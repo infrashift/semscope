@@ -5,24 +5,24 @@ type: "Issue"
 kind: "issue"
 tags:
   - "issue"
-  - "open"
   - "phase-2"
   - "cli"
+  - "in-progress"
 created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+timestamp: "2026-11-17T06:23:10-06:00"
 description: "Add internal/version and the cobra commands version, scan and rules with every ruleset flag."
 ---
 
 # ISSUE-002: Phase 2: Version package and Cobra CLI
 
-**Status/Phase:** open · Phase 2
+**Status/Phase:** in-progress · Phase 2
 
 ## Description
 Add `internal/version` and the cobra command tree. Run Task 2.2 after Phase 3, because the `scan` and `rules` commands need the ruleset engine.
 
 ## Acceptance Criteria
-- [ ] `internal/version` holds `Version`, `Commit` and `BuildDate` from `-ldflags`, with a fallback to `debug.ReadBuildInfo`.
-- [ ] `internal/version` lists the SARIF versions `2.1.0` and `2.2`.
+- [x] `internal/version` holds `Version`, `Commit` and `BuildDate` from `-ldflags`, with a fallback to `debug.ReadBuildInfo`.
+- [x] `internal/version` lists the SARIF versions `2.1.0` and `2.2`.
 - [ ] `semscope --version`, `semscope -v` and `semscope version` print the same metadata.
 - [ ] `semscope scan` accepts every flag of the [CLI contract](/specs/cli-contract--01a1e9729633.md).
 - [ ] `semscope rules list` and `semscope rules inspect` work.
