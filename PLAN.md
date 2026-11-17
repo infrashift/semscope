@@ -132,7 +132,7 @@ Tracking: [ISSUE-004](.okfw/issues/issue-004-phase-4-bounded-engine-and-nasa-p10
   - Run user Tree-sitter queries (`ast_query`). A user then adds a code rule in CUE without a change to the Go code.
   - Return an error when the work exceeds a file, node, depth or finding limit.
   - Turn on the self-scan gate.
-- [ ] **Task 4.2: Differential parity tests.** Write `internal/engine/nasa_parity_test.go`. It runs the oracles and `semscope scan --ruleset nasa-p10` on these inputs:
+- [x] **Task 4.2: Differential parity tests.** Write `internal/engine/nasa_parity_test.go`. It runs the oracles and `semscope scan --ruleset nasa-p10` on these inputs:
   1. Violation fixtures in `testdata/nasa_p10/violations/`, one for each rule.
   2. Compliant fixtures in `testdata/nasa_p10/compliant/`.
   3. Custom ruleset fixtures in `testdata/custom_rulesets/` for rule addition, rule omission and threshold changes.

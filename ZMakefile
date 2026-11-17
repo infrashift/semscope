@@ -7,6 +7,7 @@ PYTHON ?= python3
 GOLANGCI_LINT ?= $(shell $(GO) env GOPATH)/bin/golangci-lint
 GOFMT ?= $(shell $(GO) env GOROOT)/bin/gofmt
 GO_DIRS := cmd internal rules
+PARITY_CORPUS ?= $(shell cd ../zmake 2>/dev/null && pwd)
 VERSION_PKG := github.com/infrashift/semscope/internal/version
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo unknown)
@@ -54,9 +55,9 @@ LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMI
 @sarif:
     @echo "sarif: not available before Task 5.1"
 
-## parity: compare semscope with nasa-lint.py on a corpus (Task 4.2)
+## parity: compare semscope with nasa-lint.py on the src/ tree of PARITY_CORPUS (ADR-0005)
 @parity:
-    @echo "parity: not available before Task 4.2"
+    SEMSCOPE_PARITY_CORPUS=$(PARITY_CORPUS) $(GO) test -count=1 -run NasaParityCorpus -v ./internal/engine/
 
 ## check: run every gate
 @check: lint test wiki docs-style selfscan

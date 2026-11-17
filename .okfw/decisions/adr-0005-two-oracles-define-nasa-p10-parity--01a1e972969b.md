@@ -34,6 +34,11 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 - The parity test runs `python3`. It fails with a clear message when `python3` is absent.
 - The divergence file documents each known oracle quirk that a corpus hits.
 
+## Results
+- Fixtures: 14 trees, exact parity, including the oracle quirk that line rules apply inside Zig test helpers.
+- zmake `src/`: exact parity, with 306 functions and 614 assertions in both tools.
+- semscope sources: exact parity with `nasa-lint-go.py`.
+
 ## Alternatives considered
 - **Bug-for-bug parity.** Rejected: semscope then reports false recursion and misses assertions in one-line functions.
 - **Parity on the semscope sources only.** Rejected: `nasa-lint.py` finds no Zig files there, so the comparison is empty.

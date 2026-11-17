@@ -1,0 +1,6 @@
+c/a.c:4:29: warning: NASA-P10-03: allocation `malloc` in function `work`
+cpp/a.cpp:1:26: warning: NASA-P10-03: allocation `new` in function `make_one`
+go/a.go:10:9: warning: NASA-P10-03: allocation `append` in function `grow`
+rs/a.rs:2:24: warning: NASA-P10-03: allocation `Box::new` in function `work`
+zig/a.zig:6:12: warning: NASA-P10-03: allocation `a.alloc` in function `work`
+semscope: 5 finding(s) in 5 file(s): 0 error(s), 5 warning(s), 0 note(s)

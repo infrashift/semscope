@@ -70,18 +70,31 @@ type jsonFinding struct {
 	EndCol   int    `json:"endColumn,omitempty"`
 }
 
+// jsonStats is the JSON form of the assertion statistics of one language.
+type jsonStats struct {
+	Functions  int `json:"functions"`
+	Assertions int `json:"assertions"`
+}
+
 // jsonReport is the JSON document that WriteJSON writes.
 type jsonReport struct {
-	Tool     string        `json:"tool"`
-	Version  string        `json:"version"`
-	Summary  Summary       `json:"summary"`
-	Findings []jsonFinding `json:"findings"`
+	Tool       string               `json:"tool"`
+	Version    string               `json:"version"`
+	Summary    Summary              `json:"summary"`
+	Assertions map[string]jsonStats `json:"assertions"`
+	Findings   []jsonFinding        `json:"findings"`
 }
 
 // WriteJSON writes the findings and the summary as one indented JSON document.
 func WriteJSON(w io.Writer, r engine.Result, toolVersion string) error {
 	assert.That(w != nil, "w is not nil")
-	doc := jsonReport{Tool: "semscope", Version: toolVersion, Summary: Summarize(r), Findings: []jsonFinding{}}
+	doc := jsonReport{
+		Tool: "semscope", Version: toolVersion, Summary: Summarize(r),
+		Assertions: map[string]jsonStats{}, Findings: []jsonFinding{},
+	}
+	for lang, st := range r.Stats {
+		doc.Assertions[string(lang)] = jsonStats{Functions: st.Functions, Assertions: st.Assertions}
+	}
 	for _, f := range r.Findings {
 		doc.Findings = append(doc.Findings, jsonFinding{
 			RuleID: f.RuleID, Severity: f.Severity, Message: f.Message, Path: f.Path,

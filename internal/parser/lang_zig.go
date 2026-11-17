@@ -70,7 +70,7 @@ func (w *walker) zigDeclaration(n *ts.Node) error {
 	if value.Kind() == "builtin_function" && strings.HasPrefix(w.text(value), "@import(") {
 		w.f.Imports[w.text(target)] = strings.Trim(strings.TrimPrefix(w.text(value), "@import"), "()\" ")
 	}
-	if n.Kind() == "variable_declaration" && w.enclosing() < 0 && zigIsVar(n, w.src) {
+	if n.Kind() == "variable_declaration" && zigContainerLevel(n) && zigIsVar(n, w.src) {
 		if err := w.addSite(n, SiteGlobal, "container-level `var "+w.text(target)+"`", 0); err != nil {
 			return err
 		}
@@ -85,6 +85,22 @@ func (w *walker) zigDeclaration(n *ts.Node) error {
 		return nil
 	}
 	return w.addSite(n, SiteDiscard, "discarded call result `_ = f(...)`", 0)
+}
+
+// zigContainerLevel reports whether a declaration belongs to a file, struct,
+// union, enum or opaque type. A var in a block, also a comptime block, is local.
+func zigContainerLevel(n *ts.Node) bool {
+	assert.That(n.Kind() == "variable_declaration", "n is a variable declaration")
+	p := n.Parent()
+	if p == nil {
+		return false
+	}
+	switch p.Kind() {
+	case "source_file", "struct_declaration", "union_declaration", "enum_declaration", "opaque_declaration":
+		return true
+	}
+	assert.That(p.Kind() != "", "the parent has a kind")
+	return false
 }
 
 // zigIsVar reports whether a variable declaration uses the keyword var.

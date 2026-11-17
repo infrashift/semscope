@@ -1,0 +1,6 @@
+-: error: NASA-P10-05: c: 1 assertions in 1 functions (average 1.00, min 2)
+-: error: NASA-P10-05: go: 3 assertions in 3 functions (average 1.00, min 2)
+-: error: NASA-P10-05: python: 1 assertions in 1 functions (average 1.00, min 2)
+-: error: NASA-P10-05: rust: 1 assertions in 1 functions (average 1.00, min 2)
+-: error: NASA-P10-05: zig: 3 assertions in 3 functions (average 1.00, min 2)
+semscope: 5 finding(s) in 6 file(s): 5 error(s), 0 warning(s), 0 note(s)

@@ -10,3 +10,10 @@ const S = struct {
         x = y;
     }
 };
+const names = blk: {
+    var local: [2]u8 = undefined;
+    break :blk local;
+};
+const Counter = struct {
+    var hits: u32 = 0;
+};

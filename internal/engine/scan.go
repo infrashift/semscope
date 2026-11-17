@@ -103,14 +103,14 @@ func (c *collector) addPath(given string) error {
 	if err != nil {
 		return fmt.Errorf("engine: %w", err)
 	}
-	info, err := os.Stat(p)
+	info, err := os.Stat(p) //nolint:gosec // the user names the paths to scan
 	if err != nil {
 		return fmt.Errorf("engine: %w", err)
 	}
 	if !info.IsDir() {
 		return c.add(filepath.Clean(p))
 	}
-	err = filepath.WalkDir(p, func(path string, d fs.DirEntry, err error) error {
+	err = filepath.WalkDir(p, func(path string, d fs.DirEntry, err error) error { //nolint:gosec // the user names the paths to scan
 		switch {
 		case err != nil:
 			return err

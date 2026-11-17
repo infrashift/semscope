@@ -1,0 +1,16 @@
+c/a.c:1:5: error: NASA-P10-09: function pointer
+c/a.c:2:13: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+go/internal/a/a.go:6:14: error: NASA-P10-09: function type
+go/internal/a/a.go:10:8: error: NASA-P10-09: function type
+go/internal/a/a.go:11:19: error: NASA-P10-09: function type
+go/internal/a/a.go:12:10: error: NASA-P10-09: function type
+go/internal/a/a.go:15:10: error: NASA-P10-09: function type
+go/internal/a/a.go:18:5: error: NASA-P10-09: function type
+go/internal/a/a.go:26:14: error: NASA-P10-09: function type
+go/internal/a/a.go:38:9: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+rs/a.rs:1:13: error: NASA-P10-09: function pointer type
+rs/a.rs:1:32: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+zig/src/a.zig:4:21: error: NASA-P10-09: pointer to a function
+zig/src/a.zig:7:10: error: NASA-P10-09: pointer to a function
+zig/src/a.zig:13:14: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+semscope: 15 finding(s) in 4 file(s): 15 error(s), 0 warning(s), 0 note(s)

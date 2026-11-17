@@ -1,0 +1,11 @@
+c/a.c:2:1: error: NASA-P10-08: directive `stringize`
+c/a.c:3:1: error: NASA-P10-08: directive `token_paste`
+c/a.c:4:1: error: NASA-P10-08: directive `variadic_macro`
+c/a.c:5:1: error: NASA-P10-08: directive `undef`
+c/a.c:8:1: error: NASA-P10-08: conditional compilation nests 3 levels (max 2)
+go/a.go:5:1: error: NASA-P10-08: directive `go:linkname`
+py/a.py:2:5: error: NASA-P10-08: dynamic code `exec`
+py/a.py:3:12: error: NASA-P10-08: dynamic code `eval`
+rs/a.rs:1:1: error: NASA-P10-08: directive `macro_rules!`
+zig/a.zig:1:11: error: NASA-P10-08: directive `@cImport`
+semscope: 10 finding(s) in 5 file(s): 10 error(s), 0 warning(s), 0 note(s)
