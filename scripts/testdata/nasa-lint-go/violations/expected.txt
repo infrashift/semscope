@@ -1,0 +1,17 @@
+internal/a/a.go:11: R9: function type declaration
+internal/a/a.go:15: R9: func-typed field or variable
+internal/a/a.go:16: R9: func-typed field or variable
+internal/a/a.go:20: R9: func-typed field or variable
+internal/a/a.go:43: R2: unbounded loop `for {`
+internal/a/a.go:52: R2: unbounded loop `for ;; {`
+internal/a/a.go:55: R2: unbounded loop `for true {`
+internal/a/a.go:72: R7: discarded call result `_ = f(...)`
+internal/a/a.go:73: R7: discarded call result `x, _ := f(...)`
+internal/a/a.go:88: R1: `goto` statement
+internal/a/a.go:107: R9: func-typed parameter
+internal/a/a.go:112: R9: func-typed result
+internal/a/a.go:129: R4: func Long has 61 lines (max 60)
+internal/a/a.go:23: R1: recursion: internal/a:Fact -> internal/a:Fact
+internal/a/a.go:35: R1: recursion: internal/a:T.step -> internal/a:T.walk -> internal/a:T.step
+cmd,internal,rules: R5: 0 assertions in 14 functions (average 0.00, min 2.0)
+nasa-lint-go: 16 error(s); 14 functions, 0 assertions (average 0.00)

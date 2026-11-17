@@ -1,0 +1,1 @@
+nasa-lint-go: 0 error(s); 3 functions, 6 assertions (average 2.00)

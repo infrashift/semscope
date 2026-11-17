@@ -28,6 +28,8 @@ test:
 lint:
 	@out=$$($(GOFMT) -l $(GO_DIRS)); test -z "$$out" || { echo "gofmt: $$out"; exit 1; }
 	$(PYTHON) -I scripts/nasa-lint.py
+	$(PYTHON) -I scripts/nasa-lint-go.py
+	$(PYTHON) -I scripts/tests/nasa_lint_go_test.py
 	$(GO) vet ./...
 	$(GOLANGCI_LINT) run
 
