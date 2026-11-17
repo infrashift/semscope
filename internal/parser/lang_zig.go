@@ -50,11 +50,45 @@ func (w *walker) zigFunction(n *ts.Node) error {
 	if name == nil || n.ChildByFieldName("body") == nil {
 		return nil
 	}
-	fn := Function{Name: w.text(name)}
+	fn := Function{Name: w.text(name), Scope: w.zigScope(n)}
 	fn.Exempt = strings.HasPrefix(fn.Name, "test") || strings.HasSuffix(fn.Name, "Test")
+	if fn.Scope != "" {
+		fn.Key = fn.Scope + "." + fn.Name
+	}
 	assert.That(fn.Name != "", "a function has a name")
-	assert.That(fn.Key == "", "addFunction sets the key")
+	assert.That(fn.Key == "" || strings.HasSuffix(fn.Key, "."+fn.Name), "the key ends with the name")
 	return w.addFunction(n, fn)
+}
+
+// zigScope returns the container path of the function declaration n. A
+// container of `const Name = struct {...}` gives the segment "Name". An
+// enclosing function F gives the segment "F()", so a function of the struct
+// that F returns has the scope "F()". Other anonymous containers give no
+// segment. The file is the root and gives no segment.
+func (w *walker) zigScope(n *ts.Node) string {
+	assert.That(n.Kind() == "function_declaration", "n is a function declaration")
+	var segs []string
+	p := n.Parent()
+	for depth := 0; p != nil && depth < w.limits.MaxDepth; depth++ {
+		switch p.Kind() {
+		case "struct_declaration", "union_declaration", "enum_declaration", "opaque_declaration":
+			if v := p.Parent(); v != nil && v.Kind() == "variable_declaration" {
+				if id := v.NamedChild(0); id != nil && id.Kind() == "identifier" {
+					segs = append(segs, w.text(id))
+				}
+			}
+		case "function_declaration":
+			if name := p.ChildByFieldName("name"); name != nil {
+				segs = append(segs, w.text(name)+"()")
+			}
+		}
+		p = p.Parent()
+	}
+	for i, j := 0, len(segs)-1; i < j; i, j = i+1, j-1 {
+		segs[i], segs[j] = segs[j], segs[i]
+	}
+	assert.That(len(segs) < w.limits.MaxDepth, "one segment for each level at most")
+	return strings.Join(segs, ".")
 }
 
 // zigDeclaration records an import, a container-level var, or a discarded

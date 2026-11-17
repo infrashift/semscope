@@ -26,7 +26,8 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 - On the fixtures in `testdata/nasa_p10/`, semscope and the oracle report the same set of file, line and rule. The R5 averages match to two decimals.
 - On a real corpus, for example the zmake `src/` tree, each divergence needs a fix or a record in `testdata/nasa_p10/parity-divergences.json`.
 - Each divergence record has a reason and a link to an issue.
-- semscope does not copy a known oracle defect. An example is the merge of same-name functions of files with the same base name into one call graph node. semscope still merges the same-name functions of one Zig file. [ISSUE-008](/issues/issue-008-zig-limits-of-semscope-found-by-the-corpus-parity-test--01a1ebb73216.md) tracks this defect.
+- semscope does not copy a known oracle defect. An example is the merge of same-name functions into one call graph node.
+- semscope keys a Zig function by its full path and its container path, for example `Mutable.toFloat`. It resolves a plain call through the lexical scopes of the caller. [ISSUE-008](/issues/issue-008-zig-limits-of-semscope-found-by-the-corpus-parity-test--01a1ebb73216.md) records the change.
 - The rules R3, R6, R8 and R10 have no oracle. Fixtures alone test them.
 - For C, C++, Python and Rust, fixtures alone test all rules.
 
@@ -51,7 +52,7 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 Results on 2026-11-17:
 - zmake, the fixture, cobra, pflag, go-sarif, CUE and go-tree-sitter: exact parity.
 - x/tools: one line record. A line regex cannot see an unnamed func-typed parameter of an interface method.
-- Zig 0.17.1 standard library: two class records for R1 (203 and 6), 13 line records for R4 and R7, and one stats record. [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) lists the oracle defects.
+- Zig 0.17.1 standard library: two class records for R1 (203 and 4), 13 line records for R4 and R7, and one stats record. [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) lists the oracle defects.
 - The corpora found eight semscope defects and nine `nasa-lint-go.py` defects. Task 6.3 fixes them.
 
 ## Alternatives considered

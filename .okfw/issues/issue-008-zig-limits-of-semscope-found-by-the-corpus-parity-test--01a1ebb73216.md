@@ -33,9 +33,12 @@ The corpus parity test of Task 6.3 found two semscope defects on the Zig 0.17.1 
 - R1 read the decl literal `.init()` as a call of the function `init` of the file.
 - Go: R7 reported the conversion `var _ I = (*T)(nil)`, and R1 read `p[0].Msg()` as a call through the receiver `p`.
 
+## Progress
+- **Containers (done).** The Zig adapter gives each function a scope: the names of the enclosing containers, and `F()` for each enclosing function F. The node key is the scope and the name, for example `Mutable.toFloat` or `ArrayList().append`. A plain call `f()` looks for f in the container of the caller, then in each outer container, then in the file. A call through `self`, `Self` or `@This()` looks in the container of the caller only. The engine test `TestZigContainerScopes` holds each case. On the Zig standard library, the cycle `Const.toFloat -> Const.toFloat` now shows at `Const.toFloat`, not at `Mutable.toFloat`.
+
 ## Acceptance Criteria
 - [ ] Update the Zig grammar when a release reads Zig 0.17.
-- [ ] Key a Zig function by its container, and resolve a call through the scope of the call.
+- [x] Key a Zig function by its container, and resolve a call through the scope of the call.
 
 ## Related
 - [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md)

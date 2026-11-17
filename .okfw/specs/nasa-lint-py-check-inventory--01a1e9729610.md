@@ -38,7 +38,7 @@ description: "Every check, threshold, pattern and quirk of scripts/nasa-lint.py,
 
 ## R1: recursion
 - The call graph has one node for each pair of file name and function name. The file name has no directory.
-- Quirk: two functions with the same name in one file share one node. Two files with the same name in different directories share nodes.
+- Quirk: two functions with the same name in one file share one node. Two files with the same name in different directories share nodes. semscope does not copy this quirk: its node key holds the full path and the Zig container path, for example `Mutable.toFloat`.
 - `CALL_RE` finds the calls in the body lines. It also matches the name of a builtin such as `@intCast(`.
 - An unqualified call, or a call through `self`, `Self` or `@This`, gives an edge only to a function of the same file.
 - A call `alias.f(` gives an edge only when `alias` comes from `const alias = @import("x.zig")`. The node key uses the import string, not the resolved path.

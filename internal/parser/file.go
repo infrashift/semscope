@@ -18,9 +18,15 @@ type Pos struct {
 // Function is one function or method with a body.
 type Function struct {
 	// Name is the plain name. Key is the call graph name: "Type.name" for a
-	// Go method, else Name.
+	// Go method, Scope + "." + Name for a Zig function in a container, else
+	// Name.
 	Name string
 	Key  string
+	// Scope is the container path of a Zig function, outermost first and
+	// separated by ".". A function of `const Mutable = struct {...}` has the
+	// scope "Mutable". A function of the struct that the function ArrayList
+	// returns has the scope "ArrayList()". A function of the file has "".
+	Scope string
 	// Recv is the receiver variable of a Go method, else "".
 	Recv string
 	// Pos runs from the first line of the signature to the closing brace.

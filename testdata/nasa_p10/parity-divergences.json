@@ -34,9 +34,9 @@
     "corpus": "zig-std-0.17.1",
     "rule": "NASA-P10-01",
     "side": "semscope",
-    "count": 6,
-    "reason": "the false edges of the oracle change its depth-first search, so it reports some real cycles at another head function; same-name functions of one file share one node in both tools",
-    "issue": "ISSUE-008"
+    "count": 4,
+    "reason": "real cycles (Const.toFloat, Type.format, two AstGen cycles) that nasa-lint.py reports at another head function: it merges the same-name functions of a file into one node, and its false edges change its depth-first search",
+    "issue": "ISSUE-007"
   },
   {
     "corpus": "zig-std-0.17.1",

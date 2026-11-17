@@ -265,3 +265,64 @@ drops.go:45:2: error: NASA-P10-07: unchecked error of ` + "`f`" + `
 		}
 	}
 }
+
+func TestZigContainerScopes(t *testing.T) {
+	dir := tree(t, map[string]string{"int.zig": `const Mutable = struct {
+    fn toConst(self: Mutable) Const {
+        return .{ .x = self.x };
+    }
+    fn toFloat(self: Mutable) f64 {
+        return self.toConst().toFloat();
+    }
+};
+const Const = struct {
+    fn toFloat(self: Const) f64 {
+        if (self.x == 0) return self.toFloat();
+        return helper(self.x);
+    }
+};
+fn helper(x: u32) f64 {
+    return @floatFromInt(x);
+}
+fn List(comptime T: type) type {
+    return struct {
+        fn append(self: *@This(), x: T) void {
+            self.grow();
+            _ = List(T);
+        }
+        fn grow(self: *@This()) void {
+            self.append(undefined);
+        }
+    };
+}
+const Outer = struct {
+    fn walk(n: u32) void {
+        if (n > 0) step(n - 1);
+    }
+    fn step(n: u32) void {
+        walk(n);
+    }
+    const Inner = struct {
+        fn walk(n: u32) void {
+            step(n);
+        }
+    };
+};
+`})
+	rules := load(t, nil)
+	for i := range rules {
+		rules[i].Enabled = rules[i].ID == "NASA-P10-01"
+	}
+	res, err := scan(t, rules, DefaultLimits(), dir, dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := `int.zig:10:5: error: NASA-P10-01: recursion: Const.toFloat -> Const.toFloat
+int.zig:20:9: error: NASA-P10-01: recursion: List().append -> List().grow -> List().append
+int.zig:33:5: error: NASA-P10-01: recursion: Outer.step -> Outer.walk -> Outer.step
+3 finding(s) in 1 file(s)
+`
+	if got := text(t, res); got != want {
+		t.Fatalf("findings:\n%s\nwant:\n%s", got, want)
+	}
+}

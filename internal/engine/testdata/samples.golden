@@ -62,7 +62,7 @@ sample_a.zig:19:15: error: NASA-P10-08: directive `@cImport`
 sample_a.zig:20:15: error: NASA-P10-10: construct `@ptrFromInt`
 sample_b.cpp:1:19: error: NASA-P10-01: recursion: m -> m
 sample_b.cpp:2:23: warning: NASA-P10-03: allocation `new` in function `n`
-sample_b.zig:6:5: error: NASA-P10-01: recursion: m -> m
+sample_b.zig:6:5: error: NASA-P10-01: recursion: S.m -> S.m
 sample_b.zig:9:9: error: NASA-P10-07: discarded call result `_ = f(...)`
 sample_b.zig:18:5: error: NASA-P10-06: container-level `var hits`
 67 finding(s) in 7 file(s)

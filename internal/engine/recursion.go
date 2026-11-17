@@ -80,8 +80,6 @@ func resolve(f *parser.File, caller parser.Function, call parser.Call) string {
 			return ""
 		}
 		return sc + "\x00" + recvType + "." + call.Name
-	case f.Lang == parser.Zig && (call.Qual == "self" || call.Qual == "Self" || call.Qual == "@This()"):
-		return sc + "\x00" + call.Name
 	case f.Lang == parser.Python && (call.Qual == "self" || call.Qual == "cls"):
 		return sc + "\x00" + call.Name
 	case f.Lang == parser.Rust && (call.Qual == "self" || call.Qual == "Self"):
@@ -132,12 +130,51 @@ func (g *callGraph) addEdges(f *parser.File) {
 		}
 		caller := f.Functions[call.Fn]
 		from, ok := g.index[scope(f)+"\x00"+caller.Key]
-		to, found := g.index[resolve(f, caller, call)]
+		to, found := g.target(f, caller, call)
 		if ok && found {
 			g.nodes[from].edges = append(g.nodes[from].edges, to)
 		}
 	}
 	assert.That(g.index != nil, "the graph has an index")
+}
+
+// target returns the node of the function that call names. A plain Zig
+// call and a Zig call through self, Self or @This() go through zigTarget. Other calls go
+// through resolve.
+func (g *callGraph) target(f *parser.File, caller parser.Function, call parser.Call) (int, bool) {
+	assert.That(call.Name != "", "a call has a name")
+	self := call.Qual == "self" || call.Qual == "Self" || call.Qual == "@This()"
+	if f.Lang == parser.Zig && (call.Qual == "" || self) {
+		return g.zigTarget(f, caller, call)
+	}
+	to, found := g.index[resolve(f, caller, call)]
+	assert.That(!found || to < len(g.nodes), "the index holds valid nodes")
+	return to, found
+}
+
+// zigTarget resolves a Zig call through the scopes of the caller, the
+// lexical scope of Zig. A plain call `f()` looks in the container of the
+// caller, then in each outer container, then in the file. A call through
+// self looks in the container of the caller only.
+func (g *callGraph) zigTarget(f *parser.File, caller parser.Function, call parser.Call) (int, bool) {
+	assert.That(f.Lang == parser.Zig, "the file is Zig")
+	var path []string
+	if caller.Scope != "" {
+		path = strings.Split(caller.Scope, ".")
+	}
+	lowest := 0
+	if call.Qual != "" {
+		lowest = len(path)
+	}
+	sc := scope(f) + "\x00"
+	for i := len(path); i >= lowest; i-- {
+		key := strings.Join(append(append([]string{}, path[:i]...), call.Name), ".")
+		if to, found := g.index[sc+key]; found {
+			return to, true
+		}
+	}
+	assert.That(lowest <= len(path), "the search starts inside the path")
+	return 0, false
 }
 
 // sortEdges sorts the edges of each node by target key and removes duplicates.

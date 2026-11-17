@@ -1,7 +1,7 @@
 package="" imports=map[] exempt=false lines=19
 fn f key=f recv= lines=3-3 exempt=false
 fn g key=g recv= lines=4-4 exempt=false
-fn m key=m recv= lines=6-11 exempt=false
+fn m key=S.m recv= lines=6-11 exempt=false
 call fn=2 "self.m" name="m" qual="self" unused=true line=7
 call fn=2 "Self.m" name="m" qual="Self" unused=true line=8
 call fn=2 "h" name="h" qual="" unused=false line=9
