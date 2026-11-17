@@ -1,3 +1,12 @@
+# semscope
+
+semscope scans source code with composable CUE rulesets. `PLAN.md` is the phase checklist.
+
+- Read the [Development workflow](.okfw/development-workflow--01a1e97295ed.md) before you start a task.
+- Run `zmake check` and `zmake -f Makefile check` after each task. Commit only when both gates pass.
+- Go code obeys the Power of 10 rules of [ADR-0003](.okfw/decisions/adr-0003-adapt-the-nasa-power-of-10-rules-to-go--01a1e9729678.md). Use `assert.That` for programmer errors only.
+- Write all prose in ASD-STE100. `scripts/ste-check.py` checks it.
+
 <!-- BEGIN okfw -->
 ## Project knowledge base (okfw)
 

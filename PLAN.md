@@ -57,6 +57,8 @@ Task order: run 2.1, then 3.1 and 3.2, then 2.2. The `scan` and `rules` commands
 
 ## Phase 1: Repository bootstrap, gates and OKF wiki
 
+Tracking: [ISSUE-001](.okfw/issues/issue-001-phase-1-repository-bootstrap-gates-and-okf-wiki--01a1e97296be.md)
+
 - [x] **Task 1.0: Repository and build files.** Initialize git. Add `.gitignore`, `ZMakefile` and `Makefile`. The two build files hold the same tasks.
 - [x] **Task 1.1: Go module and package layout.** Initialize `github.com/infrashift/semscope` with Go 1.25. Add these packages:
   - `cmd/semscope/`: the entry point and the `spf13/cobra` commands.
@@ -71,9 +73,11 @@ Task order: run 2.1, then 3.1 and 3.2, then 2.2. The `scan` and `rules` commands
   - `.golangci.yml`: a golangci-lint v2 configuration for the Power of 10 rules.
 - [x] **Task 1.2: Baseline linter scripts.** Copy `nasa-lint.py` and `ste-check.py` from zmake into `scripts/`. `nasa-lint.py` reads Zig only. It becomes the Zig oracle for the parity tests. Write `scripts/nasa-lint-go.py`, a Go port of its six checks, with golden fixture tests.
 - [x] **Task 1.2b: Documentation style gate.** Remove the open code fence that hid this file from `ste-check.py`. Rewrite this file in STE. Add the marketing words and `your` to the banned list. Extend the check to Go comments and to cobra `Short` and `Long` strings.
-- [ ] **Task 1.3: OKF wiki.** Copy the wiki layout of zmake: `architecture/`, `specs/`, `decisions/`, `issues/`, `daily/` and two root guides. Write the architecture overview, the specs, ADR-0001 to ADR-0005 and one issue for each phase. Record the check inventory of `nasa-lint.py` as a spec. Use the okfw MCP server or the `okfw` CLI.
+- [x] **Task 1.3: OKF wiki.** Copy the wiki layout of zmake: `architecture/`, `specs/`, `decisions/`, `issues/`, `daily/` and two root guides. Write the architecture overview, the specs, ADR-0001 to ADR-0006 and one issue for each phase. Record the check inventory of `nasa-lint.py` as a spec. Use the okfw MCP server or the `okfw` CLI.
 
 ## Phase 2: Version package and Cobra CLI
+
+Tracking: [ISSUE-002](.okfw/issues/issue-002-phase-2-version-package-and-cobra-cli--01a1e97296d0.md)
 
 - [ ] **Task 2.1: Version package.** Add `internal/version` with `Version`, `Commit` and `BuildDate`. The `build` task sets them through `-ldflags`. Without `-ldflags`, the package reads the VCS fields of `debug.ReadBuildInfo`. The package lists the supported SARIF versions `2.1.0` and `2.2`.
 - [ ] **Task 2.2: Cobra CLI.** Build the CLI with `github.com/spf13/cobra`:
@@ -90,6 +94,8 @@ Task order: run 2.1, then 3.1 and 3.2, then 2.2. The `scan` and `rules` commands
   - An unknown rule ID or parameter in a flag gives an error.
 
 ## Phase 3: Composable CUE ruleset engine
+
+Tracking: [ISSUE-003](.okfw/issues/issue-003-phase-3-composable-cue-ruleset-engine--01a1e97296e2.md)
 
 - [ ] **Task 3.1: CUE ruleset schema.** Write `internal/ruleset/schema.cue`. Load it with `cuelang.org/go/cue/cuecontext`. The schema has these parts:
   - The `rules` map uses the stable rule ID as the key: `rules: [ID=string]: #Rule & {id: ID}`.
@@ -117,6 +123,8 @@ Task order: run 2.1, then 3.1 and 3.2, then 2.2. The `scan` and `rules` commands
 
 ## Phase 4: Bounded static analysis engine and parity
 
+Tracking: [ISSUE-004](.okfw/issues/issue-004-phase-4-bounded-engine-and-nasa-p10-parity--01a1e97296f3.md)
+
 - [ ] **Task 4.1: Non-recursive analyzer.** Implement `internal/parser` and `internal/engine` under the rules R1 to R10:
   - Walk each syntax tree with a Tree-sitter cursor. Do not use recursion.
   - Build the call graph in a table with a fixed capacity. Find the cycles with an iterative Tarjan algorithm.
@@ -134,6 +142,8 @@ Task order: run 2.1, then 3.1 and 3.2, then 2.2. The `scan` and `rules` commands
   On the fixtures, semscope and the oracles report the same set of file, line and rule. A divergence on the corpus needs a fix, or an entry with a reason in `testdata/nasa_p10/parity-divergences.json`. semscope does not copy a known defect of an oracle.
 
 ## Phase 5: SARIF reports and self-hosting gate
+
+Tracking: [ISSUE-005](.okfw/issues/issue-005-phase-5-sarif-reports-and-self-hosting-gate--01a1e9729706.md)
 
 - [ ] **Task 5.1: SARIF producer.** Implement the SARIF writer with `github.com/owenrumney/go-sarif/v3`:
   - Use `pkg/report/v210/sarif` for SARIF 2.1.0 and `pkg/report/v22/sarif` for SARIF 2.2. The `--sarif-version` flag selects one.
