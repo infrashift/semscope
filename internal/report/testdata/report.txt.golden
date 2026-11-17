@@ -1,0 +1,4 @@
+-: error: NASA-P10-05: go: 3 assertions in 3 functions (average 1.00, min 2)
+internal/a/a.go:8:2: error: NASA-P10-02: `for` loop without a condition
+b.go:4:9: warning: NASA-P10-03: allocation `make` in function `f`
+semscope: 3 finding(s) in 2 file(s): 2 error(s), 1 warning(s), 0 note(s)

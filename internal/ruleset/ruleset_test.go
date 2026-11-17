@@ -2,6 +2,7 @@ package ruleset
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 )
@@ -149,6 +150,31 @@ func TestLoadErrors(t *testing.T) {
 				t.Fatalf("Load() error = %v, want it to contain %q", err, tc.want)
 			}
 		})
+	}
+}
+
+func TestExclude(t *testing.T) {
+	dir := t.TempDir()
+	write := func(name, body string) string {
+		p := dir + "/" + name
+		if err := os.WriteFile(p, []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		return p
+	}
+	a := write("a.cue", "package x\nexclude: \"vendor/*\": \"third-party code\"\n")
+	b := write("b.cue", "package x\nexclude: scripts: \"tooling\"\n")
+	r := mustLoad(t, Options{Rulesets: []string{td + "base.cue", a, b}})
+	if len(r.Exclude) != 2 || r.Exclude["scripts"] != "tooling" || r.Exclude["vendor/*"] != "third-party code" {
+		t.Fatalf("exclude = %v", r.Exclude)
+	}
+	bad := write("c.cue", "package x\nexclude: \"[\": \"bad\"\n")
+	if _, err := Load(Options{Rulesets: []string{td + "base.cue", bad}}); err == nil || !strings.Contains(err.Error(), "exclude pattern") {
+		t.Fatalf("bad pattern: err = %v", err)
+	}
+	empty := write("d.cue", "package x\nexclude: scripts: \"\"\n")
+	if _, err := Load(Options{Rulesets: []string{td + "base.cue", empty}}); err == nil {
+		t.Fatalf("an exclude without a reason gave no error")
 	}
 }
 

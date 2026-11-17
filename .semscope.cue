@@ -5,3 +5,7 @@ package overlay
 // R3 deviation: Go, cobra, CUE and Tree-sitter allocate memory at run time.
 // semscope sizes its pools in engine.New and caps the rest with hard limits.
 rules: "NASA-P10-03": enabled: false
+
+// The Python gate scripts are tooling, not semscope code. scripts/nasa-lint.py
+// stays byte-identical with zmake, because it is the Zig oracle (ADR-0005).
+exclude: scripts: "Python gate tooling; nasa-lint.py stays byte-identical as the Zig oracle (ADR-0005)"

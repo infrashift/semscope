@@ -129,7 +129,9 @@ func (c *fileCtx) length(cr *compiledRule) {
 	}
 }
 
-// preprocessor reports banned directives, banned dynamic-code calls and deep conditionals.
+// preprocessor reports banned directives, banned dynamic-code calls and deep
+// conditionals. A dynamic-code call is a plain call of a builtin, for example
+// exec: `re.compile` and `self.exec` do not count.
 func (c *fileCtx) preprocessor(cr *compiledRule) {
 	assert.That(cr.rule.Check.Kind == "restricted_preprocessor", "the rule has the kind of this checker")
 	banned := cr.rule.Check.BannedDirectives[string(c.f.Lang)]
@@ -143,7 +145,11 @@ func (c *fileCtx) preprocessor(cr *compiledRule) {
 			c.add(cr, s.Pos, fmt.Sprintf("conditional compilation nests %d levels (max %d)", s.Depth, limit))
 		}
 	}
-	c.calls(cr, banned, false, "dynamic code")
+	for _, call := range c.f.Calls {
+		if call.Qual == "" && matchCall(banned, call) {
+			c.add(cr, call.Pos, "dynamic code `"+call.Callee+"`")
+		}
+	}
 }
 
 // pointers reports deep pointer chains and, unless allowed, function pointers.

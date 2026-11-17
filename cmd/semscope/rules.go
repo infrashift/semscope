@@ -84,6 +84,14 @@ func writeInspect(w io.Writer, rs ruleset.Resolved) error {
 	assert.That(w != nil, "w is not nil")
 	var b strings.Builder
 	fmt.Fprintf(&b, "ruleset: %s\nsources: %s\n", rs.Name, strings.Join(rs.Sources, ", "))
+	patterns := make([]string, 0, len(rs.Exclude))
+	for p := range rs.Exclude {
+		patterns = append(patterns, p)
+	}
+	sort.Strings(patterns)
+	for _, p := range patterns {
+		fmt.Fprintf(&b, "exclude: %s (%s)\n", p, rs.Exclude[p])
+	}
 	active, omitted := rs.Active(), rs.Omitted()
 	fmt.Fprintf(&b, "\nactive rules: %d\n", len(active))
 	writeRuleTable(&b, active)

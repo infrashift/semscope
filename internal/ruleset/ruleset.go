@@ -108,6 +108,8 @@ type Resolved struct {
 	// Name and Description come from the last source that sets them.
 	Name        string
 	Description string
+	// Exclude maps each excluded path pattern to its reason.
+	Exclude map[string]string
 	// Sources holds the name of each source, in load sequence.
 	Sources []string
 	// Rules holds every rule, sorted by ID. An omitted rule has Enabled false.
@@ -176,6 +178,10 @@ func Load(opts Options) (Resolved, error) {
 	if err != nil {
 		return Resolved{}, err
 	}
+	excludes, err := decodeExcludes(v)
+	if err != nil {
+		return Resolved{}, err
+	}
 	if err = applyToggles(rules, opts.Enable, opts.Omit); err != nil {
 		return Resolved{}, err
 	}
@@ -186,6 +192,7 @@ func Load(opts Options) (Resolved, error) {
 	return Resolved{
 		Name:        optionalString(v, "name"),
 		Description: optionalString(v, "description"),
+		Exclude:     excludes,
 		Sources:     sources,
 		Rules:       rules,
 	}, nil

@@ -11,4 +11,5 @@
 * [ADR-0005: Two oracles define nasa-p10 parity](adr-0005-two-oracles-define-nasa-p10-parity--01a1e972969b.md) - nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles; fixtures match exactly and corpus divergences need a recorded reason.
 * [ADR-0006: zmake runs the development gates](adr-0006-zmake-runs-the-development-gates--01a1e97296ad.md) - A ZMakefile and a Makefile hold the same gate tasks; zmake runs both before each task commit.
 * [ADR-0007: cobra parses the command line](adr-0007-cobra-parses-the-command-line--01a1e97fa733.md) - semscope uses github.com/spf13/cobra for its commands and flags; command callbacks are function literals that ADR-0003 allows.
+* [ADR-0008: go-sarif writes the SARIF reports](adr-0008-go-sarif-writes-the-sarif-reports--01a1e9998cbd.md) - semscope writes SARIF 2.1.0 and SARIF 2.2 through github.com/owenrumney/go-sarif/v3 and validates each report against the schema before it writes it.
 

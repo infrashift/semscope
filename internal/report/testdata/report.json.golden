@@ -1,0 +1,43 @@
+{
+  "tool": "semscope",
+  "version": "v1.0.0",
+  "summary": {
+    "files": 2,
+    "errors": 2,
+    "warnings": 1,
+    "notes": 0
+  },
+  "assertions": {
+    "go": {
+      "functions": 3,
+      "assertions": 3
+    }
+  },
+  "findings": [
+    {
+      "ruleId": "NASA-P10-05",
+      "severity": "error",
+      "message": "go: 3 assertions in 3 functions (average 1.00, min 2)"
+    },
+    {
+      "ruleId": "NASA-P10-02",
+      "severity": "error",
+      "message": "`for` loop without a condition",
+      "path": "internal/a/a.go",
+      "line": 8,
+      "column": 2,
+      "endLine": 10,
+      "endColumn": 3
+    },
+    {
+      "ruleId": "NASA-P10-03",
+      "severity": "warning",
+      "message": "allocation `make` in function `f`",
+      "path": "b.go",
+      "line": 4,
+      "column": 9,
+      "endLine": 4,
+      "endColumn": 22
+    }
+  ]
+}

@@ -13,7 +13,7 @@ status: "draft"
 
 # CLI contract
 
-Task 2.2 implements the commands and the flags. Task 4.1 adds the scan engine, `--fail-level` and the text and JSON reports. Task 5.1 adds SARIF. The help text of each command has golden tests in `cmd/semscope/testdata/`.
+Task 2.2 implements the commands and the flags. Task 4.1 adds the scan engine, `--fail-level` and the text and JSON reports. Task 5.1 adds SARIF 2.1.0 and 2.2 ([ADR-0008](/decisions/adr-0008-go-sarif-writes-the-sarif-reports--01a1e9998cbd.md)). `rules inspect` also lists the exclude patterns. The help text of each command has golden tests in `cmd/semscope/testdata/`.
 
 ## Commands
 | Command | Effect |

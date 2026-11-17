@@ -17,7 +17,8 @@ status: "stable"
 `internal/ruleset/schema.cue` holds the schema. The binary embeds it. Task 3.1 implements it.
 
 ## Shape
-- `#Ruleset`: the optional fields `name` and `description`, and the map `rules: [ID=string]: #Rule & {id: ID}`. The map key sets the rule ID.
+- `#Ruleset`: the optional fields `name`, `description` and `exclude`, and the map `rules: [ID=string]: #Rule & {id: ID}`. The map key sets the rule ID.
+- `exclude`: a map from a path pattern to a reason, for example `exclude: scripts: "tooling"`. A pattern uses `path.Match` syntax on paths relative to the scan root. It matches a path or a parent directory of the path. A map composes over overlays, and each entry needs a reason.
 - `#Rule`: `id`, `enabled?` (`bool`), `severity?` (`"error" | "warning" | "note"`), `languages` (one or more), `title`, `message`, `params` and `check`.
 - The loader sets `enabled` to `true` and `severity` to `"error"` when a rule omits them.
 - `#Language`: `"go" | "c" | "cpp" | "zig" | "python" | "rust"`.

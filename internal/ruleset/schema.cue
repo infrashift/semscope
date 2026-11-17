@@ -6,6 +6,10 @@ package ruleset
 #Ruleset: {
 	name?:        string
 	description?: string
+	// exclude maps a path pattern to the reason for the exclusion. A pattern
+	// uses path.Match syntax on slash-separated paths relative to the scan
+	// root. It matches a path or any parent directory of the path.
+	exclude?: [string]: string & !=""
 	rules: [ID=string]: #Rule & {id: ID}
 }
 

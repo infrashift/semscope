@@ -145,7 +145,7 @@ Tracking: [ISSUE-004](.okfw/issues/issue-004-phase-4-bounded-engine-and-nasa-p10
 
 Tracking: [ISSUE-005](.okfw/issues/issue-005-phase-5-sarif-reports-and-self-hosting-gate--01a1e9729706.md)
 
-- [ ] **Task 5.1: SARIF producer.** Implement the SARIF writer with `github.com/owenrumney/go-sarif/v3`:
+- [x] **Task 5.1: SARIF producer.** Implement the SARIF writer with `github.com/owenrumney/go-sarif/v3`:
   - Use `pkg/report/v210/sarif` for SARIF 2.1.0 and `pkg/report/v22/sarif` for SARIF 2.2. The `--sarif-version` flag selects one.
   - Set `tool.driver.name` to `"semscope"`. Set `tool.driver.version`, `tool.driver.informationUri` and `tool.driver.rules`. The rules list holds only the active rules.
   - Give each finding a repository-relative `artifactLocation.uri`, a `ruleId` and a `level`. Add the 1-based `startLine`, `startColumn`, `endLine` and `endColumn`.
@@ -154,7 +154,8 @@ Tracking: [ISSUE-005](.okfw/issues/issue-005-phase-5-sarif-reports-and-self-host
   1. Run `zmake check` and `zmake -f Makefile check`.
   2. Run `zmake build`.
   3. Run `./bin/semscope --version`.
-  4. Run `./bin/semscope scan --ruleset nasa-p10 --format sarif --sarif-version 2.1.0 --output semscope-self.sarif .`.
-  5. Run `./bin/semscope scan --ruleset nasa-p10 --format sarif --sarif-version 2.2 --output semscope-self-v22.sarif .`.
+  4. Run `./bin/semscope scan --ruleset nasa-p10 -r .semscope.cue --format sarif --sarif-version 2.1.0 --output semscope-self.sarif .`.
+  5. Run `./bin/semscope scan --ruleset nasa-p10 -r .semscope.cue --format sarif --sarif-version 2.2 --output semscope-self-v22.sarif .`.
+  6. Run `zmake sarif`. It runs steps 2, 4 and 5.
 
   Write `README.md`. Sync the architecture records and the usage notes to the OKF wiki. Verify zero violations in the repository.

@@ -201,6 +201,30 @@ func TestLimitsAndCompileErrors(t *testing.T) {
 	}
 }
 
+func TestExclude(t *testing.T) {
+	dir := tree(t, map[string]string{
+		"keep/a.go":       "package a\nfunc f() {\n\tfor {\n\t}\n}\n",
+		"tools/b.go":      "package b\nfunc f() {\n\tfor {\n\t}\n}\n",
+		"gen/x/c_gen.go":  "package c\nfunc f() {\n\tfor {\n\t}\n}\n",
+		"gen/x/c_real.go": "package c\nfunc g() {\n\tfor {\n\t}\n}\n",
+	})
+	e, err := New(load(t, nil), DefaultLimits(), "tools", "gen/*/*_gen.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer e.Close()
+	res, err := e.Scan(dir, []string{dir})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.Files != 2 || !strings.Contains(text(t, res), "keep/a.go") || !strings.Contains(text(t, res), "gen/x/c_real.go") {
+		t.Fatalf("files = %d:\n%s", res.Files, text(t, res))
+	}
+	if _, err := New(load(t, nil), DefaultLimits(), "["); err == nil {
+		t.Fatalf("a bad exclude pattern gave no error")
+	}
+}
+
 func TestNasaTag(t *testing.T) {
 	for id, want := range map[string]string{"NASA-P10-01": "R1", "NASA-P10-10": "R10", "NASA-P10-11": "", "CUSTOM-01": ""} {
 		if got := nasaTag(id); got != want {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -114,7 +115,7 @@ func (c *collector) addPath(given string) error {
 		switch {
 		case err != nil:
 			return err
-		case d.IsDir() && path != p && skipDir(d.Name()):
+		case d.IsDir() && path != p && (skipDir(d.Name()) || c.e.excluded(relPath(c.root, path))):
 			return filepath.SkipDir
 		case d.IsDir():
 			return nil
@@ -133,7 +134,7 @@ func (c *collector) addPath(given string) error {
 func (c *collector) add(p string) error {
 	assert.That(filepath.IsAbs(p), "p is absolute")
 	lang, ok := parser.Detect(p)
-	if !ok || !c.e.langs[lang] || c.seen[p] {
+	if !ok || !c.e.langs[lang] || c.seen[p] || c.e.excluded(relPath(c.root, p)) {
 		return nil
 	}
 	if len(c.out) >= c.e.limits.MaxFiles {
@@ -143,6 +144,25 @@ func (c *collector) add(p string) error {
 	c.out = append(c.out, source{abs: p, rel: relPath(c.root, p), lang: lang})
 	assert.That(len(c.out) == len(c.seen), "one entry for each file")
 	return nil
+}
+
+// excluded reports whether an exclude pattern matches rel or a parent directory of rel.
+func (e *Engine) excluded(rel string) bool {
+	assert.That(!strings.Contains(rel, "\\"), "rel uses forward slashes")
+	if len(e.exclude) == 0 {
+		return false
+	}
+	parts := strings.Split(rel, "/")
+	for i := 1; i <= len(parts); i++ {
+		prefix := strings.Join(parts[:i], "/")
+		for _, p := range e.exclude {
+			if ok, err := path.Match(p, prefix); err == nil && ok {
+				return true
+			}
+		}
+	}
+	assert.That(len(parts) >= 1, "a path has one or more parts")
+	return false
 }
 
 // relPath returns p relative to root with forward slashes, or p when p is outside root.

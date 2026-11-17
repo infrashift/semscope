@@ -10,6 +10,7 @@ package engine
 
 import (
 	"fmt"
+	"path"
 	"runtime"
 
 	ts "github.com/tree-sitter/go-tree-sitter"
@@ -76,17 +77,24 @@ type worker struct {
 // Engine runs the active rules. It is not safe for concurrent calls of Scan.
 type Engine struct {
 	rules   []compiledRule
+	exclude []string
 	langs   map[parser.Language]bool
 	limits  Limits
 	workers []worker
 }
 
-// New compiles the active rules and allocates the worker pool.
-func New(rules []ruleset.Rule, limits Limits) (*Engine, error) {
+// New compiles the active rules and allocates the worker pool. A scan skips
+// each path that an exclude pattern matches (see excluded).
+func New(rules []ruleset.Rule, limits Limits, exclude ...string) (*Engine, error) {
 	if limits.Workers < 1 || limits.MaxFiles < 1 || limits.MaxFindings < 1 || limits.MaxGraphNodes < 1 {
 		return nil, fmt.Errorf("engine: each limit must be positive: %+v", limits)
 	}
-	e := &Engine{langs: map[parser.Language]bool{}, limits: limits}
+	for _, p := range exclude {
+		if _, err := path.Match(p, ""); err != nil {
+			return nil, fmt.Errorf("engine: exclude pattern %q: %w", p, err)
+		}
+	}
+	e := &Engine{langs: map[parser.Language]bool{}, limits: limits, exclude: exclude}
 	for _, r := range rules {
 		if !r.Enabled {
 			continue

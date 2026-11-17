@@ -49,11 +49,12 @@ wiki:
 
 ## selfscan: scan the semscope sources with semscope and the overlay .semscope.cue
 selfscan:
-	$(GO) run ./cmd/semscope scan -r nasa-p10 -r .semscope.cue --fail-level warning cmd internal rules
+	$(GO) run ./cmd/semscope scan -r nasa-p10 -r .semscope.cue --fail-level warning .
 
-## sarif: write SARIF 2.1.0 and 2.2 reports for the semscope sources (Task 5.1)
-sarif:
-	@echo "sarif: not available before Task 5.1"
+## sarif: write the SARIF 2.1.0 and 2.2 reports of the semscope repository
+sarif: build
+	./bin/semscope scan -r nasa-p10 -r .semscope.cue --format sarif --sarif-version 2.1.0 -o semscope-self.sarif .
+	./bin/semscope scan -r nasa-p10 -r .semscope.cue --format sarif --sarif-version 2.2 -o semscope-self-v22.sarif .
 
 ## parity: compare semscope with nasa-lint.py on the src/ tree of PARITY_CORPUS (ADR-0005)
 parity:

@@ -2,6 +2,7 @@ package ruleset
 
 import (
 	"fmt"
+	"path"
 	"sort"
 
 	"cuelang.org/go/cue"
@@ -30,6 +31,28 @@ func decodeRules(v cue.Value) ([]Rule, error) {
 	}
 	sort.Slice(rules, func(i, j int) bool { return rules[i].ID < rules[j].ID })
 	return rules, nil
+}
+
+// decodeExcludes decodes the exclude map of v. A bad path pattern gives an error.
+func decodeExcludes(v cue.Value) (map[string]string, error) {
+	out := map[string]string{}
+	ex := v.LookupPath(cue.ParsePath("exclude"))
+	if !ex.Exists() {
+		return out, nil
+	}
+	if err := ex.Decode(&out); err != nil {
+		return nil, cueError("exclude", err)
+	}
+	if len(out) > MaxRules {
+		return nil, fmt.Errorf("ruleset: more than %d exclude patterns", MaxRules)
+	}
+	for pattern := range out {
+		if _, err := path.Match(pattern, ""); err != nil {
+			return nil, fmt.Errorf("ruleset: exclude pattern %q: %w", pattern, err)
+		}
+	}
+	assert.That(ex.Err() == nil, "the validated exclude map has no error")
+	return out, nil
 }
 
 // optionalString returns the string at path in v, or "" when the field is absent.

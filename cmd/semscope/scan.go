@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 
 	"github.com/spf13/cobra"
 
@@ -81,7 +82,12 @@ func runScan(cmd *cobra.Command, f *scanFlags, paths []string) error {
 	if len(paths) == 0 {
 		paths = []string{"."}
 	}
-	eng, err := engine.New(rs.Rules, engine.DefaultLimits())
+	exclude := make([]string, 0, len(rs.Exclude))
+	for pattern := range rs.Exclude {
+		exclude = append(exclude, pattern)
+	}
+	sort.Strings(exclude)
+	eng, err := engine.New(rs.Rules, engine.DefaultLimits(), exclude...)
 	if err != nil {
 		return err
 	}
@@ -94,7 +100,7 @@ func runScan(cmd *cobra.Command, f *scanFlags, paths []string) error {
 	if err != nil {
 		return err
 	}
-	if err := writeReport(cmd.OutOrStdout(), f, res); err != nil {
+	if err := writeReport(cmd.OutOrStdout(), f, res, rs.Active()); err != nil {
 		return err
 	}
 	assert.That(res.Files >= 0, "the scan counts its files")
@@ -105,7 +111,7 @@ func runScan(cmd *cobra.Command, f *scanFlags, paths []string) error {
 }
 
 // writeReport writes res in the selected format to the --output file or to stdout.
-func writeReport(stdout io.Writer, f *scanFlags, res engine.Result) (err error) {
+func writeReport(stdout io.Writer, f *scanFlags, res engine.Result, active []ruleset.Rule) (err error) {
 	assert.That(stdout != nil && f != nil, "stdout and f are not nil")
 	w := stdout
 	if f.output != "" {
@@ -124,7 +130,7 @@ func writeReport(stdout io.Writer, f *scanFlags, res engine.Result) (err error) 
 	case "json":
 		return report.WriteJSON(w, res, version.Get().Version)
 	case "sarif":
-		return fmt.Errorf("--format sarif: the SARIF writer arrives in Task 5.1")
+		return report.WriteSARIF(w, f.sarifVersion, res, active, version.Get().Version)
 	}
 	assert.That(f.format == "text", "validate allows three formats")
 	return report.WriteText(w, res)

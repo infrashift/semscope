@@ -45,6 +45,7 @@ The rules target C. Go has garbage collection, closures and interfaces, and no `
 - An input that exceeds a limit fails with a clear error.
 - The Go gate exempts the test files. golangci-lint still checks them.
 - The self-scan turns off NASA-P10-03 through the overlay `.semscope.cue`. The overlay records the reason.
+- The overlay also excludes `scripts`: the Python gate tooling. `nasa-lint.py` stays byte-identical, because it is the Zig oracle.
 - Each package variable of semscope carries `semscope: allow(NASA-P10-06) <reason>`: two embedded files, one compiled pattern and one sentinel error.
 - The self-scan and `nasa-lint-go.py` report the same R5 counts and the same R7 lines for the semscope sources.
 
