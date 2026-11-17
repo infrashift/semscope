@@ -39,7 +39,7 @@ LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMI
 
 ## docs-style: check the documentation against ASD-STE100 rules
 @docs-style:
-    $(PYTHON) -I scripts/ste-check.py
+    $(PYTHON) -I scripts/ste-check.py --strict
 
 ## wiki: validate the OKF wiki
 @wiki:

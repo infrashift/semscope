@@ -3,12 +3,12 @@
 
 Errors (exit 1): banned words and phrases, procedural steps over 20 words,
 descriptive sentences over 25 words.
-Warnings (exit 0): possible passive voice.
+Warnings (exit 0): possible passive voice. With --strict, a warning also gives exit 1.
 The check reads the Markdown files, the OKF wiki, the full-line comments of
 the Go sources in cmd, internal and rules, and the cobra Short and Long help
 strings. It skips Go test files, testdata, directive comments (`//go:`,
 `//nolint`, `// nasa-lint:`, `// semscope:`) and tab-indented code in comments.
-Run from the repository root: python3 -I scripts/ste-check.py
+Run from the repository root: python3 -I scripts/ste-check.py [--strict]
 Adapted from the whac-a-leak checker.
 """
 import pathlib
@@ -155,7 +155,8 @@ def main():
         for start, block in go_blocks(p.read_text(encoding="utf-8")):
             check(p, "\n" * start + "\n".join(block), report)
     print(f"ste-check: {counts['error']} error(s), {counts['warning']} warning(s)")
-    return 1 if counts["error"] else 0
+    strict = "--strict" in sys.argv[1:]
+    return 1 if counts["error"] or (strict and counts["warning"]) else 0
 
 
 if __name__ == "__main__":

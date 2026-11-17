@@ -97,7 +97,7 @@ Tracking: [ISSUE-002](.okfw/issues/issue-002-phase-2-version-package-and-cobra-c
 
 Tracking: [ISSUE-003](.okfw/issues/issue-003-phase-3-composable-cue-ruleset-engine--01a1e97296e2.md)
 
-- [ ] **Task 3.1: CUE ruleset schema.** Write `internal/ruleset/schema.cue`. Load it with `cuelang.org/go/cue/cuecontext`. The schema has these parts:
+- [x] **Task 3.1: CUE ruleset schema.** Write `internal/ruleset/schema.cue`. Load it with `cuelang.org/go/cue/cuecontext`. The schema has these parts:
   - The `rules` map uses the stable rule ID as the key: `rules: [ID=string]: #Rule & {id: ID}`.
   - `id`: the stable identifier, for example `"NASA-P10-01"`.
   - `enabled`: `bool | *true`. An overlay sets `enabled: false` to omit a rule.
