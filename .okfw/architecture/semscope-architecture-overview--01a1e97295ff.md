@@ -6,9 +6,9 @@ tags:
   - "architecture"
   - "overview"
 created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:21:28-06:00"
+timestamp: "2026-11-17T07:07:37-06:00"
 description: "The packages of semscope and the data flow from the command line to a SARIF report."
-status: "draft"
+status: "stable"
 ---
 
 # semscope architecture overview
@@ -53,8 +53,13 @@ The engine has a fixed upper bound for each kind of work: files, file size, synt
 - The cycle search is an iterative three-color depth-first search over sorted nodes, with one finding for each back edge. The oracles use the same search, so the findings match. A Tarjan search gives components, not the cycle path of each back edge.
 - Each finding goes through the suppression check: `semscope: allow(<ID>)`, or `nasa-lint: allow(R<n>)` for a NASA-P10 rule, on the line or the line above.
 
+## Reports
+- `internal/report` writes text, JSON and SARIF. [ADR-0008](/decisions/adr-0008-go-sarif-writes-the-sarif-reports--01a1e9998cbd.md) records the SARIF design.
+- The JSON report also gives the function and assertion counts of each language. The parity tests read them.
+- Each report is the same on each run. The engine sorts the findings, and the SARIF 2.2 `guid` comes from the report content.
+
 ## Self-scan
-`zmake selfscan` runs `semscope scan -r nasa-p10 -r .semscope.cue --fail-level warning` on `cmd`, `internal` and `rules`. The overlay `.semscope.cue` turns off NASA-P10-03 for the R3 deviation of ADR-0003.
+`zmake selfscan` runs `semscope scan -r nasa-p10 -r .semscope.cue --fail-level warning .` on the whole repository. The overlay `.semscope.cue` turns off NASA-P10-03 for the R3 deviation of ADR-0003. It also excludes the Python gate scripts. `zmake sarif` writes the same scan as SARIF 2.1.0 and SARIF 2.2.
 
 ## Related
 - [ADR-0002](/decisions/adr-0002-composable-cue-rulesets-with-a-nasa-p10-baseline--01a1e9729667.md): composable CUE rulesets.

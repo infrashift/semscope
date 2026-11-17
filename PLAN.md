@@ -150,7 +150,7 @@ Tracking: [ISSUE-005](.okfw/issues/issue-005-phase-5-sarif-reports-and-self-host
   - Set `tool.driver.name` to `"semscope"`. Set `tool.driver.version`, `tool.driver.informationUri` and `tool.driver.rules`. The rules list holds only the active rules.
   - Give each finding a repository-relative `artifactLocation.uri`, a `ruleId` and a `level`. Add the 1-based `startLine`, `startColumn`, `endLine` and `endColumn`.
   - Call `rep.Validate()` before the writer writes the report.
-- [ ] **Task 5.2: Self-hosting gate and wiki sync.** Run the full gate:
+- [x] **Task 5.2: Self-hosting gate and wiki sync.** Run the full gate:
   1. Run `zmake check` and `zmake -f Makefile check`.
   2. Run `zmake build`.
   3. Run `./bin/semscope --version`.

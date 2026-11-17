@@ -6,9 +6,9 @@ tags:
   - "spec"
   - "cli"
 created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:21:28-06:00"
+timestamp: "2026-11-17T07:07:37-06:00"
 description: "The commands, flags, outputs and exit codes of the semscope command line."
-status: "draft"
+status: "stable"
 ---
 
 # CLI contract
