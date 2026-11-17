@@ -53,8 +53,8 @@ sample_a.rs:14:5: error: NASA-P10-10: construct `unsafe { x(); }`
 sample_a.zig:4:1: error: NASA-P10-06: container-level `var counter`
 sample_a.zig:8:5: error: NASA-P10-02: unbounded loop `while (true)`
 sample_a.zig:11:5: error: NASA-P10-07: discarded call result `_ = f(...)`
-sample_a.zig:12:15: error: NASA-P10-07: swallowed error `catch {}`
-sample_a.zig:13:5: error: NASA-P10-07: `catch unreachable` hides an error
+sample_a.zig:12:21: error: NASA-P10-07: swallowed error `catch {}`
+sample_a.zig:13:11: error: NASA-P10-07: `catch unreachable` hides an error
 sample_a.zig:14:21: error: NASA-P10-07: swallowed error `else |_| {}`
 sample_a.zig:17:14: error: NASA-P10-09: pointer to a function
 sample_a.zig:18:14: error: NASA-P10-09: 2 levels of pointer indirection (max 1)

@@ -211,16 +211,21 @@ func (w *walker) addFunction(n *ts.Node, fn Function) error {
 	return nil
 }
 
-// addCall records a call of the callee text at node n.
+// addCall records a call of the callee text at node n. A callee without a
+// name gives no record. The Zig grammar parses the range `(n - 1)..` in
+// `for ((n - 1)..m)` as such a callee.
 func (w *walker) addCall(n *ts.Node, callee string) error {
 	assert.That(n != nil, "n is not nil")
 	assert.That(callee != "", "a call has a callee")
-	if err := w.count(); err != nil {
-		return err
-	}
 	callee = normalizeCallee(callee)
 	qual, name := splitCallee(callee)
 	assert.That(strings.HasSuffix(callee, name), "the name ends the callee")
+	if name == "" {
+		return nil
+	}
+	if err := w.count(); err != nil {
+		return err
+	}
 	parent := n.Parent()
 	unused := parent != nil && parent.Kind() == "expression_statement"
 	w.f.Calls = append(w.f.Calls, Call{
@@ -240,7 +245,10 @@ func (w *walker) addSite(n *ts.Node, k SiteKind, detail string, depth int) error
 	return nil
 }
 
-// normalizeCallee removes white space and type arguments in [] or <> from a callee text.
+// normalizeCallee removes white space and type arguments in [] or <> from a
+// callee text. An index inside the callee becomes "[]", so that `p[0].Msg`
+// gives the qualifier "p[]" and not the receiver "p". The type arguments at
+// the end, as in `f[int]`, go away.
 func normalizeCallee(s string) string {
 	var b strings.Builder
 	depth := 0
@@ -250,21 +258,32 @@ func normalizeCallee(s string) string {
 			depth++
 		case r == ']' || r == '>':
 			depth = max(depth-1, 0)
+			if depth == 0 && r == ']' {
+				b.WriteString("[]")
+			}
 		case depth == 0 && r != ' ' && r != '\t' && r != '\n' && r != '\r':
 			b.WriteRune(r)
 		}
 	}
-	out := strings.TrimSuffix(strings.ReplaceAll(b.String(), "::::", "::"), "::")
+	out := strings.ReplaceAll(b.String(), "::::", "::")
+	for strings.HasSuffix(out, "[]") || strings.HasSuffix(out, "::") {
+		out = strings.TrimSuffix(strings.TrimSuffix(out, "[]"), "::")
+	}
 	assert.That(len(out) <= len(s), "normalizing does not grow the text")
 	assert.That(!strings.ContainsAny(out, " \t\n"), "no white space remains")
 	return out
 }
 
-// splitCallee splits a callee text at the last "." or "::" into a qualifier and a name.
+// splitCallee splits a callee text at the last "." or "::" into a qualifier
+// and a name. A Zig decl literal `.init` gets the qualifier ".": it names a
+// declaration of the result type, not a function of the file.
 func splitCallee(callee string) (string, string) {
 	cut := strings.LastIndexAny(callee, ".:")
 	if cut < 0 {
 		return "", callee
+	}
+	if cut == 0 && callee[0] == '.' {
+		return ".", callee[1:]
 	}
 	name := callee[cut+1:]
 	head := strings.TrimRight(callee[:cut], ":.")

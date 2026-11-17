@@ -107,13 +107,17 @@ func goLoopUnbounded(n *ts.Node, src []byte) bool {
 }
 
 // goDiscard records an assignment whose last left operand is `_` and whose
-// right side is one call: `_ = f()` or `x, _ := f()`.
+// right side is one call: `_ = f()` or `x, _ := f()`. A conversion to a
+// parenthesized type, as in `var _ I = (*T)(nil)`, is not a call.
 func (w *walker) goDiscard(n *ts.Node) error {
 	assert.That(w.lang == Go, "the file is Go")
 	left, right := n.ChildByFieldName("left"), n.ChildByFieldName("right")
 	names := 0
 	var last *ts.Node
 	if n.Kind() == "var_spec" {
+		if n.ChildByFieldName("type") != nil {
+			return nil // `var _ I = T(nil)` checks at compile time that T implements I
+		}
 		right = n.ChildByFieldName("value")
 		for i := uint(0); i < n.NamedChildCount() && n.NamedChild(i).Kind() == "identifier"; i++ {
 			last, names = n.NamedChild(i), names+1
@@ -124,8 +128,12 @@ func (w *walker) goDiscard(n *ts.Node) error {
 	if last == nil || w.text(last) != "_" || right == nil || right.NamedChildCount() != 1 {
 		return nil
 	}
-	if right.NamedChild(0).Kind() != "call_expression" {
+	call := right.NamedChild(0)
+	if call.Kind() != "call_expression" {
 		return nil
+	}
+	if fn := call.ChildByFieldName("function"); fn != nil && fn.Kind() == "parenthesized_expression" {
+		return nil // a conversion `(*T)(nil)`, for example `var _ I = (*T)(nil)`
 	}
 	assert.That(names >= 1, "the left side has one or more names")
 	detail := "discarded call result `_ = f(...)`"

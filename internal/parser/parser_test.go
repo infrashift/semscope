@@ -113,6 +113,21 @@ func TestTestFilesAreExempt(t *testing.T) {
 	}
 }
 
+func TestCallsHaveNames(t *testing.T) {
+	p := newTestParser(t)
+	src := "fn f(n: usize) void {\n    for ((n - 1)..(2 * n)) |_| {}\n    for (0..(n - 1) / 2) |_| {}\n    g();\n}\n"
+	f, tree, err := p.Parse("range.zig", Zig, []byte(src))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tree.Close()
+	for _, c := range f.Calls {
+		if c.Name == "" {
+			t.Errorf("call without a name: callee %q at line %d", c.Callee, c.Pos.Line)
+		}
+	}
+}
+
 func TestLimits(t *testing.T) {
 	small := DefaultLimits()
 	small.MaxFileBytes = 4
@@ -157,6 +172,10 @@ func TestNormalizeAndSplitCallee(t *testing.T) {
 		"Vec::<u8>::new":   {"Vec::new", "Vec", "new"},
 		"f[int]":           {"f", "", "f"},
 		"std.debug.assert": {"std.debug.assert", "debug", "assert"},
+		"p[0].Msg":         {"p[].Msg", "p[]", "Msg"},
+		".init":            {".init", ".", "init"},
+		"::f":              {"::f", "", "f"},
+		"x.items[i][j].f":  {"x.items[][].f", "items[][]", "f"},
 	} {
 		got := normalizeCallee(in)
 		qual, name := splitCallee(got)

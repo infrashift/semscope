@@ -92,5 +92,5 @@ Write `// semscope: allow(NASA-P10-07) <reason>` on the line of the finding or o
 
 - `zmake check` runs every gate: the oracle scripts, gofmt, go vet, golangci-lint, the race tests, the wiki checks, the STE check and the self-scan.
 - `zmake -f Makefile check` runs the same gates from the GNU Make file.
-- `zmake parity` compares semscope with `nasa-lint.py` on the zmake source tree.
+- `zmake parity` compares semscope with the oracles on real code: zmake, the Zig standard library and six Go modules. `scripts/parity_corpora.py` finds them.
 - `PLAN.md` is the phase checklist. The OKF wiki in `.okfw/` records the design decisions and the specs.

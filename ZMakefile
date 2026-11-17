@@ -7,7 +7,8 @@ PYTHON ?= python3
 GOLANGCI_LINT ?= $(shell $(GO) env GOPATH)/bin/golangci-lint
 GOFMT ?= $(shell $(GO) env GOROOT)/bin/gofmt
 GO_DIRS := cmd internal rules
-PARITY_CORPUS ?= $(shell cd ../zmake 2>/dev/null && pwd)
+PARITY_CORPUS ?= $(shell $(PYTHON) -I scripts/parity_corpora.py zig)
+PARITY_GO_CORPUS ?= $(shell $(PYTHON) -I scripts/parity_corpora.py go)
 VERSION_PKG := github.com/infrashift/semscope/internal/version
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo unknown)
@@ -56,9 +57,9 @@ LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMI
     ./bin/semscope scan -r nasa-p10 -r .semscope.cue --format sarif --sarif-version 2.1.0 -o semscope-self.sarif .
     ./bin/semscope scan -r nasa-p10 -r .semscope.cue --format sarif --sarif-version 2.2 -o semscope-self-v22.sarif .
 
-## parity: compare semscope with nasa-lint.py on the src/ tree of PARITY_CORPUS (ADR-0005)
+## parity: compare semscope with the oracles on the Zig and Go corpora (ADR-0005, scripts/parity_corpora.py)
 @parity:
-    SEMSCOPE_PARITY_CORPUS=$(PARITY_CORPUS) $(GO) test -count=1 -run NasaParityCorpus -v ./internal/engine/
+    SEMSCOPE_PARITY_CORPUS="$(PARITY_CORPUS)" SEMSCOPE_PARITY_GO_CORPUS="$(PARITY_GO_CORPUS)" $(GO) test -count=1 -timeout 900s -run NasaParityCorpus -v ./internal/engine/
 
 ## check: run every gate
 @check: lint test wiki docs-style selfscan

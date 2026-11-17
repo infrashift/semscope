@@ -4,15 +4,22 @@
 This script is the Go port of nasa-lint.py. ADR-0003 adapts the rules to Go.
 The script checks:
   R1  no `goto`, and no direct or indirect recursion
-  R2  no `for {` or `for ;; {` loop: every loop needs a visible bound
-  R4  functions of 60 lines or fewer (the `func` line to the closing brace)
+  R2  no `for {`, `for ;; {`, `for true {` or `for init; ; post {` loop:
+      every loop needs a visible bound
+  R4  functions of 60 lines or fewer (the `func` line to the closing brace);
+      a one-line function `func f() int { return 1 }` is a function too
   R5  an average of 2 or more assertions (`assert.That(`) per function
-  R7  no discarded call results: `_ = f(...)`, or `_` as the last result of a call
-  R9  no function types of our own: `type T func(`, and func-typed fields,
-      variables, parameters and results
+  R7  no discarded call results: `_ = f(...)`, or `_` as the last result of a
+      call; the call must be the whole right side, so `v, _ := f().(T)` is
+      not a finding
+  R9  no function types of our own: `type T func(`, `type T = func(`, and
+      func-typed fields, variables, parameters (also `...func(`), results and
+      elements (`[]func(`, `map[K]func(`, `chan func(`)
 The call graph of R1 has one node per package function and per method. An
 edge goes to a function of the same package (`f(`) or to a method of the same
-receiver type (`r.m(` where `r` is the receiver). Other calls have no edge, the
+receiver type (`r.m(` where `r` is the receiver). A method call on an
+expression, as in `g().m(` or `p[0].m(`, and a method declaration of an
+interface in a function body have no edge. Other calls have no edge, the
 same as nasa-lint.py. Go forbids import cycles, so a cycle of direct calls
 stays inside one package.
 Test files (`_test.go`) and `testdata`, `vendor` and hidden directories are
@@ -48,22 +55,31 @@ KEYWORDS = {
     "fallthrough", "for", "func", "go", "goto", "if", "import", "interface",
     "map", "package", "range", "return", "select", "struct", "switch", "type", "var",
 }
-FUNC_TYPE = r"(?:map\[[^\]]*\]|\[\w*\])*\*?func\s*\("
+FUNC_TYPE = r"(?:\.\.\.)?(?:map\[[^\]]*\]|\[\w*\])*\*?func\s*\("
 LINE_RULES = [
     ("R1", re.compile(r"\bgoto\b"), "`goto` statement"),
     ("R2", re.compile(r"\bfor\s*\{"), "unbounded loop `for {`"),
     ("R2", re.compile(r"\bfor\s*;\s*;\s*\{"), "unbounded loop `for ;; {`"),
     ("R2", re.compile(r"\bfor\s+true\s*\{"), "unbounded loop `for true {`"),
+    ("R2", re.compile(r"\bfor\b[^;{]*;\s*;"), "unbounded loop `for init; ; post {`"),
     ("R7", re.compile(r"(?<![\w.,]\s)(?<![\w.,])_\s*=\s*[\w.]*\w\s*(?:\[[^\]]*\])?\s*\("),
      "discarded call result `_ = f(...)`"),
     ("R7", re.compile(r"\b\w+\s*(?:,\s*\w+\s*)*,\s*_\s*:?=\s*[\w.]*\w\s*(?:\[[^\]]*\])?\s*\("),
      "discarded call result `x, _ := f(...)`"),
-    ("R9", re.compile(r"^\s*type\s+\w+(?:\[[^\]]*\])?\s+" + FUNC_TYPE), "function type declaration"),
+    ("R9", re.compile(r"^\s*type\s+\w+(?:\[[^\]]*\])?\s+(?:=\s*)?" + FUNC_TYPE), "function type declaration"),
     ("R9", re.compile(r"^\s*(?:var\s+)?(?!(?:" + "|".join(sorted(KEYWORDS)) + r")\b)\w+(?:\s*,\s*\w+)*\s+" + FUNC_TYPE),
      "func-typed field or variable"),
     ("R9", re.compile(r"[(,]\s*\w+(?:\s*,\s*\w+)*\s+" + FUNC_TYPE), "func-typed parameter"),
-    ("R9", re.compile(r"\)\s*\(?\s*" + FUNC_TYPE), "func-typed result"),
+    ("R9", re.compile(r"\)\s+(?:\((?:[^()]*,\s*)?)?" + FUNC_TYPE), "func-typed result"),
+    ("R9", re.compile(r"(?:\[\w*\]|map\[[^\]]*\]|\bchan\s+|\.\(\s*)\*?func\s*\("), "func-typed element"),
 ]
+# A fallback rule reports a line only when no other rule of its R number
+# reports the line: `for i := 0; ; i++ {`, but not `for ;; {` twice, and
+# `make([]func(), n)`, `x := map[string]func(){` or `v.(func())`.
+FALLBACK_RULES = {"unbounded loop `for init; ; post {`", "func-typed element"}
+# A line that starts with a method declaration of an interface, for
+# example `Deadline() (time.Time, bool)`, holds no call.
+METHOD_SPEC_RE = re.compile(r"^\s*[A-Za-z_]\w*\s*\([^()]*\)\s+[\w*\[(]")
 
 
 def strip_go(text):
@@ -99,16 +115,39 @@ def strip_go(text):
     return "".join(out).split("\n")
 
 
+def whole_call(code, start):
+    """Report whether the call that opens at code[start] is the whole right
+    side: `x, _ := f()` or `_ = a.f().g()`, but not `x, _ := f().(T)`. A call
+    that does not close on its line counts as whole."""
+    i = start
+    for _ in range(len(code)):
+        depth, j = 0, i
+        while j < len(code):
+            depth += {"(": 1, ")": -1}.get(code[j], 0)
+            if depth == 0:
+                break
+            j += 1
+        if j >= len(code):
+            return True
+        rest = code[j + 1:]
+        nxt = re.match(r"\s*(?:\.\s*\w+\s*(?:\[[^\]]*\])?\s*)?\(", rest)
+        if not nxt:
+            return rest.strip() == "" or rest.lstrip()[:1] in (";", "}")
+        i = j + nxt.end()
+    return True
+
+
 def suppressed(lines, idx, rule):
     tag = f"nasa-lint: allow({rule})"
     return tag in lines[idx] or (idx > 0 and tag in lines[idx - 1])
 
 
 def body_open(code, fn_idx):
-    """Return the line where the body of the func on `fn_idx` opens, or None."""
+    """Return the line where the body of the func on `fn_idx` opens, or None.
+    A one-line function `func f() int { return 1 }` opens on its own line."""
     for i in range(fn_idx, min(fn_idx + 20, len(code))):
         s = code[i].strip()
-        if s.endswith("{"):
+        if s.endswith("{") or (i == fn_idx and s.endswith("}") and one_line_body(s) is not None):
             return i
         if i > fn_idx and (not s or s.startswith("func")):
             return None
@@ -125,8 +164,26 @@ def block_end(code, start):
     return len(code) - 1
 
 
-def body_text(code, open_idx, end):
+def one_line_body(line):
+    """Return the text after the body brace of a one-line func, or None.
+    The body brace is the first `{` after the parameters, outside parentheses,
+    that does not follow `struct` or `interface`."""
+    depth, closed = 0, False
+    for i, ch in enumerate(line):
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            closed = closed or depth == 0
+        elif ch == "{" and depth == 0 and closed and not re.search(r"\b(?:struct|interface)\s*$", line[:i]):
+            return line[i + 1:]
+    return None
+
+
+def body_text(code, start, open_idx, end):
     first = code[open_idx]
+    if open_idx == start == end:
+        return [one_line_body(first.strip()) or ""]
     return [first[first.rfind("{") + 1:]] + code[open_idx + 1:end + 1]
 
 
@@ -168,7 +225,7 @@ def scan_file(root, path):
         fns.append({
             "name": name, "recv": m.group(1), "type": recv_type,
             "key": (pkgdir, f"{recv_type}.{name}" if recv_type else name),
-            "start": i, "end": end, "body": body_text(code, open_idx, end),
+            "start": i, "end": end, "body": body_text(code, i, open_idx, end),
             "helper": is_test_helper(name),
         })
     return {"path": path, "lines": lines, "code": code, "pkgdir": pkgdir,
@@ -178,9 +235,11 @@ def scan_file(root, path):
 def calls_of(fn, f):
     edges = set()
     for c in fn["body"]:
+        if METHOD_SPEC_RE.match(c) and not c.rstrip().endswith("{"):
+            continue
         for m in CALL_RE.finditer(c):
             qual, name = m.group(1), m.group(2)
-            if name in KEYWORDS:
+            if name in KEYWORDS or (qual is None and c[:m.start()].rstrip().endswith(".")):
                 continue
             if qual is None:
                 edges.add((f["pkgdir"], name))
@@ -245,8 +304,15 @@ def main():
 
     for f in files:
         for i, c in enumerate(f["code"]):
+            hits = set()
             for rule, rx, msg in LINE_RULES:
-                if rx.search(c) and not suppressed(f["lines"], i, rule):
+                m = rx.search(c)
+                if not m or (msg in FALLBACK_RULES and rule in hits):
+                    continue
+                if rule == "R7" and not whole_call(c, m.end() - 1):
+                    continue
+                hits.add(rule)
+                if not suppressed(f["lines"], i, rule):
                     err(f, i, rule, msg)
         for fn in f["fns"]:
             if fn["helper"]:

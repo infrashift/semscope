@@ -173,7 +173,8 @@ Tracking: [ISSUE-006](.okfw/issues/issue-006-phase-6-exclude-flag-go-type-checks
   - The check finds each call statement, `defer` statement and `go` statement that drops an `error` result.
   - The parameter `go_ignore_calls` names calls that never return an error, for example `(*strings.Builder).WriteString`.
   - The default is `false`, so the parity with `nasa-lint-go.py` does not change. The self-scan overlay `.semscope.cue` sets it to `true`.
-- [ ] **Task 6.3: More parity corpora.** The corpus parity test reads a list of Zig trees and a list of Go trees.
-  - Zig: zmake, ztree and the Zig standard library when they are on the disk.
-  - Go: the source modules of the semscope dependencies in the module cache.
+- [x] **Task 6.3: More parity corpora.** The corpus parity test reads a list of Zig trees and a list of Go trees. `scripts/parity_corpora.py` gives the default lists.
+  - Zig: zmake and the Zig standard library when they are on the disk. ztree is not a default corpus, because it changes each day.
+  - Go: the fixture `corpus-forms` and six source modules of the semscope dependencies in the module cache.
   - Each divergence gets a fix or a record with a reason in `testdata/nasa_p10/parity-divergences.json`.
+  - A record is a line record, a class record with an exact count, or a stats record.

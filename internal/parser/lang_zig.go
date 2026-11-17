@@ -26,7 +26,7 @@ func (w *walker) visitZig(n *ts.Node, kind string) (bool, error) {
 		if id := n.NamedChild(0); id != nil {
 			return true, w.addSite(n, SiteDirective, w.text(id), 0)
 		}
-	case "while_statement":
+	case "while_statement", "while_expression":
 		if cond := n.ChildByFieldName("condition"); cond != nil && w.text(cond) == "true" {
 			return true, w.addSite(n, SiteUnboundedLoop, "unbounded loop `while (true)`", 0)
 		}
@@ -36,6 +36,8 @@ func (w *walker) visitZig(n *ts.Node, kind string) (bool, error) {
 		return true, w.zigCatch(n)
 	case "else_clause":
 		return true, w.zigElse(n)
+	case "if_expression":
+		return true, w.zigIfExprElse(n)
 	case "pointer_type":
 		return w.pointerChain(n, "pointer_type", "pointer_type")
 	}
@@ -75,17 +77,54 @@ func (w *walker) zigDeclaration(n *ts.Node) error {
 			return err
 		}
 	}
-	if w.text(target) != "_" {
+	if !w.zigDiscardTarget(n, target, value) {
 		return nil
 	}
-	if value.Kind() == "try_expression" && value.NamedChildCount() > 0 {
-		value = value.NamedChild(0)
-	}
+	value = zigLeftOperand(value)
 	if value.Kind() != "call_expression" {
 		return nil
 	}
 	return w.addSite(n, SiteDiscard, "discarded call result `_ = f(...)`", 0)
 }
+
+// zigDiscardTarget reports whether `_` is a target of the declaration or
+// assignment n, for example `_ = f()` or `const a, _ = f()`.
+func (w *walker) zigDiscardTarget(n, target, value *ts.Node) bool {
+	assert.That(target != nil && value != nil, "zigDeclaration checks the operands")
+	if w.text(target) == "_" {
+		return true
+	}
+	if n.Kind() != "variable_declaration" {
+		return false
+	}
+	for i := uint(1); i+1 < n.NamedChildCount(); i++ {
+		if c := n.NamedChild(i); c != nil && c.Kind() == "identifier" && w.text(c) == "_" {
+			return true
+		}
+	}
+	assert.That(n.NamedChildCount() >= 2, "a declaration has a target and a value")
+	return false
+}
+
+// zigLeftOperand returns the leftmost operand of v through `try`, `orelse`,
+// `catch`, `.?` and binary operators: the call in `try f() orelse x`.
+// maxOperandSteps limits the descent.
+func zigLeftOperand(v *ts.Node) *ts.Node {
+	assert.That(v != nil, "v is not nil")
+	for steps := 0; steps < maxOperandSteps && v.NamedChildCount() > 0; steps++ {
+		switch v.Kind() {
+		case "try_expression", "catch_expression", "binary_expression", "null_coercion_expression":
+			v = v.NamedChild(0)
+		default:
+			return v
+		}
+	}
+	assert.That(v != nil, "a named child exists")
+	return v
+}
+
+// maxOperandSteps bounds the descent of zigLeftOperand.
+const maxOperandSteps = 64
 
 // zigContainerLevel reports whether a declaration belongs to a file, struct,
 // union, enum or opaque type. A var in a block, also a comptime block, is local.
@@ -118,7 +157,8 @@ func zigIsVar(n *ts.Node, src []byte) bool {
 	return false
 }
 
-// zigCatch records `catch {}` and `catch unreachable`.
+// zigCatch records `catch {}` and `catch unreachable` at the keyword catch.
+// A call before the keyword can start on an earlier line.
 func (w *walker) zigCatch(n *ts.Node) error {
 	assert.That(n.Kind() == "catch_expression", "n is a catch expression")
 	assert.That(w.lang == Zig, "the file is Zig")
@@ -126,11 +166,37 @@ func (w *walker) zigCatch(n *ts.Node) error {
 	if last == nil || countNamed(n, "payload") > 0 {
 		return nil
 	}
+	at := n
+	for i := uint(0); i < n.ChildCount(); i++ {
+		if c := n.Child(i); c != nil && c.Kind() == "catch" {
+			at = c
+			break
+		}
+	}
 	switch {
 	case last.Kind() == "block" && last.NamedChildCount() == 0:
-		return w.addSite(n, SiteDiscard, "swallowed error `catch {}`", 0)
+		return w.addSite(at, SiteDiscard, "swallowed error `catch {}`", 0)
 	case last.Utf8Text(w.src) == "unreachable":
-		return w.addSite(n, SiteDiscard, "`catch unreachable` hides an error", 0)
+		return w.addSite(at, SiteDiscard, "`catch unreachable` hides an error", 0)
+	}
+	return nil
+}
+
+// zigIfExprElse records `else |_| {}` of an if expression. The grammar
+// gives an if expression no else_clause node: the keyword else, the payload
+// and the block are children of the if expression.
+func (w *walker) zigIfExprElse(n *ts.Node) error {
+	assert.That(n.Kind() == "if_expression", "n is an if expression")
+	assert.That(w.lang == Zig, "the file is Zig")
+	count := n.ChildCount()
+	for i := uint(0); i+2 < count; i++ {
+		kw, payload, body := n.Child(i), n.Child(i+1), n.Child(i+2)
+		if kw == nil || payload == nil || body == nil || kw.Kind() != "else" {
+			continue
+		}
+		if payload.Kind() == "payload" && w.text(payload) == "|_|" && body.Kind() == "block" && body.NamedChildCount() == 0 {
+			return w.addSite(kw, SiteDiscard, "swallowed error `else |_| {}`", 0)
+		}
 	}
 	return nil
 }

@@ -1,0 +1,15 @@
+internal/b/b.go:19: R9: function type declaration
+internal/b/b.go:22: R9: func-typed parameter
+internal/b/b.go:27: R9: func-typed parameter
+internal/c/c.go:41: R7: discarded call result `x, _ := f(...)`
+internal/c/c.go:48: R2: unbounded loop `for init; ; post {`
+internal/c/c.go:56: R9: func-typed result
+internal/c/c.go:62: R9: func-typed element
+internal/c/c.go:71: R9: func-typed result
+internal/c/c.go:94: R7: discarded call result `_ = f(...)`
+internal/c/c.go:100: R2: unbounded loop `for init; ; post {`
+internal/c/c.go:107: R9: func-typed element
+internal/c/c.go:112: R9: function type declaration
+internal/b/b.go:13: R1: recursion: internal/b:Loop -> internal/b:Loop
+cmd,internal,rules: R5: 0 assertions in 26 functions (average 0.00, min 2.0)
+nasa-lint-go: 14 error(s); 26 functions, 0 assertions (average 0.00)

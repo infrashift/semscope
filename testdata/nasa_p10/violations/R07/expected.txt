@@ -9,7 +9,8 @@ rs/a.rs:3:13: error: NASA-P10-07: `unwrap` hides an error
 rs/a.rs:4:13: error: NASA-P10-07: `expect` hides an error
 zig/src/a.zig:13:5: error: NASA-P10-07: discarded call result `_ = f(...)`
 zig/src/a.zig:14:5: error: NASA-P10-07: discarded call result `_ = f(...)`
-zig/src/a.zig:15:5: error: NASA-P10-07: swallowed error `catch {}`
-zig/src/a.zig:16:9: error: NASA-P10-07: `catch unreachable` hides an error
+zig/src/a.zig:15:11: error: NASA-P10-07: swallowed error `catch {}`
+zig/src/a.zig:16:5: error: NASA-P10-07: discarded call result `_ = f(...)`
+zig/src/a.zig:16:15: error: NASA-P10-07: `catch unreachable` hides an error
 zig/src/a.zig:19:7: error: NASA-P10-07: swallowed error `else |_| {}`
-semscope: 14 finding(s) in 5 file(s): 14 error(s), 0 warning(s), 0 note(s)
+semscope: 15 finding(s) in 5 file(s): 15 error(s), 0 warning(s), 0 note(s)

@@ -1,1 +1,158 @@
-[]
+[
+  {
+    "corpus": "golang.org/x/tools@v0.52.0",
+    "path": "internal/jsonrpc2/stack/stacktest/stacktest.go",
+    "line": 16,
+    "rule": "NASA-P10-09",
+    "side": "semscope",
+    "reason": "the interface method Cleanup(func()) has an unnamed func-typed parameter; a line regex cannot tell it from a call with a func literal",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "side": "stats",
+    "oracle": [
+      11974,
+      2063
+    ],
+    "semscope": [
+      11976,
+      1871
+    ],
+    "reason": "nasa-lint.py counts the assertions of a nested function also in each enclosing function, skips assertions on the lines of { and }, and misses noinline and @\"name\" functions",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "rule": "NASA-P10-01",
+    "side": "oracle",
+    "count": 203,
+    "reason": "nasa-lint.py CALL_RE reads @builtin(, the decl literal .name( and x.f().g( as calls of a function of the same file; these false edges give cycles that semscope does not report",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "rule": "NASA-P10-01",
+    "side": "semscope",
+    "count": 6,
+    "reason": "the false edges of the oracle change its depth-first search, so it reports some real cycles at another head function; same-name functions of one file share one node in both tools",
+    "issue": "ISSUE-008"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/Io/Dispatch.zig",
+    "line": 1115,
+    "rule": "NASA-P10-04",
+    "side": "semscope",
+    "reason": "tree-sitter-zig v1.1.2 parses the Zig 0.17 identifier await as a keyword; the error recovery makes the function 275 lines long",
+    "issue": "ISSUE-008"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/Io/Uring.zig",
+    "line": 1526,
+    "rule": "NASA-P10-04",
+    "side": "semscope",
+    "reason": "tree-sitter-zig v1.1.2 parses the Zig 0.17 identifier await as a keyword; the error recovery makes the function 283 lines long",
+    "issue": "ISSUE-008"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/debug.zig",
+    "line": 728,
+    "rule": "NASA-P10-04",
+    "side": "semscope",
+    "reason": "nasa-lint.py FN_RE has no noinline, so the oracle does not see the function",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/zig/AstGen.zig",
+    "line": 8372,
+    "rule": "NASA-P10-04",
+    "side": "semscope",
+    "reason": "a parameter type union(enum) { ends the signature line; nasa-lint.py takes it as the body and ends the function early",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/zig/AstGen.zig",
+    "line": 11552,
+    "rule": "NASA-P10-04",
+    "side": "semscope",
+    "reason": "a parameter type struct { ends the signature line; nasa-lint.py takes it as the body and ends the function early",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/zig/AstGen.zig",
+    "line": 13505,
+    "rule": "NASA-P10-04",
+    "side": "semscope",
+    "reason": "a parameter type struct { ends the signature line; nasa-lint.py takes it as the body and ends the function early",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/zig/AstRlAnnotate.zig",
+    "line": 346,
+    "rule": "NASA-P10-07",
+    "side": "oracle",
+    "reason": "const a, _ = f().field drops a field of a call result, not a call result; the nasa-lint.py regex sees _ = f(",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/Io/Threaded.zig",
+    "line": 7262,
+    "rule": "NASA-P10-07",
+    "side": "semscope",
+    "reason": "catch and unreachable are on two lines; the nasa-lint.py line rules read one line",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/Io/Threaded.zig",
+    "line": 14989,
+    "rule": "NASA-P10-07",
+    "side": "semscope",
+    "reason": "_, x = f() discards a call result; the nasa-lint.py regex needs _ =",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/Io/Uring.zig",
+    "line": 5863,
+    "rule": "NASA-P10-07",
+    "side": "semscope",
+    "reason": "catch and unreachable are on two lines; the nasa-lint.py line rules read one line",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/Progress.zig",
+    "line": 1277,
+    "rule": "NASA-P10-07",
+    "side": "semscope",
+    "reason": "_, const x = f() discards a call result; the nasa-lint.py regex needs _ =",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/compress/flate/Compress.zig",
+    "line": 1966,
+    "rule": "NASA-P10-07",
+    "side": "semscope",
+    "reason": "_ = try @This().drain(...) discards a call result; the nasa-lint.py regex does not match a callee that starts with @",
+    "issue": "ISSUE-007"
+  },
+  {
+    "corpus": "zig-std-0.17.1",
+    "path": "src/unicode.zig",
+    "line": 90,
+    "rule": "NASA-P10-07",
+    "side": "semscope",
+    "reason": "catch and unreachable are on two lines; the nasa-lint.py line rules read one line",
+    "issue": "ISSUE-007"
+  }
+]
