@@ -1,0 +1,60 @@
+# semscope development gates in modern mode. zmake reads this file before the
+# Makefile. The Makefile holds the same tasks in plain GNU Make syntax.
+# Run `zmake check` for the ZMakefile. Run `zmake -f Makefile check` for the Makefile.
+
+GO ?= go
+PYTHON ?= python3
+GOLANGCI_LINT ?= $(shell $(GO) env GOPATH)/bin/golangci-lint
+GOFMT ?= $(shell $(GO) env GOROOT)/bin/gofmt
+GO_DIRS := cmd internal rules
+VERSION_PKG := github.com/infrashift/semscope/internal/version
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
+COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo unknown)
+BUILD_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMIT) -X $(VERSION_PKG).BuildDate=$(BUILD_DATE)
+
+## all: run every gate (the default goal)
+@all: check
+
+## build: compile the semscope binary into bin/
+@build:
+    $(GO) build -trimpath -ldflags "$(LDFLAGS)" -o bin/semscope ./cmd/semscope
+
+## test: run the unit tests with the race detector
+@test:
+    $(GO) test -race ./...
+
+## lint: check the formatting, the Power of 10 rules and the static analyzers
+@lint:
+    @out=$$($(GOFMT) -l $(GO_DIRS)); test -z "$$out" || { echo "gofmt: $$out"; exit 1; }
+    $(PYTHON) -I scripts/nasa-lint.py
+    $(GO) vet ./...
+    $(GOLANGCI_LINT) run
+
+## fmt: format the Go sources in place
+@fmt:
+    $(GOFMT) -w $(GO_DIRS)
+
+## docs-style: check the documentation against ASD-STE100 rules
+@docs-style:
+    $(PYTHON) -I scripts/ste-check.py
+
+## wiki: validate the OKF wiki
+@wiki:
+    okfw validate --all
+    okfw validate --okf
+
+## selfscan: scan the semscope sources with semscope (Task 4.1)
+@selfscan:
+    @echo "selfscan: not available before Task 4.1"
+
+## sarif: write SARIF 2.1.0 and 2.2 reports for the semscope sources (Task 5.1)
+@sarif:
+    @echo "sarif: not available before Task 5.1"
+
+## parity: compare semscope with nasa-lint.py on a corpus (Task 4.2)
+@parity:
+    @echo "parity: not available before Task 4.2"
+
+## check: run every gate
+@check: lint test wiki docs-style selfscan

@@ -1,0 +1,52 @@
+# golangci-lint v2 configuration. The linters approximate the NASA Power of 10
+# rules for Go. scripts/nasa-lint-go.py checks recursion and assertion density.
+version: "2"
+
+linters:
+  default: standard
+  enable:
+    - depguard        # R10: no unsafe, no reflect
+    - errorlint       # R7: wrap and compare errors correctly
+    - forbidigo       # R5/R7: panic only through internal/assert
+    - funlen          # R4: 60 lines per function
+    - gochecknoglobals # R6: no mutable package state
+    - gocognit        # R1: simple control flow
+    - gosec           # R10: unsafe constructs
+    - misspell
+    - nakedret
+    - nestif          # R1: shallow nesting
+    - revive          # R10: doc comments and Go style
+    - unparam
+  settings:
+    depguard:
+      rules:
+        main:
+          list-mode: lax
+          deny:
+            - pkg: unsafe
+              desc: "NASA P10 rule 10 bans the unsafe package"
+            - pkg: reflect
+              desc: "NASA P10 rule 9 restricts indirection; use static types"
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    forbidigo:
+      forbid:
+        - pattern: ^panic$
+          msg: "use internal/assert for programmer errors; return an error for bad input"
+    funlen:
+      lines: 60
+      statements: -1
+      ignore-comments: false
+    gocognit:
+      min-complexity: 20
+    nestif:
+      min-complexity: 4
+  exclusions:
+    rules:
+      - path: internal/assert/assert\.go
+        linters: [forbidigo]
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

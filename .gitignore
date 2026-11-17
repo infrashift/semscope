@@ -1,0 +1,6 @@
+# Build output
+/bin/
+# SARIF reports from local scans
+*.sarif
+# Python byte code from the scripts
+__pycache__/
