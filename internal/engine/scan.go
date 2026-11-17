@@ -64,6 +64,11 @@ func (e *Engine) Scan(root string, paths []string) (Result, error) {
 		return Result{}, err
 	}
 	findings = append(findings, global...)
+	typed, err := e.goTypeChecks(sources, files)
+	if err != nil {
+		return Result{}, err
+	}
+	findings = append(findings, typed...)
 	if len(findings) > e.limits.MaxFindings {
 		return Result{}, fmt.Errorf("engine: %d findings (max %d)", len(findings), e.limits.MaxFindings)
 	}

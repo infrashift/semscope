@@ -4,7 +4,7 @@ semscope scans source code with composable CUE rulesets. The built-in ruleset `n
 
 ## Build
 
-semscope needs Go 1.25 or later and a C compiler, because cgo builds the Tree-sitter grammars. The gates also need Python 3, golangci-lint v2, okfw and zmake.
+semscope needs Go 1.26 or later and a C compiler, because cgo builds the Tree-sitter grammars. The gates also need Python 3, golangci-lint v2, okfw and zmake.
 
 1. Run `zmake build`.
 2. Run `./bin/semscope --version`.
@@ -71,12 +71,18 @@ semscope rules inspect nasa-p10 overlay.cue
 | NASA-P10-04 | Functions of `max_lines` (60) lines or fewer. |
 | NASA-P10-05 | An average of `min_assertions` (2) or more assertions for each function. |
 | NASA-P10-06 | No mutable global state. |
-| NASA-P10-07 | No discarded call results and no swallowed errors. |
+| NASA-P10-07 | No discarded call results and no swallowed errors. Set `go_types` to `true` for a Go check with type information. |
 | NASA-P10-08 | No token pasting, variadic macros, deep conditionals or dynamic code. |
 | NASA-P10-09 | One level of pointer indirection at most, and no function pointers. |
 | NASA-P10-10 | No unsafe constructs and no warning suppressions without a reason. |
 
 The checks of NASA-P10-01, -02, -04, -05, -07 and -09 match `scripts/nasa-lint.py` for Zig and `scripts/nasa-lint-go.py` for Go. The parity tests in `internal/engine` compare them line by line.
+
+The Go check with type information finds each call, `defer` and `go` statement that drops an `error` result. It needs the go command and a `go.mod`. The parameter `go_ignore_calls` names calls that never fail.
+
+```sh
+semscope scan --set NASA-P10-07.go_types=true .
+```
 
 ## Suppressions
 

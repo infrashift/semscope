@@ -85,6 +85,18 @@ rules: {
 		languages: *["go", "c", "cpp", "zig", "python", "rust"] | [...]
 		title:     "Check return values"
 		message:   "Check the return value of each call. Do not discard or swallow an error."
+		// go_types loads the Go packages with type information. It needs the
+		// go command and a go.mod. nasa-lint-go.py has no such check, so the
+		// default is false (ADR-0009).
+		params: {
+			go_types: *false | bool
+			go_ignore_calls: *[
+				"(*bytes.Buffer).Write", "(*bytes.Buffer).WriteByte", "(*bytes.Buffer).WriteRune", "(*bytes.Buffer).WriteString",
+				"(*strings.Builder).Write", "(*strings.Builder).WriteByte", "(*strings.Builder).WriteRune", "(*strings.Builder).WriteString",
+				"fmt.Fprint(*bytes.Buffer)", "fmt.Fprintf(*bytes.Buffer)", "fmt.Fprintln(*bytes.Buffer)",
+				"fmt.Fprint(*strings.Builder)", "fmt.Fprintf(*strings.Builder)", "fmt.Fprintln(*strings.Builder)",
+			] | [...string]
+		}
 		check: {
 			kind: "checked_returns"
 			must_check_calls: {

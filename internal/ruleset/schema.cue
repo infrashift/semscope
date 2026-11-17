@@ -49,6 +49,12 @@ package ruleset
 			allow_function_pointers: bool
 		}
 	}
+	if check.kind == "checked_returns" {
+		params: {
+			go_types?:        bool
+			go_ignore_calls?: [...string]
+		}
+	}
 	if check.kind == "restricted_preprocessor" {
 		params: max_conditional_depth: int & >=0
 	}
@@ -67,6 +73,9 @@ package ruleset
 #NarrowestScope: {kind: "narrowest_scope"}
 // must_check_calls names calls whose result the code must use. The parser
 // has no type information, so the list stands in for "non-void" in C and C++.
+// The parameter go_types turns on a Go check with type information: it
+// finds each call, defer and go statement that drops an error result.
+// go_ignore_calls names calls that never return a non-nil error.
 #CheckedReturns: {kind: "checked_returns", must_check_calls?: #PerLanguage}
 #RestrictedPreprocessor: {kind: "restricted_preprocessor", banned_directives?: #PerLanguage}
 #MaxPointerIndirection: {kind: "max_pointer_indirection"}

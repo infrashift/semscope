@@ -168,7 +168,7 @@ Tracking: [ISSUE-006](.okfw/issues/issue-006-phase-6-exclude-flag-go-type-checks
   - A flag pattern has the same syntax as a pattern in the `exclude` map of a ruleset.
   - The loader adds each flag pattern to the exclude map with the reason `--exclude flag`.
   - A bad pattern gives an error and exit status 2.
-- [ ] **Task 6.2: Type-aware Go check for NASA-P10-07.** Add the parameter `go_types: *false | bool` to `checked_returns`.
+- [x] **Task 6.2: Type-aware Go check for NASA-P10-07.** Add the parameter `go_types: *false | bool` to `checked_returns`.
   - When `go_types` is `true`, semscope loads the Go packages with type information (`golang.org/x/tools/go/packages`).
   - The check finds each call statement, `defer` statement and `go` statement that drops an `error` result.
   - The parameter `go_ignore_calls` names calls that never return an error, for example `(*strings.Builder).WriteString`.

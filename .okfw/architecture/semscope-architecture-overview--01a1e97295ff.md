@@ -31,6 +31,7 @@ semscope is a Go command-line tool. It reads a CUE ruleset, parses source files 
 | `internal/ruleset` | CUE schema, loader, overlays, omissions and overrides. Gives the resolved rules. |
 | `internal/parser` | One Tree-sitter adapter for each language. Gives a flat record of each file. |
 | `internal/engine` | Bounded worker pool, checkers, call graph, structural queries. |
+| `internal/gotypes` | Loads Go packages with type information. Finds the calls that drop an error result. |
 | `internal/report` | SARIF 2.1.0, SARIF 2.2, JSON and text writers. |
 | `rules/nasa_p10` | The CUE source of the `nasa-p10` ruleset, embedded in the binary. |
 
@@ -54,6 +55,7 @@ The engine has a fixed upper bound for each kind of work: files, file size, synt
 - Each finding goes through the suppression check: `semscope: allow(<ID>)`, or `nasa-lint: allow(R<n>)` for a NASA-P10 rule, on the line or the line above.
 
 ## Reports
+- `internal/gotypes` runs only when a `checked_returns` rule sets `go_types`. [ADR-0009](/decisions/adr-0009-type-information-for-the-go-check-of-nasa-p10-07--01a1eba86090.md) records the design.
 - `internal/report` writes text, JSON and SARIF. [ADR-0008](/decisions/adr-0008-go-sarif-writes-the-sarif-reports--01a1e9998cbd.md) records the SARIF design.
 - The JSON report also gives the function and assertion counts of each language. The parity tests read them.
 - Each report is the same on each run. The engine sorts the findings, and the SARIF 2.2 `guid` comes from the report content.

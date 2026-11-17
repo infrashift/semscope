@@ -9,3 +9,7 @@ rules: "NASA-P10-03": enabled: false
 // The Python gate scripts are tooling, not semscope code. scripts/nasa-lint.py
 // stays byte-identical with zmake, because it is the Zig oracle (ADR-0005).
 exclude: scripts: "Python gate tooling; nasa-lint.py stays byte-identical as the Zig oracle (ADR-0005)"
+
+// semscope checks its own Go code with type information: each call, defer
+// and go statement that drops an error is a finding (ADR-0009).
+rules: "NASA-P10-07": params: go_types: true

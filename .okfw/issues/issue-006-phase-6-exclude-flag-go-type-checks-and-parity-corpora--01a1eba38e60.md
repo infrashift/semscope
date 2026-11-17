@@ -24,9 +24,9 @@ Phase 5 closed the original plan. This phase adds the next steps from the daily 
 
 ## Acceptance Criteria
 - [x] `--exclude PATTERN` on `scan` and `rules inspect` adds an exclude pattern. A bad pattern gives exit status 2.
-- [ ] The parameter `go_types` of NASA-P10-07 turns on a Go check with type information. The check finds call statements that drop an `error` result.
-- [ ] The default of `go_types` is `false`, so the parity with `nasa-lint-go.py` does not change.
-- [ ] The self-scan turns on `go_types`.
+- [x] The parameter `go_types` of NASA-P10-07 turns on a Go check with type information. The check finds call statements that drop an `error` result.
+- [x] The default of `go_types` is `false`, so the parity with `nasa-lint-go.py` does not change.
+- [x] The self-scan turns on `go_types`.
 - [ ] The parity test reads more than one corpus for each language. Each divergence has a fix or a record with a reason.
 
 ## Related

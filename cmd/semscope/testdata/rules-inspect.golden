@@ -17,6 +17,7 @@ active rules: 10
       languages: go, c, cpp, zig, python, rust
   NASA-P10-07  error  checked_returns  Check return values
       languages: go, c, cpp, zig, python, rust
+      params: go_ignore_calls=["(*bytes.Buffer).Write", "(*bytes.Buffer).WriteByte", "(*bytes.Buffer).WriteRune", "(*bytes.Buffer).WriteString", "(*strings.Builder).Write", "(*strings.Builder).WriteByte", "(*strings.Builder).WriteRune", "(*strings.Builder).WriteString", "fmt.Fprint(*bytes.Buffer)", "fmt.Fprintf(*bytes.Buffer)", "fmt.Fprintln(*bytes.Buffer)", "fmt.Fprint(*strings.Builder)", "fmt.Fprintf(*strings.Builder)", "fmt.Fprintln(*strings.Builder)"] go_types=false
   NASA-P10-08  error  restricted_preprocessor  Limited preprocessor
       languages: go, c, cpp, zig, python, rust
       params: max_conditional_depth=2

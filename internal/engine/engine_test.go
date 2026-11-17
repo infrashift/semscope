@@ -232,3 +232,36 @@ func TestNasaTag(t *testing.T) {
 		}
 	}
 }
+
+func TestGoTypesCheck(t *testing.T) {
+	dir := "../../testdata/go_types"
+	rules := load(t, nil, "NASA-P10-07.go_types=true")
+	for i := range rules {
+		rules[i].Enabled = rules[i].ID == "NASA-P10-07"
+	}
+	res, err := scan(t, rules, DefaultLimits(), dir, dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := `drops.go:32:2: error: NASA-P10-07: unchecked error of ` + "`example.com/gotypes.fail`" + `
+drops.go:33:2: error: NASA-P10-07: unchecked error of ` + "`example.com/gotypes.pair`" + `
+drops.go:34:8: error: NASA-P10-07: unchecked error of ` + "`(example.com/gotypes.closer).Close` in a defer statement" + `
+drops.go:35:5: error: NASA-P10-07: unchecked error of ` + "`example.com/gotypes.fail` in a go statement" + `
+drops.go:36:2: error: NASA-P10-07: unchecked error of ` + "`example.com/gotypes.codedFail`" + `
+drops.go:42:2: error: NASA-P10-07: unchecked error of ` + "`fmt.Fprintln`" + `
+drops.go:45:2: error: NASA-P10-07: unchecked error of ` + "`f`" + `
+7 finding(s) in 2 file(s)
+`
+	if got := text(t, res); got != want {
+		t.Fatalf("findings:\n%s\nwant:\n%s", got, want)
+	}
+	off, err := scan(t, load(t, nil), DefaultLimits(), dir, dir+"/drops.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, f := range off.Findings {
+		if strings.HasPrefix(f.Message, "unchecked error") {
+			t.Errorf("go_types is false by default, but the scan reports %v", f)
+		}
+	}
+}

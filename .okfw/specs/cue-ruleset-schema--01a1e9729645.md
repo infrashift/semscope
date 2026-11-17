@@ -37,7 +37,7 @@ status: "stable"
 | `max_function_lines` | R4 | `max_lines: int & >0` | none |
 | `min_assertions` | R5 | `min_assertions: int & >=0`, `mode: "average" \| "per_function"` | `assert_calls?: #PerLanguage` |
 | `narrowest_scope` | R6 | none | none |
-| `checked_returns` | R7 | none | `must_check_calls?: #PerLanguage` |
+| `checked_returns` | R7 | `go_types?: bool`, `go_ignore_calls?: [...string]` ([ADR-0009](/decisions/adr-0009-type-information-for-the-go-check-of-nasa-p10-07--01a1eba86090.md)) | `must_check_calls?: #PerLanguage` |
 | `restricted_preprocessor` | R8 | `max_conditional_depth: int & >=0` | `banned_directives?: #PerLanguage` |
 | `max_pointer_indirection` | R9 | `max_pointer_depth: int & >=0`, `allow_function_pointers: bool` | none |
 | `ast_query` | any | none | `query: [#Language]: string`; each `@violation` capture gives a finding |
