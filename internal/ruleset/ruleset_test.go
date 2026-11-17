@@ -178,6 +178,23 @@ func TestExclude(t *testing.T) {
 	}
 }
 
+func TestFlagExclude(t *testing.T) {
+	dir := t.TempDir()
+	overlay := dir + "/a.cue"
+	if err := os.WriteFile(overlay, []byte("package x\nexclude: scripts: \"tooling\"\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	r := mustLoad(t, Options{Rulesets: []string{td + "base.cue", overlay}, Exclude: []string{"scripts", "gen/*.go", "gen/*.go"}})
+	if len(r.Exclude) != 2 || r.Exclude["scripts"] != "tooling" || r.Exclude["gen/*.go"] != FlagExcludeReason {
+		t.Fatalf("exclude = %v", r.Exclude)
+	}
+	for _, bad := range []string{"[", ""} {
+		if _, err := Load(Options{Rulesets: []string{td + "base.cue"}, Exclude: []string{bad}}); err == nil || !strings.Contains(err.Error(), "--exclude pattern") {
+			t.Errorf("--exclude %q: err = %v", bad, err)
+		}
+	}
+}
+
 func TestEmptyDirectoryGivesError(t *testing.T) {
 	dir := t.TempDir()
 	if _, err := Load(Options{Rulesets: []string{dir}}); err == nil || !strings.Contains(err.Error(), "no .cue files") {

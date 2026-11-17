@@ -14,6 +14,7 @@ type rulesetFlags struct {
 	omit     []string
 	disable  []string
 	set      []string
+	exclude  []string
 }
 
 // bind adds the flags to fs. withRuleset adds --ruleset and -r.
@@ -27,6 +28,8 @@ func (f *rulesetFlags) bind(fs *pflag.FlagSet, withRuleset bool) {
 	fs.StringSliceVar(&f.omit, "omit-rule", nil, "omit the rules with these IDs")
 	fs.StringSliceVar(&f.disable, "disable-rule", nil, "the same as --omit-rule")
 	fs.StringArrayVar(&f.set, "set", nil, "override a rule parameter: RULE_ID.param=value (a list value is comma-separated)")
+	fs.StringArrayVar(&f.exclude, "exclude", nil,
+		"skip the paths that match this path.Match pattern, relative to the scan root; repeat the flag to add patterns")
 	assert.That(fs.Lookup("set") != nil, "the --set flag exists")
 }
 
@@ -37,5 +40,5 @@ func (f *rulesetFlags) options(extra []string) ruleset.Options {
 	omit := append(append([]string{}, f.omit...), f.disable...)
 	assert.That(len(rulesets) == len(f.rulesets)+len(extra), "no ruleset value is lost")
 	assert.That(len(omit) == len(f.omit)+len(f.disable), "no omitted rule is lost")
-	return ruleset.Options{Rulesets: rulesets, Enable: f.enable, Omit: omit, Set: f.set}
+	return ruleset.Options{Rulesets: rulesets, Enable: f.enable, Omit: omit, Set: f.set, Exclude: f.exclude}
 }

@@ -13,7 +13,7 @@ status: "stable"
 
 # CLI contract
 
-Task 2.2 implements the commands and the flags. Task 4.1 adds the scan engine, `--fail-level` and the text and JSON reports. Task 5.1 adds SARIF 2.1.0 and 2.2 ([ADR-0008](/decisions/adr-0008-go-sarif-writes-the-sarif-reports--01a1e9998cbd.md)). `rules inspect` also lists the exclude patterns. The help text of each command has golden tests in `cmd/semscope/testdata/`.
+Task 2.2 implements the commands and the flags. Task 4.1 adds the scan engine, `--fail-level` and the text and JSON reports. Task 5.1 adds SARIF 2.1.0 and 2.2 ([ADR-0008](/decisions/adr-0008-go-sarif-writes-the-sarif-reports--01a1e9998cbd.md)). `rules inspect` also lists the exclude patterns. Task 6.1 adds `--exclude`. The help text of each command has golden tests in `cmd/semscope/testdata/`.
 
 ## Commands
 | Command | Effect |
@@ -30,6 +30,7 @@ Task 2.2 implements the commands and the flags. Task 4.1 adds the scan engine, `
 | `--enable-rule` | Rule IDs, comma-separated | none |
 | `--omit-rule`, `--disable-rule` | Rule IDs, comma-separated | none |
 | `--set` | `RULE_ID.param=value`. Repeatable. | none |
+| `--exclude` | A `path.Match` pattern relative to the scan root. Repeatable. | none |
 | `--format` | `sarif`, `json` or `text` | `text` |
 | `--sarif-version` | `2.1.0` or `2.2` | `2.1.0` |
 | `--output`, `-o` | A file path | stdout |
@@ -40,6 +41,7 @@ Task 2.2 implements the commands and the flags. Task 4.1 adds the scan engine, `
 - To extend `nasa-p10`, give `-r nasa-p10 -r overlay.cue`. A `.cue` file alone forms a complete ruleset.
 - `--set` parses the value with the type of the parameter in the schema: int, bool, string, or a comma-separated list.
 - An unknown rule ID or parameter gives an error. The CLI does not ignore it.
+- `--exclude` adds a pattern to the exclude map of the ruleset with the reason `--exclude flag`. When a ruleset also excludes the pattern, the reason of the ruleset stays. `rules inspect` also takes the flag. A bad pattern gives exit status 2.
 - SARIF 2.2 is an OASIS draft. The help text says so.
 
 ## Text report

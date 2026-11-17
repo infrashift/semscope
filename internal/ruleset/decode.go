@@ -55,6 +55,25 @@ func decodeExcludes(v cue.Value) (map[string]string, error) {
 	return out, nil
 }
 
+// addFlagExcludes adds each command-line pattern to excludes. A pattern
+// that a ruleset also excludes keeps the reason of the ruleset.
+func addFlagExcludes(excludes map[string]string, patterns []string) error {
+	assert.That(excludes != nil, "decodeExcludes gives a map")
+	for _, pattern := range patterns {
+		if _, err := path.Match(pattern, ""); err != nil || pattern == "" {
+			return fmt.Errorf("ruleset: --exclude pattern %q: want a path.Match pattern", pattern)
+		}
+		if _, ok := excludes[pattern]; !ok {
+			excludes[pattern] = FlagExcludeReason
+		}
+	}
+	if len(excludes) > MaxRules {
+		return fmt.Errorf("ruleset: more than %d exclude patterns", MaxRules)
+	}
+	assert.That(len(patterns) == 0 || len(excludes) > 0, "the map holds the patterns")
+	return nil
+}
+
 // optionalString returns the string at path in v, or "" when the field is absent.
 func optionalString(v cue.Value, path string) string {
 	assert.That(v.Exists(), "v exists")

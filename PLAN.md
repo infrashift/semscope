@@ -159,3 +159,21 @@ Tracking: [ISSUE-005](.okfw/issues/issue-005-phase-5-sarif-reports-and-self-host
   6. Run `zmake sarif`. It runs steps 2, 4 and 5.
 
   Write `README.md`. Sync the architecture records and the usage notes to the OKF wiki. Verify zero violations in the repository.
+
+## Phase 6: Exclude flag, Go type checks and parity corpora
+
+Tracking: [ISSUE-006](.okfw/issues/issue-006-phase-6-exclude-flag-go-type-checks-and-parity-corpora--01a1eba38e60.md)
+
+- [x] **Task 6.1: Exclude flag.** Add `--exclude PATTERN` to `scan` and `rules inspect`. Repeat the flag to add patterns.
+  - A flag pattern has the same syntax as a pattern in the `exclude` map of a ruleset.
+  - The loader adds each flag pattern to the exclude map with the reason `--exclude flag`.
+  - A bad pattern gives an error and exit status 2.
+- [ ] **Task 6.2: Type-aware Go check for NASA-P10-07.** Add the parameter `go_types: *false | bool` to `checked_returns`.
+  - When `go_types` is `true`, semscope loads the Go packages with type information (`golang.org/x/tools/go/packages`).
+  - The check finds each call statement, `defer` statement and `go` statement that drops an `error` result.
+  - The parameter `go_ignore_calls` names calls that never return an error, for example `(*strings.Builder).WriteString`.
+  - The default is `false`, so the parity with `nasa-lint-go.py` does not change. The self-scan overlay `.semscope.cue` sets it to `true`.
+- [ ] **Task 6.3: More parity corpora.** The corpus parity test reads a list of Zig trees and a list of Go trees.
+  - Zig: zmake, ztree and the Zig standard library when they are on the disk.
+  - Go: the source modules of the semscope dependencies in the module cache.
+  - Each divergence gets a fix or a record with a reason in `testdata/nasa_p10/parity-divergences.json`.

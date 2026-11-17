@@ -49,12 +49,14 @@ exclude: vendor: "third-party code"
 ```sh
 semscope scan -r nasa-p10 -r overlay.cue .
 semscope scan --omit-rule NASA-P10-05 --set NASA-P10-04.max_lines=40 .
+semscope scan --exclude vendor --exclude 'gen/*.go' .
 semscope rules list
 semscope rules inspect nasa-p10 overlay.cue
 ```
 
 - An overlay can add a rule, omit a rule, change a parameter, narrow the languages of a rule and exclude paths.
 - An unknown rule ID or parameter in a flag gives an error.
+- `--exclude` adds a path pattern to the exclude map. The pattern has the `path.Match` syntax and is relative to the scan root.
 - An `ast_query` rule runs one Tree-sitter query for each language. Each `@violation` capture gives a finding.
 - A `token_ban` rule bans regular expressions in the source without comments and strings.
 - With these two check kinds, a user adds a code rule in CUE without a change to the Go code.

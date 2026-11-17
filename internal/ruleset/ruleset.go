@@ -125,7 +125,13 @@ type Options struct {
 	Omit   []string
 	// Set holds parameter overrides in the form RULE_ID.param=value.
 	Set []string
+	// Exclude holds path patterns from the command line. Load adds each
+	// pattern to the exclude map with the reason FlagExcludeReason.
+	Exclude []string
 }
+
+// FlagExcludeReason is the reason of an exclude pattern from Options.Exclude.
+const FlagExcludeReason = "--exclude flag"
 
 // Active returns the enabled rules, sorted by ID.
 func (r Resolved) Active() []Rule {
@@ -160,6 +166,8 @@ func Load(opts Options) (Resolved, error) {
 		return Resolved{}, fmt.Errorf("ruleset: %d rulesets given (max %d)", len(opts.Rulesets), MaxSources)
 	case len(opts.Set) > MaxOverrides:
 		return Resolved{}, fmt.Errorf("ruleset: %d --set values given (max %d)", len(opts.Set), MaxOverrides)
+	case len(opts.Exclude) > MaxRules:
+		return Resolved{}, fmt.Errorf("ruleset: %d --exclude values given (max %d)", len(opts.Exclude), MaxRules)
 	case len(opts.Enable) > MaxRules || len(opts.Omit) > MaxRules:
 		return Resolved{}, fmt.Errorf("ruleset: more than %d rule IDs in --enable-rule or --omit-rule", MaxRules)
 	}
@@ -180,6 +188,9 @@ func Load(opts Options) (Resolved, error) {
 	}
 	excludes, err := decodeExcludes(v)
 	if err != nil {
+		return Resolved{}, err
+	}
+	if err = addFlagExcludes(excludes, opts.Exclude); err != nil {
 		return Resolved{}, err
 	}
 	if err = applyToggles(rules, opts.Enable, opts.Omit); err != nil {

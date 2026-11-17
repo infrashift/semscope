@@ -8,6 +8,7 @@ Usage:
 Flags:
       --disable-rule strings   the same as --omit-rule
       --enable-rule strings    enable the rules with these IDs
+      --exclude stringArray    skip the paths that match this path.Match pattern, relative to the scan root; repeat the flag to add patterns
       --fail-level string      the lowest severity that gives exit status 1: error, warning, note or none (default "error")
       --format string          the output format: text, json or sarif (default "text")
   -h, --help                   help for scan

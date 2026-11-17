@@ -54,7 +54,7 @@ status: "stable"
 2. Unify each overlay with the result, in the sequence of the flags.
 3. Apply each `--set` value with `FillPath`. The value takes the type of the current parameter. A list value is comma-separated.
 4. Validate the result. Each rule must be concrete after the defaults apply.
-5. Decode the rules and sort them by ID.
+5. Decode the rules and sort them by ID. Decode the exclude map and add each `--exclude` pattern to it.
 6. Apply `--enable-rule` and `--omit-rule`. These flags win over the `enabled` field of any source.
 
 ## CUE defaults

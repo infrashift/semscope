@@ -9,4 +9,5 @@
 * [ISSUE-003: Phase 3: Composable CUE ruleset engine](issue-003-phase-3-composable-cue-ruleset-engine--01a1e97296e2.md) - Add the CUE ruleset schema, the loader with overlays and overrides, and the nasa-p10 ruleset.
 * [ISSUE-004: Phase 4: Bounded engine and nasa-p10 parity](issue-004-phase-4-bounded-engine-and-nasa-p10-parity--01a1e97296f3.md) - Add the Tree-sitter parsers, the bounded engine and the parity tests against both oracles.
 * [ISSUE-005: Phase 5: SARIF reports and self-hosting gate](issue-005-phase-5-sarif-reports-and-self-hosting-gate--01a1e9729706.md) - Add the SARIF 2.1.0 and 2.2 writers and run the final self-hosting gate.
+* [ISSUE-006: Phase 6: Exclude flag, Go type checks and parity corpora](issue-006-phase-6-exclude-flag-go-type-checks-and-parity-corpora--01a1eba38e60.md) - Add the --exclude flag, a type-aware Go check for NASA-P10-07 and more corpora for the parity test.
 

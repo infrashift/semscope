@@ -62,6 +62,7 @@ func TestUsageErrorsExitTwo(t *testing.T) {
 		{[]string{"scan", "--set", "NASA-P10-04.max=1"}, `no parameter "max"`},
 		{[]string{"scan", "-r", "missing.cue"}, "not a built-in ruleset"},
 		{[]string{"scan", "--no-such-flag"}, "unknown flag"},
+		{[]string{"scan", "--exclude", "["}, `--exclude pattern "["`},
 		{[]string{"rules", "inspect"}, "requires at least 1 arg"},
 		{[]string{"version", "extra"}, "unknown command"},
 	}
@@ -113,6 +114,26 @@ func TestScanExitCodesAndFormats(t *testing.T) {
 	data, err := os.ReadFile(report) //nolint:gosec // the test made the path
 	if err != nil || !strings.Contains(string(data), `"ruleId": "NASA-P10-02"`) {
 		t.Fatalf("json report = %s, %v", data, err)
+	}
+}
+
+func TestScanExclude(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"bad/a.go":     "package bad\n\nfunc f() {\n\tfor {\n\t}\n}\n",
+		"bad/gen/b.go": "package gen\n\nfunc g() {\n\tfor {\n\t}\n}\n",
+	})
+	t.Chdir(dir)
+	out, _, code := cli(t, "scan", "--omit-rule", "NASA-P10-05", "--exclude", "bad/gen", ".")
+	if code != exitFindings || !strings.Contains(out, "bad/a.go:4:2:") || strings.Contains(out, "gen/b.go") {
+		t.Fatalf("--exclude bad/gen: code %d, out %q", code, out)
+	}
+	out, _, code = cli(t, "scan", "--omit-rule", "NASA-P10-05", "--exclude", "bad/gen", "--exclude", "*/a.go", ".")
+	if code != exitOK || !strings.Contains(out, "0 finding(s) in 0 file(s)") {
+		t.Fatalf("two --exclude flags: code %d, out %q", code, out)
+	}
+	out, _, code = cli(t, "rules", "inspect", "nasa-p10", "--exclude", "bad/gen")
+	if code != exitOK || !strings.Contains(out, "exclude: bad/gen (--exclude flag)\n") {
+		t.Fatalf("rules inspect --exclude: code %d, out %q", code, out)
 	}
 }
 
