@@ -23,6 +23,7 @@ The `nasa-p10` ruleset targets Go, C, C++, Zig, Python and Rust. The parity test
 ## Decision
 - `internal/parser` uses `github.com/tree-sitter/go-tree-sitter` (v0.25) for all six languages, Go included.
 - The grammars: `tree-sitter-go`, `tree-sitter-c`, `tree-sitter-cpp`, `tree-sitter-python`, `tree-sitter-rust` and `tree-sitter-grammars/tree-sitter-zig`.
+- Since Task 7.2, the Zig grammar is a patched copy of `tree-sitter-zig` v1.1.2 in `third_party/tree-sitter-zig`. [ADR-0010](/decisions/adr-0010-a-patched-zig-grammar-for-zig-0-17--01a1ebe05590.md) records the patch.
 - Each language has one adapter. The adapter gives a flat record of the file: functions, calls, loops, assertions, discards, pointer types and directives.
 - Tree walks use a `TreeCursor`. A cursor walks the tree without recursion.
 

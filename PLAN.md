@@ -186,6 +186,6 @@ Tracking: [ISSUE-008](.okfw/issues/issue-008-zig-limits-of-semscope-found-by-the
 - [x] **Task 7.1: Zig container keys.** Key each Zig function by its container path, for example `Mutable.toFloat`.
   - A plain call looks in the container of the caller, then in each outer container, then in the file.
   - A call through `self`, `Self` or `@This()` looks in the container of the caller only.
-- [ ] **Task 7.2: Zig 0.17 grammar.** Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. No release of `tree-sitter-zig` removes them.
+- [x] **Task 7.2: Zig 0.17 grammar.** Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. No release of `tree-sitter-zig` removes them.
   - Keep a patched copy of the v1.1.2 grammar in `third_party/tree-sitter-zig`. A `replace` directive in `go.mod` selects it.
   - Generate `src/parser.c` with `tree-sitter-cli` 0.25.10.

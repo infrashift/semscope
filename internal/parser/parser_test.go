@@ -128,6 +128,29 @@ func TestCallsHaveNames(t *testing.T) {
 	}
 }
 
+func TestZig017Identifiers(t *testing.T) {
+	p := newTestParser(t)
+	src := "fn cancel(ev: *Ev) void {\n    const usingnamespace_x = 1;\n    await(ev, usingnamespace_x);\n    async(ev);\n}\n\nfn next() void {}\n"
+	f, tree, err := p.Parse("io.zig", Zig, []byte(src))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tree.Close()
+	if tree.RootNode().HasError() {
+		t.Fatalf("Zig 0.17 identifiers give a parse error: %s", tree.RootNode().ToSexp())
+	}
+	if len(f.Functions) != 2 || f.Functions[0].Pos.EndLine != 5 {
+		t.Fatalf("functions = %+v, want cancel on lines 1-5 and next", f.Functions)
+	}
+	var names []string
+	for _, c := range f.Calls {
+		names = append(names, c.Name)
+	}
+	if strings.Join(names, ",") != "await,async" {
+		t.Errorf("calls = %v, want await and async", names)
+	}
+}
+
 func TestLimits(t *testing.T) {
 	small := DefaultLimits()
 	small.MaxFileBytes = 4

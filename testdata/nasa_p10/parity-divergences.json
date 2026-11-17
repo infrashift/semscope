@@ -16,10 +16,10 @@
       2063
     ],
     "semscope": [
-      11976,
+      11978,
       1871
     ],
-    "reason": "nasa-lint.py counts the assertions of a nested function also in each enclosing function, skips assertions on the lines of { and }, and misses noinline and @\"name\" functions",
+    "reason": "nasa-lint.py counts the assertions of a nested function also in each enclosing function, skips assertions on the lines of { and }, and misses noinline, @\"name\" and one-line functions",
     "issue": "ISSUE-007"
   },
   {
@@ -37,24 +37,6 @@
     "count": 4,
     "reason": "real cycles (Const.toFloat, Type.format, two AstGen cycles) that nasa-lint.py reports at another head function: it merges the same-name functions of a file into one node, and its false edges change its depth-first search",
     "issue": "ISSUE-007"
-  },
-  {
-    "corpus": "zig-std-0.17.1",
-    "path": "src/Io/Dispatch.zig",
-    "line": 1115,
-    "rule": "NASA-P10-04",
-    "side": "semscope",
-    "reason": "tree-sitter-zig v1.1.2 parses the Zig 0.17 identifier await as a keyword; the error recovery makes the function 275 lines long",
-    "issue": "ISSUE-008"
-  },
-  {
-    "corpus": "zig-std-0.17.1",
-    "path": "src/Io/Uring.zig",
-    "line": 1526,
-    "rule": "NASA-P10-04",
-    "side": "semscope",
-    "reason": "tree-sitter-zig v1.1.2 parses the Zig 0.17 identifier await as a keyword; the error recovery makes the function 283 lines long",
-    "issue": "ISSUE-008"
   },
   {
     "corpus": "zig-std-0.17.1",

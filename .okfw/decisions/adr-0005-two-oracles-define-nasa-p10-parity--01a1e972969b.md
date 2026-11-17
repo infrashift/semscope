@@ -52,7 +52,7 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 Results on 2026-11-17:
 - zmake, the fixture, cobra, pflag, go-sarif, CUE and go-tree-sitter: exact parity.
 - x/tools: one line record. A line regex cannot see an unnamed func-typed parameter of an interface method.
-- Zig 0.17.1 standard library: two class records for R1 (203 and 4), 13 line records for R4 and R7, and one stats record. [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) lists the oracle defects.
+- Zig 0.17.1 standard library: two class records for R1 (203 and 4), 11 line records for R4 and R7, and one stats record. [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) lists the oracle defects.
 - The corpora found eight semscope defects and nine `nasa-lint-go.py` defects. Task 6.3 fixes them.
 
 ## Alternatives considered

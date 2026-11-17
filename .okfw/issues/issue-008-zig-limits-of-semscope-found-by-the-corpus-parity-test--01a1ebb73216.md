@@ -9,7 +9,7 @@ tags:
   - "zig"
   - "parity"
   - "phase-6"
-  - "open"
+  - "closed"
 created: "2026-11-17T16:53:34-06:00"
 timestamp: "2026-11-17T16:53:34-06:00"
 description: "The Zig grammar v1.1.2 lags Zig 0.17, and the Zig call graph gives same-name functions of one file one node."
@@ -17,10 +17,10 @@ description: "The Zig grammar v1.1.2 lags Zig 0.17, and the Zig call graph gives
 
 # ISSUE-008: Zig limits of semscope found by the corpus parity test
 
-**Status/Phase:** open · Phase 6
+**Status/Phase:** closed · Phase 7
 
 ## Description
-The corpus parity test of Task 6.3 found two semscope defects on the Zig 0.17.1 standard library. They stay open, and `testdata/nasa_p10/parity-divergences.json` records their instances.
+The corpus parity test of Task 6.3 found two semscope defects on the Zig 0.17.1 standard library. Phase 7 fixes both.
 
 1. **The grammar lags Zig 0.17.** `tree-sitter-zig` v1.1.2 parses `await` as a keyword. In Zig 0.17 it is an identifier. The error recovery makes `fn cancel` of `Io/Dispatch.zig` and `Io/Uring.zig` longer than 270 lines, so NASA-P10-04 reports them. The real functions have 11 lines.
 2. **Same-name functions share one node.** The call graph keys a Zig function by file and name, the same as `nasa-lint.py`. `Mutable.toFloat`, `Const.toFloat` and `Managed.toFloat` of `math/big/int.zig` are one node. A cycle through one of them can show at another.
@@ -36,9 +36,14 @@ The corpus parity test of Task 6.3 found two semscope defects on the Zig 0.17.1 
 ## Progress
 - **Containers (done).** The Zig adapter gives each function a scope: the names of the enclosing containers, and `F()` for each enclosing function F. The node key is the scope and the name, for example `Mutable.toFloat` or `ArrayList().append`. A plain call `f()` looks for f in the container of the caller, then in each outer container, then in the file. A call through `self`, `Self` or `@This()` looks in the container of the caller only. The engine test `TestZigContainerScopes` holds each case. On the Zig standard library, the cycle `Const.toFloat -> Const.toFloat` now shows at `Const.toFloat`, not at `Mutable.toFloat`.
 
+- **Grammar (done).** `third_party/tree-sitter-zig` holds v1.1.2 without the rules for `async`, `await` and `usingnamespace`. The `replace` directive in `go.mod` selects it. `TestZig017Identifiers` fails with the release grammar and passes with the patched grammar. On the Zig standard library, `fn cancel` of `Io/Dispatch.zig` and `Io/Uring.zig` has its real length again. The two line records for NASA-P10-04 went stale, and semscope finds two more functions.
+
 ## Acceptance Criteria
-- [ ] Update the Zig grammar when a release reads Zig 0.17.
+- [x] Read Zig 0.17: no release does, so semscope keeps a patched grammar ([ADR-0010](/decisions/adr-0010-a-patched-zig-grammar-for-zig-0-17--01a1ebe05590.md)).
 - [x] Key a Zig function by its container, and resolve a call through the scope of the call.
+
+## Resolution
+Tasks 7.1 and 7.2 are complete. No divergence record names ISSUE-008 now. The Zig standard library has records for oracle defects only, and [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) lists them.
 
 ## Related
 - [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md)

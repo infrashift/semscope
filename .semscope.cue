@@ -13,3 +13,7 @@ exclude: scripts: "Python gate tooling; nasa-lint.py stays byte-identical as the
 // semscope checks its own Go code with type information: each call, defer
 // and go statement that drops an error is a finding (ADR-0009).
 rules: "NASA-P10-07": params: go_types: true
+
+// The patched Tree-sitter Zig grammar is third-party code: parser.c is
+// generated, and the Go binding uses cgo and unsafe (ADR-0010).
+exclude: third_party: "vendored Tree-sitter Zig grammar with a generated parser (ADR-0010)"

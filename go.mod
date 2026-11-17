@@ -36,3 +36,5 @@ require (
 	golang.org/x/text v0.43.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 )
+
+replace github.com/tree-sitter-grammars/tree-sitter-zig => ./third_party/tree-sitter-zig
