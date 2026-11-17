@@ -179,7 +179,7 @@ Tracking: [ISSUE-006](.okfw/issues/issue-006-phase-6-exclude-flag-go-type-checks
   - Each divergence gets a fix or a record with a reason in `testdata/nasa_p10/parity-divergences.json`.
   - A record is a line record, a class record with an exact count, or a stats record.
 
-## Phase 7: Zig limits of ISSUE-008
+## Phase 7: Zig limits of ISSUE-008 and the oracle defects of ISSUE-007
 
 Tracking: [ISSUE-008](.okfw/issues/issue-008-zig-limits-of-semscope-found-by-the-corpus-parity-test--01a1ebb73216.md)
 
@@ -189,3 +189,6 @@ Tracking: [ISSUE-008](.okfw/issues/issue-008-zig-limits-of-semscope-found-by-the
 - [x] **Task 7.2: Zig 0.17 grammar.** Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. No release of `tree-sitter-zig` removes them.
   - Keep a patched copy of the v1.1.2 grammar in `third_party/tree-sitter-zig`. A `replace` directive in `go.mod` selects it.
   - Generate `src/parser.c` with `tree-sitter-cli` 0.25.10.
+- [x] **Task 7.3: Oracle defects.** Fix the defects of `nasa-lint.py` that ISSUE-007 lists.
+  - Use the semscope node keys in R1, count each line for the innermost function, and read R7 across lines.
+  - Add the fixture `scripts/testdata/nasa-lint/corpus-forms` and fix the semscope defects that the fix shows.

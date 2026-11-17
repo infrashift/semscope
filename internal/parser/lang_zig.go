@@ -19,7 +19,7 @@ func (w *walker) visitZig(n *ts.Node, kind string) (bool, error) {
 	case "function_declaration":
 		return true, w.zigFunction(n)
 	case "call_expression":
-		if fn := n.ChildByFieldName("function"); fn != nil {
+		if fn := w.zigCallee(n.ChildByFieldName("function")); fn != nil {
 			return true, w.addCall(n, w.text(fn))
 		}
 	case "builtin_function":
@@ -42,6 +42,42 @@ func (w *walker) visitZig(n *ts.Node, kind string) (bool, error) {
 		return w.pointerChain(n, "pointer_type", "pointer_type")
 	}
 	return true, nil
+}
+
+// zigCallee returns the called expression of a call. The grammar binds a
+// prefix operator to the callee: `?Span(T)`, `*Q(T)` and `!f(x)` give a
+// nullable_type, pointer_type or error_union_type around the name. The
+// callee is the last named child of such a node.
+func (w *walker) zigCallee(fn *ts.Node) *ts.Node {
+	assert.That(w.lang == Zig, "the file is Zig")
+	for steps := 0; fn != nil && steps < maxOperandSteps; steps++ {
+		switch fn.Kind() {
+		case "nullable_type", "pointer_type", "error_union_type":
+			if fn.NamedChildCount() == 0 {
+				return fn
+			}
+			fn = fn.NamedChild(fn.NamedChildCount() - 1)
+		default:
+			return fn
+		}
+	}
+	assert.That(fn == nil || fn.Kind() != "", "the callee has a kind")
+	return fn
+}
+
+// zigEmptyBlock reports whether n is a block with comments only.
+func (w *walker) zigEmptyBlock(n *ts.Node) bool {
+	assert.That(w.lang == Zig, "the file is Zig")
+	assert.That(n == nil || n.EndByte() <= uint(len(w.src)), "the node lies inside the source")
+	if n == nil || n.Kind() != "block" {
+		return false
+	}
+	for i := uint(0); i < n.NamedChildCount(); i++ {
+		if c := n.NamedChild(i); c != nil && c.Kind() != "comment" {
+			return false
+		}
+	}
+	return true
 }
 
 // zigFunction records a Zig function declaration with a body.
@@ -208,7 +244,7 @@ func (w *walker) zigCatch(n *ts.Node) error {
 		}
 	}
 	switch {
-	case last.Kind() == "block" && last.NamedChildCount() == 0:
+	case w.zigEmptyBlock(last):
 		return w.addSite(at, SiteDiscard, "swallowed error `catch {}`", 0)
 	case last.Utf8Text(w.src) == "unreachable":
 		return w.addSite(at, SiteDiscard, "`catch unreachable` hides an error", 0)
@@ -228,7 +264,7 @@ func (w *walker) zigIfExprElse(n *ts.Node) error {
 		if kw == nil || payload == nil || body == nil || kw.Kind() != "else" {
 			continue
 		}
-		if payload.Kind() == "payload" && w.text(payload) == "|_|" && body.Kind() == "block" && body.NamedChildCount() == 0 {
+		if payload.Kind() == "payload" && w.text(payload) == "|_|" && w.zigEmptyBlock(body) {
 			return w.addSite(kw, SiteDiscard, "swallowed error `else |_| {}`", 0)
 		}
 	}
@@ -246,7 +282,7 @@ func (w *walker) zigElse(n *ts.Node) error {
 	for steps := 0; body.Kind() != "block" && body.NamedChildCount() > 0 && steps < 4; steps++ {
 		body = body.NamedChild(0)
 	}
-	if body.Kind() == "block" && body.NamedChildCount() == 0 {
+	if w.zigEmptyBlock(body) {
 		return w.addSite(n, SiteDiscard, "swallowed error `else |_| {}`", 0)
 	}
 	return nil

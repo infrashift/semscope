@@ -151,6 +151,32 @@ func TestZig017Identifiers(t *testing.T) {
 	}
 }
 
+func TestZigPrefixCalleesAndCommentBlocks(t *testing.T) {
+	p := newTestParser(t)
+	src := "fn f(T: type) void {\n    _ = ?Span(T);\n    if (!valid(T)) {}\n    const q: *Q(T) = undefined;\n    g() catch {\n        // ignored\n    };\n}\n"
+	f, tree, err := p.Parse("p.zig", Zig, []byte(src))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tree.Close()
+	var names []string
+	for _, c := range f.Calls {
+		names = append(names, c.Name)
+	}
+	if strings.Join(names, ",") != "Span,valid,Q,g" {
+		t.Errorf("calls = %v, want Span, valid, Q and g", names)
+	}
+	swallowed := 0
+	for _, s := range f.Sites {
+		if s.Kind == SiteDiscard && strings.Contains(s.Detail, "catch {}") {
+			swallowed++
+		}
+	}
+	if swallowed != 1 {
+		t.Errorf("a catch block with a comment only gave %d findings, want 1", swallowed)
+	}
+}
+
 func TestLimits(t *testing.T) {
 	small := DefaultLimits()
 	small.MaxFileBytes = 4

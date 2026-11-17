@@ -12,4 +12,5 @@
 * [ISSUE-006: Phase 6: Exclude flag, Go type checks and parity corpora](issue-006-phase-6-exclude-flag-go-type-checks-and-parity-corpora--01a1eba38e60.md) - Add the --exclude flag, a type-aware Go check for NASA-P10-07 and more corpora for the parity test.
 * [ISSUE-007: Oracle defects found by the corpus parity test](issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) - The corpus parity test of Task 6.3 found defects in nasa-lint.py and nasa-lint-go.py; this issue lists each class and its state.
 * [ISSUE-008: Zig limits of semscope found by the corpus parity test](issue-008-zig-limits-of-semscope-found-by-the-corpus-parity-test--01a1ebb73216.md) - The Zig grammar v1.1.2 lags Zig 0.17, and the Zig call graph gives same-name functions of one file one node.
+* [ISSUE-009: The Zig grammar does not read asm clobbers of Zig 0.15](issue-009-the-zig-grammar-does-not-read-asm-clobbers-of-zig-0-15--01a1ebef12f0.md) - Zig 0.15 writes asm clobbers as a struct literal; tree-sitter-zig reads strings only, so 26 syscall functions of the Zig standard library are lost.
 

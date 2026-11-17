@@ -5,8 +5,9 @@ The output is one line of NAME=DIRECTORY entries, separated by ":". The
 parity test reads it from SEMSCOPE_PARITY_CORPUS (zig) and
 SEMSCOPE_PARITY_GO_CORPUS (go). The records of
 testdata/nasa_p10/parity-divergences.json use the names.
-  zig: zmake (the directory ../zmake), and the standard library of the zig
-       command, with the name zig-std-<version>
+  zig: the fixture scripts/testdata/nasa-lint/corpus-forms, zmake (the
+       directory ../zmake), and the standard library of the zig command,
+       with the name zig-std-<version>
   go:  the fixture scripts/testdata/nasa-lint-go/corpus-forms, and the
        source modules of semscope dependencies in the module cache, with the
        name <module path>@<version>
@@ -38,7 +39,7 @@ def run(args):
 
 
 def zig_corpora():
-    entries = []
+    entries = [f"zig-corpus-forms={pathlib.Path('scripts/testdata/nasa-lint/corpus-forms').resolve()}"]
     zmake = pathlib.Path("../zmake").resolve()
     if (zmake / "src").is_dir():
         entries.append(f"zmake={zmake}")

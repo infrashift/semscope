@@ -21,7 +21,7 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 `PLAN.md` asks for full detection parity with `nasa-lint.py`. That script reads Zig only, has heuristic quirks and covers six of the ten rules. The [check inventory](/specs/nasa-lint-py-check-inventory--01a1e9729610.md) lists the quirks.
 
 ## Decision
-- `nasa-lint.py` is the Zig oracle. It stays byte-identical with the zmake copy.
+- `nasa-lint.py` is the Zig oracle. It stays byte-identical with the zmake copy. A fix goes into both copies.
 - `nasa-lint-go.py` is the Go oracle. Its [check inventory](/specs/nasa-lint-go-py-check-inventory--01a1e9729621.md) lists its rules.
 - On the fixtures in `testdata/nasa_p10/`, semscope and the oracle report the same set of file, line and rule. The R5 averages match to two decimals.
 - On a real corpus, for example the zmake `src/` tree, each divergence needs a fix or a record in `testdata/nasa_p10/parity-divergences.json`.
@@ -42,7 +42,7 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 
 ## Corpora (Task 6.3)
 - `scripts/parity_corpora.py` gives the default corpora of `zmake parity`.
-- The Zig corpora are zmake and the standard library of the installed Zig (`zig-std-<version>`).
+- The Zig corpora are the fixture `scripts/testdata/nasa-lint/corpus-forms`, zmake and the standard library of the installed Zig (`zig-std-<version>`).
 - The Go corpora are the fixture `scripts/testdata/nasa-lint-go/corpus-forms` and six modules of the module cache: cobra, pflag, go-sarif, CUE, go-tree-sitter and x/tools.
 - A divergence record has one of three forms. A line record names one file, line and rule. A class record gives the exact count of the other differences of one rule and one side. A stats record gives the R5 counts of both tools.
 - A class record is only for a defect with many instances, for example the false call edges of `nasa-lint.py` on the Zig standard library. The test fails when the count changes in either direction, and also on a stale record.
@@ -52,7 +52,7 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 Results on 2026-11-17:
 - zmake, the fixture, cobra, pflag, go-sarif, CUE and go-tree-sitter: exact parity.
 - x/tools: one line record. A line regex cannot see an unnamed func-typed parameter of an interface method.
-- Zig 0.17.1 standard library: two class records for R1 (203 and 4), 11 line records for R4 and R7, and one stats record. [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) lists the oracle defects.
+- Zig 0.17.1 standard library: after the fix of [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md), one stats record for [ISSUE-009](/issues/issue-009-the-zig-grammar-does-not-read-asm-clobbers-of-zig-0-15--01a1ebef12f0.md). All findings match.
 - The corpora found eight semscope defects and nine `nasa-lint-go.py` defects. Task 6.3 fixes them.
 
 ## Alternatives considered

@@ -14,7 +14,7 @@ description: "Every check, threshold, pattern and quirk of scripts/nasa-lint.py,
 
 # nasa-lint.py check inventory
 
-`scripts/nasa-lint.py` comes from zmake without changes. It checks Zig only. semscope uses it as the Zig oracle: the parity tests compare its output with the `nasa-p10` findings of semscope. [ADR-0005](/decisions/adr-0005-two-oracles-define-nasa-p10-parity--01a1e972969b.md) defines parity.
+`scripts/nasa-lint.py` comes from zmake. It checks Zig only. semscope uses it as the Zig oracle: the parity tests compare its output with the `nasa-p10` findings of semscope. [ADR-0005](/decisions/adr-0005-two-oracles-define-nasa-p10-parity--01a1e972969b.md) defines parity. [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) fixed the defects that the Zig standard library showed. The fixture `scripts/testdata/nasa-lint/corpus-forms` holds each fixed form.
 
 ## Interface
 - Input: every `*.zig` file under `src/` in the current directory, in sorted sequence. The script has no path argument.
@@ -28,49 +28,51 @@ description: "Every check, threshold, pattern and quirk of scripts/nasa-lint.py,
 
 ## Test exemption
 - A block that starts with `test ... {` is exempt from every rule. `block_end` finds the end of the block by brace counting.
-- A function with a name that starts with `test` or ends with `Test` is a test helper. The script omits it from the function list, so it is exempt from R1, R4 and R5.
+- A function with a name that starts with `test` or ends with `Test` is a test helper. It is exempt from R1, R4 and R5.
 - Quirk: the line rules R2, R7 and R9 still apply inside a test helper.
 
 ## Function detection
-- Pattern: `^\s*(pub\s+)?(export\s+)?(inline\s+)?fn\s+NAME\s*\(`. The qualifiers must occur in this sequence.
-- The body opens on the first line that ends with `{`, within 20 lines of the `fn` line. A line that ends with `;` first marks a prototype. The script skips a prototype.
-- The body ends on the line where the brace depth returns to zero.
+- Pattern: `[pub] [export|extern] [inline|noinline] fn NAME(`. A name is an identifier or a quoted name `@"name"`.
+- The body opens on the first line that ends with `{` after the parameter list closes. A `struct {` parameter does not open the body. A line that ends with `;` first marks a prototype. The script skips a prototype.
+- A one-line function, for example `inline fn leave() void {}`, opens and closes on its line.
+- The body ends where the last `{` of the opening line closes. A brace before it, as in `}) void {` or `}!T) {`, does not count.
+- Each line belongs to the innermost function that holds it. The calls and the assertions of a nested function do not count for the enclosing function.
 
 ## R1: recursion
-- The call graph has one node for each pair of file name and function name. The file name has no directory.
-- Quirk: two functions with the same name in one file share one node. Two files with the same name in different directories share nodes. semscope does not copy this quirk: its node key holds the full path and the Zig container path, for example `Mutable.toFloat`.
-- `CALL_RE` finds the calls in the body lines. It also matches the name of a builtin such as `@intCast(`.
-- An unqualified call, or a call through `self`, `Self` or `@This`, gives an edge only to a function of the same file.
-- A call `alias.f(` gives an edge only when `alias` comes from `const alias = @import("x.zig")`. The node key uses the import string, not the resolved path.
-- The script drops an edge to an unknown node. It ignores the keywords `if`, `while`, `for`, `switch`, `return`, `catch`, `fn`, `try`, `orelse`, `and` and `or`.
-- An iterative three-color depth-first search visits the nodes in sorted sequence. Each back edge gives one finding at the first node of the cycle.
+- A node is the file path from the root and the function key. The key holds the names of the enclosing `const Name = struct {` containers and `F()` for each enclosing function F, for example `Mutable.toFloat` or `ArrayList().append`.
+- A plain call `f(` looks for f in the container of the caller, then in each outer container, then in the file.
+- A call through `self.`, `Self.` or `@This().` looks in the container of the caller only.
+- A call `alias.f(` of `const alias = @import("x.zig")` goes to the function f of x.zig. The path of x.zig is relative to the directory of the file.
+- A builtin `@f(`, a decl literal `.f(`, a method call on an expression `x().f(` and the name of a nested `fn f(` give no edge. The keywords `if`, `while`, `for`, `switch`, `return`, `catch`, `fn`, `try`, `orelse`, `and` and `or` give no edge.
+- An iterative three-color depth-first search visits the nodes in sorted sequence. Each back edge gives one finding at the first node of the cycle. semscope uses the same keys and the same sequence, so the findings match.
 
 ## R4: function length
 - The length counts from the `fn` line to the line of the closing brace. Both lines count, and the signature lines count.
 - A function with more than 60 lines gives a finding at the `fn` line.
 
 ## R5: assertion density
-- The script counts the matches of `\bassert\s*\(` in the body lines. The body lines exclude the line of the opening brace and the line of the closing brace.
-- Quirk: an assertion on the same line as a brace does not count. A one-line function counts zero assertions.
+- The script counts the matches of `\bassert\s*\(` on the lines of each function, also on the lines of the braces.
+- The primitive `fn assert` does not count as a function, and its declaration is not an assertion.
 - The check is one average over all functions that are not exempt. An average below 2.0 gives one finding `src: R5: ...` without a line number.
 - R5 has no suppression.
 
-## Line rules
-The script applies these patterns to each stripped line outside the test blocks. Each pattern gives at most one finding on a line.
+## Line and text rules
+The line rules read each stripped line outside the test blocks. The text rules read the whole stripped file, so a match can span lines. A text rule gives the finding on the line where the match starts.
 
-| Rule | Pattern | Message |
-|---|---|---|
-| R2 | `\bwhile\s*\(\s*true\s*\)` | unbounded loop `while (true)` |
-| R7 | `\bcatch\s*\{\s*\}` | swallowed error `catch {}` |
-| R7 | `\belse\s*\|_\|\s*\{\s*\}` | swallowed error `else \|_\| {}` |
-| R7 | `\bcatch\s+unreachable\b` | `catch unreachable` hides an error |
-| R7 | `(?<![\w.])_\s*=\s*(?:try\s+)?[\w.]+\s*\(` | discarded call result `_ = f(...)` |
-| R9 | `\*\s*const\s+fn\b` or `\*\s*fn\s*\(` | function pointer type |
+| Rule | Kind | Pattern | Message |
+|---|---|---|---|
+| R2 | line | `\bwhile\s*\(\s*true\s*\)` | unbounded loop `while (true)` |
+| R9 | line | `\*\s*const\s+fn\b` or `\*\s*fn\s*\(` | function pointer type |
+| R7 | line | `_ = f(`, `_, x = f(`, `const a, _ = f(`, also with `try` and `@This().` | discarded call result `_ = f(...)` |
+| R7 | text | `\bcatch\s*\{\s*\}` | swallowed error `catch {}` |
+| R7 | text | `\belse\s*\|_\|\s*\{\s*\}` | swallowed error `else \|_\| {}` |
+| R7 | text | `\bcatch\s+unreachable\b` | `catch unreachable` hides an error |
 
-Quirk: the R7 discard pattern does not match a builtin call such as `_ = @intCast(x)`.
+- For the discard rule, the call must be the whole value: `f()`, `a.f().g()`, `f() catch x` or `f().?`, but not `f().field`. A builtin call such as `_ = @intCast(x)` is not a discard.
+- A block with a comment only is empty after the code stripping, so `catch { // reason }` is a swallowed error.
 
 ## Suppression
-A comment `nasa-lint: allow(R<n>) <reason>` on the line or on the line above suppresses one finding. The tag works for the line rules and for R4 on the `fn` line. For R1, the tag goes on the `fn` line of the first node of the cycle.
+A comment `nasa-lint: allow(R<n>) <reason>` on the line or on the line above suppresses one finding. The tag works for the line rules, the text rules and for R4 on the `fn` line. For R1, the tag goes on the `fn` line of the first node of the cycle.
 
 ## Related
 - [nasa-lint-go.py check inventory](/specs/nasa-lint-go-py-check-inventory--01a1e9729621.md)

@@ -30,8 +30,8 @@ Task 6.3 runs the oracles and semscope on real trees: zmake, the Zig 0.17.1 stan
 - R7 reported `v, _ := f().(T)`: the blank drops the ok of a type assertion, not a call result. R7 also dropped `defer func() { _ = c.Close() }()`.
 - R1 read `g().m(` and `p[0].m(` as a call of the package function `m`. R1 also read an interface method `M() (T, bool)` in a function body as a call.
 
-## nasa-lint.py: recorded
-`nasa-lint.py` stays byte-identical with zmake ([ADR-0005](/decisions/adr-0005-two-oracles-define-nasa-p10-parity--01a1e972969b.md)). `testdata/nasa_p10/parity-divergences.json` records each difference on the Zig standard library.
+## nasa-lint.py: fixed in Task 7.3
+Task 7.3 fixes each class below. The fixture `scripts/testdata/nasa-lint/corpus-forms` holds one case for each class.
 - R1: `CALL_RE` reads `@sin(`, the decl literal `.init(` and `x.f().g(` as a call of a function of the same file. These false edges give 203 cycles that only the oracle reports.
 - R4: the body search takes the first line that ends in `{`. A parameter type `struct {` or `union(enum) {` ends the function early. `FN_RE` has no `noinline` and no `@"name"`.
 - R5: the oracle counts the assertions of a nested function also in each enclosing function. The oracle does not count an assertion on the line of `{` or `}`.
@@ -40,7 +40,17 @@ Task 6.3 runs the oracles and semscope on real trees: zmake, the Zig 0.17.1 stan
 ## Acceptance Criteria
 - [x] Each class of `nasa-lint-go.py` has a fix and a fixture.
 - [x] Each difference on the Zig standard library has a line record or a class record.
-- [ ] zmake decides whether to fix `nasa-lint.py`. semscope then removes the records.
+- [x] semscope fixes `nasa-lint.py` and removes the records of the classes.
+- [ ] zmake takes the fixed `nasa-lint.py`, so the two copies stay byte-identical ([ADR-0005](/decisions/adr-0005-two-oracles-define-nasa-p10-parity--01a1e972969b.md)).
+
+## Resolution
+Task 7.3 changes `nasa-lint.py`:
+- R1 uses the same node keys as semscope: the file path and the container path. A plain call resolves through the lexical scopes. Builtins, decl literals, method calls on expressions and nested `fn` names give no edge.
+- Function detection reads `noinline`, `extern`, `@"name"` and one-line functions. A `struct {` parameter does not open the body. Each line belongs to the innermost function.
+- R5 counts each assertion once, also on a brace line, and skips the primitive `fn assert`.
+- The R7 rules for `catch` and `else |_|` read across lines. The discard rule reads the destructure forms and `@This().f(`, and needs the call as the whole value.
+
+On zmake `src/`, the fixed script gives the same result as before: no errors, 306 functions and 614 assertions. On the Zig 0.17.1 standard library, all findings of R1, R2, R4, R7 and R9 now match semscope. The fix also showed three semscope defects, and Task 7.3 fixes them. The first is a prefix operator on a callee: `?Span(T)`, `!f(x)` and `*Q(T)`. The others are a `catch` block and an `else |_|` block with a comment only. One difference stays: [ISSUE-009](/issues/issue-009-the-zig-grammar-does-not-read-asm-clobbers-of-zig-0-15--01a1ebef12f0.md).
 
 ## Related
 - [ISSUE-006](/issues/issue-006-phase-6-exclude-flag-go-type-checks-and-parity-corpora--01a1eba38e60.md)
