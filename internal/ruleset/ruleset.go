@@ -19,6 +19,7 @@ import (
 	cueerrors "cuelang.org/go/cue/errors"
 
 	"github.com/infrashift/semscope/internal/assert"
+	nasap10 "github.com/infrashift/semscope/rules/nasa_p10"
 )
 
 //go:embed schema.cue
@@ -31,7 +32,7 @@ const (
 	MaxRules       = 4096
 	MaxParams      = 64
 	MaxOverrides   = 256
-	DefaultRuleset = "nasa-p10"
+	DefaultRuleset = nasap10.Name
 )
 
 // ParamKind is the type of a rule parameter.
@@ -83,6 +84,7 @@ type Check struct {
 	InitFunctions    []string            `json:"init_functions"`
 	AssertCalls      map[string][]string `json:"assert_calls"`
 	BannedDirectives map[string][]string `json:"banned_directives"`
+	MustCheckCalls   map[string][]string `json:"must_check_calls"`
 	Query            map[string]string   `json:"query"`
 	Patterns         map[string][]string `json:"patterns"`
 }

@@ -18,7 +18,8 @@ status: "stable"
 
 ## Shape
 - `#Ruleset`: the optional fields `name` and `description`, and the map `rules: [ID=string]: #Rule & {id: ID}`. The map key sets the rule ID.
-- `#Rule`: `id`, `enabled` (`bool | *true`), `severity` (`*"error" | "warning" | "note"`), `languages` (one or more), `title`, `message`, `params` and `check`.
+- `#Rule`: `id`, `enabled?` (`bool`), `severity?` (`"error" | "warning" | "note"`), `languages` (one or more), `title`, `message`, `params` and `check`.
+- The loader sets `enabled` to `true` and `severity` to `"error"` when a rule omits them.
 - `#Language`: `"go" | "c" | "cpp" | "zig" | "python" | "rust"`.
 - `params`: a map from a name to `int`, `string`, `bool` or `[...string]`.
 - `#PerLanguage`: a map from a language to a list of strings.
@@ -35,7 +36,7 @@ status: "stable"
 | `max_function_lines` | R4 | `max_lines: int & >0` | none |
 | `min_assertions` | R5 | `min_assertions: int & >=0`, `mode: "average" \| "per_function"` | `assert_calls?: #PerLanguage` |
 | `narrowest_scope` | R6 | none | none |
-| `checked_returns` | R7 | none | none |
+| `checked_returns` | R7 | none | `must_check_calls?: #PerLanguage` |
 | `restricted_preprocessor` | R8 | `max_conditional_depth: int & >=0` | `banned_directives?: #PerLanguage` |
 | `max_pointer_indirection` | R9 | `max_pointer_depth: int & >=0`, `allow_function_pointers: bool` | none |
 | `ast_query` | any | none | `query: [#Language]: string`; each `@violation` capture gives a finding |
@@ -56,7 +57,11 @@ status: "stable"
 6. Apply `--enable-rule` and `--omit-rule`. These flags win over the `enabled` field of any source.
 
 ## CUE defaults
-CUE unification does not replace a concrete value: `max_lines: 60` and `max_lines: 40` conflict. So the base ruleset declares each tunable value as a default, for example `max_lines: *60 | int`. An overlay with `max_lines: 40` then selects 40. The same applies to `enabled: *true | bool`.
+CUE unification does not replace a concrete value: `max_lines: 60` and `max_lines: 40` conflict. So the base ruleset declares each tunable value as a default, for example `max_lines: *60 | int`. An overlay with `max_lines: 40` then selects 40.
+
+- The same applies to lists. `nasa-p10` declares `languages: *["go", "c"] | [...]`, so an overlay can narrow the list.
+- Two different defaults cancel each other. `(*"error" | "warning") & (*"warning" | "error")` has no default, so the value stays incomplete.
+- For this reason the schema gives no defaults for `enabled` and `severity`. The loader applies them in Go. A base ruleset can declare its own default, for example `severity: *"warning" | "error" | "note"`.
 
 ## Related
 - [ADR-0002](/decisions/adr-0002-composable-cue-rulesets-with-a-nasa-p10-baseline--01a1e9729667.md): composable CUE rulesets.

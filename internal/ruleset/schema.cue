@@ -15,13 +15,15 @@ package ruleset
 // #PerLanguage maps a language to a list of names or patterns.
 #PerLanguage: [#Language]: [...string]
 
-// #Rule is one rule. A tunable value in params needs a CUE default in the
-// base ruleset, for example `max_lines: *60 | int`, so that an overlay can
-// replace it.
+// #Rule is one rule. A tunable value needs a CUE default in the base
+// ruleset, for example `max_lines: *60 | int`, so that an overlay can
+// replace it. The schema gives no defaults: two different defaults cancel
+// each other in CUE. The loader sets enabled to true and severity to
+// "error" when a rule omits them.
 #Rule: {
-	id:       =~"^[A-Za-z][A-Za-z0-9_]*(-[A-Za-z0-9_]+)*$"
-	enabled:  bool | *true
-	severity: *"error" | "warning" | "note"
+	id:        =~"^[A-Za-z][A-Za-z0-9_]*(-[A-Za-z0-9_]+)*$"
+	enabled?:  bool
+	severity?: "error" | "warning" | "note"
 	languages: [#Language, ...#Language]
 	title:   string & !=""
 	message: string & !=""
@@ -59,7 +61,9 @@ package ruleset
 #MaxFunctionLines: {kind: "max_function_lines"}
 #MinAssertions: {kind: "min_assertions", assert_calls?: #PerLanguage}
 #NarrowestScope: {kind: "narrowest_scope"}
-#CheckedReturns: {kind: "checked_returns"}
+// must_check_calls names calls whose result the code must use. The parser
+// has no type information, so the list stands in for "non-void" in C and C++.
+#CheckedReturns: {kind: "checked_returns", must_check_calls?: #PerLanguage}
 #RestrictedPreprocessor: {kind: "restricted_preprocessor", banned_directives?: #PerLanguage}
 #MaxPointerIndirection: {kind: "max_pointer_indirection"}
 

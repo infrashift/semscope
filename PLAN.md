@@ -108,7 +108,7 @@ Tracking: [ISSUE-003](.okfw/issues/issue-003-phase-3-composable-cue-ruleset-engi
   - `check`: a union with the key `kind`. The kinds are `no_goto_or_recursion`, `bounded_loops`, `no_dynamic_alloc`, `max_function_lines`, `min_assertions`, `narrowest_scope`, `checked_returns`, `restricted_preprocessor`, `max_pointer_indirection`, `ast_query` and `token_ban`.
   - The loader reads a base ruleset. It unifies the overlay files in sequence. It applies `--set`, then `--enable-rule` and `--omit-rule`.
   - The base ruleset declares each tunable value as a CUE default. An overlay value then replaces the default and does not conflict with it.
-- [ ] **Task 3.2: NASA Power of 10 ruleset.** Write `rules/nasa_p10/nasa_p10.cue` with parameters for each language. It matches every check of `nasa-lint.py` and `nasa-lint-go.py`. It adds checks for the other rules.
+- [x] **Task 3.2: NASA Power of 10 ruleset.** Write `rules/nasa_p10/nasa_p10.cue` with parameters for each language. It matches every check of `nasa-lint.py` and `nasa-lint-go.py`. It adds checks for the other rules.
   - `NASA-P10-01`: no `goto`, no `setjmp` or `longjmp`, and no direct or indirect recursion.
   - `NASA-P10-02`: no loop without a static bound, for example `for {}`, `while (true)` or `loop {}`.
   - `NASA-P10-03`: no allocator calls outside the init functions.

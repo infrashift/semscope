@@ -169,12 +169,10 @@ func TestDirectorySourceReadsCueFilesInNameSequence(t *testing.T) {
 	}
 }
 
-func TestDefaultRulesetWithoutBuiltin(t *testing.T) {
-	if _, ok := Builtin(DefaultRuleset); ok {
-		t.Skip("the built-in default ruleset exists")
-	}
-	if _, err := Load(Options{}); err == nil {
-		t.Fatalf("Load() without a built-in default gave no error")
+func TestLoadWithoutRulesetsReadsDefault(t *testing.T) {
+	r := mustLoad(t, Options{})
+	if len(r.Sources) != 1 || r.Sources[0] != "builtin:"+DefaultRuleset {
+		t.Fatalf("sources = %v", r.Sources)
 	}
 }
 

@@ -38,6 +38,12 @@ func decodeRule(v cue.Value) (Rule, error) {
 	if err := v.Decode(&rule); err != nil {
 		return Rule{}, cueError("decode rule", err)
 	}
+	if !v.LookupPath(cue.ParsePath("enabled")).Exists() {
+		rule.Enabled = true
+	}
+	if rule.Severity == "" {
+		rule.Severity = "error"
+	}
 	params, err := decodeParams(v.LookupPath(cue.ParsePath("params")))
 	if err != nil {
 		return Rule{}, fmt.Errorf("ruleset: rule %q: %w", rule.ID, err)
