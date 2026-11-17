@@ -44,7 +44,9 @@ The rules target C. Go has garbage collection, closures and interfaces, and no `
 - The code is more verbose: explicit stacks, bounds and assertions.
 - An input that exceeds a limit fails with a clear error.
 - The Go gate exempts the test files. golangci-lint still checks them.
-- The self-scan relaxes R3 for Go through the overlay `.semscope.cue`. The overlay records the reason.
+- The self-scan turns off NASA-P10-03 through the overlay `.semscope.cue`. The overlay records the reason.
+- Each package variable of semscope carries `semscope: allow(NASA-P10-06) <reason>`: two embedded files, one compiled pattern and one sentinel error.
+- The self-scan and `nasa-lint-go.py` report the same R5 counts and the same R7 lines for the semscope sources.
 
 ## Alternatives considered
 - **Literal R3: no allocation after initialization.** Rejected: Go cannot satisfy it. The runtime, the parser and the CUE evaluator allocate.

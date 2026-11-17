@@ -5,27 +5,27 @@ type: "Issue"
 kind: "issue"
 tags:
   - "issue"
-  - "open"
   - "phase-4"
   - "engine"
+  - "in-progress"
 created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+timestamp: "2026-11-17T06:55:15-06:00"
 description: "Add the Tree-sitter parsers, the bounded engine and the parity tests against both oracles."
 ---
 
 # ISSUE-004: Phase 4: Bounded engine and nasa-p10 parity
 
-**Status/Phase:** open · Phase 4
+**Status/Phase:** in-progress · Phase 4
 
 ## Description
 Add the Tree-sitter parsers for six languages, the bounded engine and the parity tests against both oracles.
 
 ## Acceptance Criteria
-- [ ] One adapter for each of Go, C, C++, Zig, Python and Rust.
-- [ ] Tree walks use a cursor. The call graph uses an iterative Tarjan search on a table with a fixed capacity.
-- [ ] Each check kind has a checker. A `switch` dispatches them.
-- [ ] Every bound gives an error when the work exceeds it.
-- [ ] The self-scan gate runs in `zmake check`.
+- [x] One adapter for each of Go, C, C++, Zig, Python and Rust.
+- [x] Tree walks use a cursor. The cycle search is iterative and its stacks have a fixed capacity. It is a three-color depth-first search, the same as in the oracles.
+- [x] Each check kind has a checker. A `switch` dispatches them.
+- [x] Every bound gives an error when the work exceeds it.
+- [x] The self-scan gate runs in `zmake check`.
 - [ ] Fixture parity with `nasa-lint.py` and `nasa-lint-go.py` is exact.
 - [ ] The corpus run on zmake `src/` shows no divergence without a recorded reason.
 

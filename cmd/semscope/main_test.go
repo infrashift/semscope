@@ -75,10 +75,44 @@ func TestUsageErrorsExitTwo(t *testing.T) {
 	}
 }
 
-func TestScanReportsTheMissingEngine(t *testing.T) {
-	_, stderr, code := cli(t, "scan", "--omit-rule", "NASA-P10-05", ".")
-	if code != exitUsage || !strings.Contains(stderr, "9 active rule(s) for 1 path(s)") {
-		t.Fatalf("code %d, stderr %q", code, stderr)
+// writeTree writes files under a new temporary directory and returns it.
+func writeTree(t *testing.T, files map[string]string) string {
+	t.Helper()
+	dir := t.TempDir()
+	for name, body := range files {
+		path := filepath.Join(dir, name)
+		if err := os.MkdirAll(filepath.Dir(path), 0o750); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	return dir
+}
+
+func TestScanExitCodesAndFormats(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"bad/a.go":  "package bad\n\nfunc f() {\n\tfor {\n\t}\n}\n",
+		"good/b.go": "package good\n",
+	})
+	out, _, code := cli(t, "scan", "--omit-rule", "NASA-P10-05", filepath.Join(dir, "bad"))
+	if code != exitFindings || !strings.Contains(out, "a.go:4:2: error: NASA-P10-02:") {
+		t.Fatalf("bad: code %d, out %q", code, out)
+	}
+	if _, _, code := cli(t, "scan", "--fail-level", "none", filepath.Join(dir, "bad")); code != exitOK {
+		t.Fatalf("--fail-level none: code %d", code)
+	}
+	if out, _, code := cli(t, "scan", filepath.Join(dir, "good")); code != exitOK || !strings.Contains(out, "0 finding(s) in 1 file(s)") {
+		t.Fatalf("good: code %d, out %q", code, out)
+	}
+	report := filepath.Join(dir, "report.json")
+	if _, _, code := cli(t, "scan", "--format", "json", "-o", report, "--omit-rule", "NASA-P10-05", filepath.Join(dir, "bad")); code != exitFindings {
+		t.Fatalf("json: code %d", code)
+	}
+	data, err := os.ReadFile(report) //nolint:gosec // the test made the path
+	if err != nil || !strings.Contains(string(data), `"ruleId": "NASA-P10-02"`) {
+		t.Fatalf("json report = %s, %v", data, err)
 	}
 }
 

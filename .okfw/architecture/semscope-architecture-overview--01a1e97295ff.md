@@ -37,6 +37,25 @@ semscope is a Go command-line tool. It reads a CUE ruleset, parses source files 
 ## Bounds
 The engine has a fixed upper bound for each kind of work: files, file size, syntax nodes, tree depth, call graph nodes and findings. When the work exceeds a bound, the engine returns an error. It does not truncate the result.
 
+## Parser
+- One `parser.Parser` holds a Tree-sitter parser and the six grammars. A worker owns one parser.
+- The walker visits the tree in pre-order with a `TreeCursor`. It does not use recursion. `MaxNodes` and `MaxDepth` bound the walk.
+- A stack with a fixed capacity (`MaxNesting`) tracks the enclosing function. The walker pops a function when a node starts after its last byte.
+- One adapter for each language turns nodes into a flat `parser.File`: functions, calls and sites. A site is a construct that a check reports, for example an unbounded loop or a global variable.
+- The adapter skips a Zig `test` block and a Rust `#[cfg(test)]` module. A Go `_test.go` file and a Python test file are exempt as a whole.
+- `File.Stripped` holds the source lines with comments and strings blanked. `token_ban` rules read it.
+
+## Engine
+- `engine.New` compiles the patterns and queries once and allocates the worker pool: one parser and one query cursor for each worker.
+- `Engine.Scan` collects the files in sorted sequence. It skips hidden, `vendor`, `testdata`, `node_modules`, `zig-cache`, `zig-out`, `target` and `__pycache__` directories.
+- Each worker parses a file, runs the per-file checks and closes the tree. A `switch` on the check kind selects the checker.
+- After the pool, the engine runs the checks over all files: the call graph for recursion and the assertion average for each language.
+- The cycle search is an iterative three-color depth-first search over sorted nodes, with one finding for each back edge. The oracles use the same search, so the findings match. A Tarjan search gives components, not the cycle path of each back edge.
+- Each finding goes through the suppression check: `semscope: allow(<ID>)`, or `nasa-lint: allow(R<n>)` for a NASA-P10 rule, on the line or the line above.
+
+## Self-scan
+`zmake selfscan` runs `semscope scan -r nasa-p10 -r .semscope.cue --fail-level warning` on `cmd`, `internal` and `rules`. The overlay `.semscope.cue` turns off NASA-P10-03 for the R3 deviation of ADR-0003.
+
 ## Related
 - [ADR-0002](/decisions/adr-0002-composable-cue-rulesets-with-a-nasa-p10-baseline--01a1e9729667.md): composable CUE rulesets.
 - [ADR-0003](/decisions/adr-0003-adapt-the-nasa-power-of-10-rules-to-go--01a1e9729678.md): the Power of 10 rules in Go.

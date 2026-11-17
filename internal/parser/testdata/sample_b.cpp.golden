@@ -1,0 +1,6 @@
+package="" imports=map[] exempt=false lines=2
+fn m key=m recv= lines=1-1 exempt=false
+fn n key=n recv= lines=2-2 exempt=false
+call fn=0 "m" name="m" qual="" unused=false line=1
+call fn=1 "new" name="new" qual="" unused=false line=2
+site kind=7 "" depth=1 fn=1 line=2

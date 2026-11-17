@@ -1,0 +1,167 @@
+package parser
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+// summary prints the record of f in a stable text form for golden files.
+func summary(f *File) string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "package=%q imports=%v exempt=%v lines=%d\n", f.Package, f.Imports, f.Exempt, len(f.Lines))
+	for _, fn := range f.Functions {
+		fmt.Fprintf(&b, "fn %s key=%s recv=%s lines=%d-%d exempt=%v\n", fn.Name, fn.Key, fn.Recv, fn.Pos.Line, fn.Pos.EndLine, fn.Exempt)
+	}
+	for _, c := range f.Calls {
+		fmt.Fprintf(&b, "call fn=%d %q name=%q qual=%q unused=%v line=%d\n", c.Fn, c.Callee, c.Name, c.Qual, c.Unused, c.Pos.Line)
+	}
+	for _, s := range f.Sites {
+		fmt.Fprintf(&b, "site kind=%d %q depth=%d fn=%d line=%d\n", s.Kind, s.Detail, s.Depth, s.Fn, s.Pos.Line)
+	}
+	return b.String()
+}
+
+func newTestParser(t *testing.T) *Parser {
+	t.Helper()
+	p, err := New(DefaultLimits())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(p.Close)
+	return p
+}
+
+func TestSamplesGolden(t *testing.T) {
+	p := newTestParser(t)
+	all, err := filepath.Glob("testdata/sample_*")
+	paths := []string{}
+	for _, path := range all {
+		if !strings.HasSuffix(path, ".golden") {
+			paths = append(paths, path)
+		}
+	}
+	if err != nil || len(paths) != 7 {
+		t.Fatalf("samples = %v, %v", paths, err)
+	}
+	for _, path := range paths {
+		t.Run(filepath.Base(path), func(t *testing.T) { checkSampleGolden(t, p, path) })
+	}
+}
+
+// checkSampleGolden parses one sample and compares its summary with the golden file.
+func checkSampleGolden(t *testing.T, p *Parser, path string) {
+	t.Helper()
+	src, err := os.ReadFile(path) //nolint:gosec // fixed testdata path
+	if err != nil {
+		t.Fatal(err)
+	}
+	lang, ok := Detect(path)
+	if !ok {
+		t.Fatalf("Detect(%s) failed", path)
+	}
+	f, tree, err := p.Parse(path, lang, src)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tree.Close()
+	got := summary(f)
+	golden := path + ".golden"
+	if os.Getenv("SEMSCOPE_UPDATE_GOLDEN") == "1" {
+		if err := os.WriteFile(golden, []byte(got), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	want, err := os.ReadFile(golden) //nolint:gosec // fixed testdata path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != string(want) {
+		t.Fatalf("record differs from %s:\n--- got\n%s--- want\n%s", golden, got, want)
+	}
+}
+
+func TestStrippedBlanksCommentsAndStrings(t *testing.T) {
+	p := newTestParser(t)
+	src := "package a\n\n// goto x\nvar s = \"for {\" // tail\nvar r = `\nfor {\n`\n"
+	f, tree, err := p.Parse("a.go", Go, []byte(src))
+	if err != nil {
+		t.Fatal(err)
+	}
+	tree.Close()
+	joined := strings.Join(f.Stripped, "\n")
+	if strings.Contains(joined, "goto") || strings.Contains(joined, "for") || len(f.Stripped) != len(f.Lines) {
+		t.Fatalf("stripped = %q", f.Stripped)
+	}
+	if !strings.Contains(f.Stripped[3], "var s =") {
+		t.Fatalf("stripped line 4 = %q", f.Stripped[3])
+	}
+}
+
+func TestTestFilesAreExempt(t *testing.T) {
+	p := newTestParser(t)
+	for _, tc := range []struct {
+		path string
+		lang Language
+	}{{"x_test.go", Go}, {"test_x.py", Python}, {"x_test.py", Python}} {
+		f, tree, err := p.Parse(tc.path, tc.lang, []byte("x"))
+		if err != nil || tree != nil || !f.Exempt {
+			t.Errorf("Parse(%s) = exempt %v, tree %v, err %v", tc.path, f != nil && f.Exempt, tree != nil, err)
+		}
+	}
+}
+
+func TestLimits(t *testing.T) {
+	small := DefaultLimits()
+	small.MaxFileBytes = 4
+	p, err := New(small)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer p.Close()
+	if _, _, err := p.Parse("a.go", Go, []byte("package a")); err == nil || !strings.Contains(err.Error(), "max 4") {
+		t.Fatalf("file size limit: err = %v", err)
+	}
+	deep := DefaultLimits()
+	deep.MaxDepth = 3
+	q, err := New(deep)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer q.Close()
+	if _, _, err := q.Parse("a.go", Go, []byte("package a\nfunc f() { g(h(i(j(1)))) }\n")); err == nil || !strings.Contains(err.Error(), "deeper than 3") {
+		t.Fatalf("depth limit: err = %v", err)
+	}
+	if _, err := New(Limits{}); err == nil {
+		t.Fatalf("New(Limits{}) gave no error")
+	}
+}
+
+func TestDetect(t *testing.T) {
+	for path, want := range map[string]Language{"a.go": Go, "a.h": C, "a.HPP": CPP, "a.zig": Zig, "a.py": Python, "a.rs": Rust} {
+		if got, ok := Detect(path); !ok || got != want {
+			t.Errorf("Detect(%s) = %s, %v", path, got, ok)
+		}
+	}
+	if _, ok := Detect("a.txt"); ok {
+		t.Errorf("Detect(a.txt) = ok")
+	}
+}
+
+func TestNormalizeAndSplitCallee(t *testing.T) {
+	for in, want := range map[string][3]string{
+		"assert.That":      {"assert.That", "assert", "That"},
+		"a -> b":           {"a.b", "a", "b"},
+		"Vec::<u8>::new":   {"Vec::new", "Vec", "new"},
+		"f[int]":           {"f", "", "f"},
+		"std.debug.assert": {"std.debug.assert", "debug", "assert"},
+	} {
+		got := normalizeCallee(in)
+		qual, name := splitCallee(got)
+		if got != want[0] || qual != want[1] || name != want[2] {
+			t.Errorf("%q -> %q (%q, %q), want %v", in, got, qual, name, want)
+		}
+	}
+}

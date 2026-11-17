@@ -1,0 +1,21 @@
+package="a" imports=map[] exempt=false lines=29
+fn walk key=T.walk recv=t lines=11-24 exempt=false
+fn helper key=helper recv= lines=26-26 exempt=false
+fn x key=x recv= lines=29-29 exempt=false
+call fn=0 "assert.That" name="That" qual="assert" unused=true line=12
+call fn=0 "foo" name="foo" qual="" unused=false line=17
+call fn=0 "bar" name="bar" qual="" unused=false line=18
+call fn=0 "t.step" name="step" qual="t" unused=true line=21
+site kind=4 "package variable `hook`" depth=0 fn=-1 line=5
+site kind=8 "function type" depth=0 fn=-1 line=5
+site kind=4 "package variable `count`" depth=0 fn=-1 line=6
+site kind=8 "function type" depth=0 fn=-1 line=8
+site kind=5 "go:linkname" depth=0 fn=-1 line=10
+site kind=7 "" depth=1 fn=0 line=11
+site kind=2 "`for` loop without a condition" depth=0 fn=0 line=13
+site kind=3 "discarded call result `_ = f(...)`" depth=0 fn=0 line=17
+site kind=3 "discarded call result `x, _ := f(...)`" depth=0 fn=0 line=18
+site kind=1 "`goto` statement" depth=0 fn=0 line=19
+site kind=7 "" depth=2 fn=0 line=22
+site kind=8 "function type" depth=0 fn=1 line=26
+site kind=8 "function type" depth=0 fn=1 line=26

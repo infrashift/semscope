@@ -1,0 +1,21 @@
+package="" imports=map[] exempt=false lines=27
+fn f key=f recv= lines=14-27 exempt=false
+call fn=0 "assert" name="assert" qual="" unused=true line=15
+call fn=0 "static_assert" name="static_assert" qual="" unused=true line=16
+call fn=0 "malloc" name="malloc" qual="" unused=true line=22
+call fn=0 "fopen" name="fopen" qual="" unused=false line=23
+call fn=0 "gets" name="gets" qual="" unused=true line=25
+call fn=0 "f" name="f" qual="" unused=false line=26
+site kind=5 "token_paste" depth=0 fn=-1 line=3
+site kind=5 "variadic_macro" depth=0 fn=-1 line=4
+site kind=5 "undef" depth=0 fn=-1 line=5
+site kind=6 "preproc_if" depth=1 fn=-1 line=6
+site kind=6 "preproc_ifdef" depth=2 fn=-1 line=7
+site kind=4 "file-scope variable `counter`" depth=0 fn=-1 line=11
+site kind=4 "file-scope variable" depth=0 fn=-1 line=13
+site kind=8 "function pointer" depth=0 fn=-1 line=13
+site kind=7 "" depth=1 fn=-1 line=13
+site kind=2 "loop with a constant true condition" depth=0 fn=0 line=17
+site kind=2 "`for` loop without a condition" depth=0 fn=0 line=18
+site kind=1 "`goto` statement" depth=0 fn=0 line=20
+site kind=7 "" depth=2 fn=0 line=24

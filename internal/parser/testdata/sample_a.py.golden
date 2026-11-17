@@ -1,0 +1,11 @@
+package="" imports=map[] exempt=false lines=16
+fn walk key=walk recv= lines=3-16 exempt=false
+call fn=0 "assert" name="assert" qual="" unused=false line=5
+call fn=0 "range" name="range" qual="" unused=false line=8
+call fn=0 "f" name="f" qual="" unused=true line=11
+call fn=0 "self.step" name="step" qual="self" unused=true line=14
+call fn=0 "exec" name="exec" qual="" unused=true line=15
+call fn=0 "walk" name="walk" qual="" unused=false line=16
+site kind=4 "`global` statement" depth=0 fn=0 line=4
+site kind=2 "unbounded loop `while True`" depth=0 fn=0 line=6
+site kind=3 "swallowed exception `except: pass`" depth=0 fn=0 line=12

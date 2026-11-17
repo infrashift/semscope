@@ -23,7 +23,7 @@ import (
 )
 
 //go:embed schema.cue
-var schemaSource string
+var schemaSource string // semscope: allow(NASA-P10-06) embedded data; the program never writes it
 
 // Limits of the loader. Input that exceeds a limit gives an error.
 const (
@@ -58,21 +58,23 @@ type Param struct {
 // String gives the parameter value in CUE syntax.
 func (p Param) String() string {
 	assert.That(p.Kind >= ParamInt && p.Kind <= ParamList, "the parameter comes from decodeParam")
+	var out string
 	switch p.Kind {
 	case ParamInt:
-		return strconv.FormatInt(p.Int, 10)
+		out = strconv.FormatInt(p.Int, 10)
 	case ParamString:
-		return strconv.Quote(p.Str)
+		out = strconv.Quote(p.Str)
 	case ParamBool:
-		return strconv.FormatBool(p.Bool)
+		out = strconv.FormatBool(p.Bool)
 	case ParamList:
 		quoted := make([]string, len(p.List))
 		for i, s := range p.List {
 			quoted[i] = strconv.Quote(s)
 		}
-		return "[" + strings.Join(quoted, ", ") + "]"
+		out = "[" + strings.Join(quoted, ", ") + "]"
 	}
-	return ""
+	assert.That(out != "", "each kind gives text")
+	return out
 }
 
 // Check is the analyzer configuration of a rule. Kind selects the checker.

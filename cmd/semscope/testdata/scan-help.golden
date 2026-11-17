@@ -1,6 +1,6 @@
 Scan the source files under each path with the active rules of the ruleset.
 The default path is the current directory.
-The exit status is 1 when a finding has the error level.
+The exit status is 1 when a finding has the --fail-level severity or a higher severity.
 
 Usage:
   semscope scan [paths...] [flags]
@@ -8,6 +8,7 @@ Usage:
 Flags:
       --disable-rule strings   the same as --omit-rule
       --enable-rule strings    enable the rules with these IDs
+      --fail-level string      the lowest severity that gives exit status 1: error, warning, note or none (default "error")
       --format string          the output format: text, json or sarif (default "text")
   -h, --help                   help for scan
       --omit-rule strings      omit the rules with these IDs

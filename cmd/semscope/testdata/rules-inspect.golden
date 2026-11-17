@@ -19,7 +19,7 @@ active rules: 10
       languages: go, c, cpp, zig, python, rust
   NASA-P10-08  error  restricted_preprocessor  Limited preprocessor
       languages: go, c, cpp, zig, python, rust
-      params: max_conditional_depth=1
+      params: max_conditional_depth=2
   NASA-P10-09  error  max_pointer_indirection  Restricted pointers
       languages: go, c, cpp, zig, rust
       params: allow_function_pointers=false max_pointer_depth=1

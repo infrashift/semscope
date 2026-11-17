@@ -26,7 +26,7 @@ func TestNasaP10Defaults(t *testing.T) {
 	}
 	params := map[string]string{
 		"NASA-P10-04.max_lines": "60", "NASA-P10-05.min_assertions": "2", "NASA-P10-05.mode": `"average"`,
-		"NASA-P10-08.max_conditional_depth": "1", "NASA-P10-09.max_pointer_depth": "1",
+		"NASA-P10-08.max_conditional_depth": "2", "NASA-P10-09.max_pointer_depth": "1",
 		"NASA-P10-09.allow_function_pointers": "false",
 	}
 	for key, val := range params {

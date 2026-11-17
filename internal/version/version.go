@@ -126,7 +126,9 @@ func SARIFVersions() []string {
 
 // IsSupportedSARIF reports whether semscope writes the SARIF version v.
 func IsSupportedSARIF(v string) bool {
-	return v == SARIF210 || v == SARIF22
+	ok := v == SARIF210 || v == SARIF22
+	assert.That(!ok || len(v) >= 3, "a supported version has a major and a minor part")
+	return ok
 }
 
 // String gives the version text that `semscope --version` prints.

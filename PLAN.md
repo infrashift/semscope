@@ -125,9 +125,9 @@ Tracking: [ISSUE-003](.okfw/issues/issue-003-phase-3-composable-cue-ruleset-engi
 
 Tracking: [ISSUE-004](.okfw/issues/issue-004-phase-4-bounded-engine-and-nasa-p10-parity--01a1e97296f3.md)
 
-- [ ] **Task 4.1: Non-recursive analyzer.** Implement `internal/parser` and `internal/engine` under the rules R1 to R10:
+- [x] **Task 4.1: Non-recursive analyzer.** Implement `internal/parser` and `internal/engine` under the rules R1 to R10:
   - Walk each syntax tree with a Tree-sitter cursor. Do not use recursion.
-  - Build the call graph in a table with a fixed capacity. Find the cycles with an iterative Tarjan algorithm.
+  - Build the call graph in a table with a fixed capacity. Find the cycles with an iterative depth-first search, the same search as in the oracles.
   - Implement one checker for each check kind. Dispatch through a `switch`, not a function table.
   - Run user Tree-sitter queries (`ast_query`). A user then adds a code rule in CUE without a change to the Go code.
   - Return an error when the work exceeds a file, node, depth or finding limit.

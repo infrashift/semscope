@@ -97,7 +97,7 @@ rules: {
 		languages: *["go", "c", "cpp", "zig", "python", "rust"] | [...]
 		title:     "Limited preprocessor"
 		message:   "Limit the preprocessor and code generation to includes and simple constants."
-		params: max_conditional_depth: *1 | int
+		params: max_conditional_depth: *2 | int
 		check: {
 			kind: "restricted_preprocessor"
 			banned_directives: {

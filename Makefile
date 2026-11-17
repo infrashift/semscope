@@ -46,9 +46,9 @@ wiki:
 	okfw validate --all
 	okfw validate --okf
 
-## selfscan: scan the semscope sources with semscope (Task 4.1)
+## selfscan: scan the semscope sources with semscope and the overlay .semscope.cue
 selfscan:
-	@echo "selfscan: not available before Task 4.1"
+	$(GO) run ./cmd/semscope scan -r nasa-p10 -r .semscope.cue --fail-level warning cmd internal rules
 
 ## sarif: write SARIF 2.1.0 and 2.2 reports for the semscope sources (Task 5.1)
 sarif:

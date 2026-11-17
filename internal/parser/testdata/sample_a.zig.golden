@@ -1,0 +1,24 @@
+package="" imports=map[other:other.zig std:std] exempt=false lines=23
+fn walk key=walk recv= lines=5-21 exempt=false
+fn helperTest key=helperTest recv= lines=23-23 exempt=true
+call fn=0 "assert" name="assert" qual="" unused=true line=6
+call fn=0 "std.debug.assert" name="assert" qual="debug" unused=true line=7
+call fn=0 "foo" name="foo" qual="" unused=false line=11
+call fn=0 "bar" name="bar" qual="" unused=false line=12
+call fn=0 "baz" name="baz" qual="" unused=false line=13
+call fn=0 "self.step" name="step" qual="self" unused=true line=15
+call fn=0 "other.go" name="go" qual="other" unused=true line=16
+site kind=5 "@import" depth=0 fn=-1 line=1
+site kind=5 "@import" depth=0 fn=-1 line=3
+site kind=4 "container-level `var counter`" depth=0 fn=-1 line=4
+site kind=7 "" depth=1 fn=0 line=5
+site kind=2 "unbounded loop `while (true)`" depth=0 fn=0 line=8
+site kind=3 "discarded call result `_ = f(...)`" depth=0 fn=0 line=11
+site kind=3 "swallowed error `catch {}`" depth=0 fn=0 line=12
+site kind=3 "`catch unreachable` hides an error" depth=0 fn=0 line=13
+site kind=3 "swallowed error `else |_| {}`" depth=0 fn=0 line=14
+site kind=8 "pointer to a function" depth=0 fn=0 line=17
+site kind=7 "" depth=2 fn=0 line=18
+site kind=5 "@cImport" depth=0 fn=0 line=19
+site kind=5 "@cInclude" depth=0 fn=0 line=19
+site kind=5 "@ptrFromInt" depth=0 fn=0 line=20

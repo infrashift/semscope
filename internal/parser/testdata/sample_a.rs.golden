@@ -1,0 +1,22 @@
+package="" imports=map[] exempt=false lines=20
+fn walk key=walk recv= lines=3-18 exempt=false
+call fn=0 "assert!" name="assert!" qual="" unused=true line=4
+call fn=0 "debug_assert_eq!" name="debug_assert_eq!" qual="" unused=true line=5
+call fn=0 "foo" name="foo" qual="" unused=false line=9
+call fn=0 "bar().unwrap" name="unwrap" qual="bar()" unused=false line=10
+call fn=0 "bar" name="bar" qual="" unused=false line=10
+call fn=0 "Box::new" name="new" qual="Box" unused=false line=11
+call fn=0 "std::ptr::null" name="null" qual="ptr" unused=false line=13
+call fn=0 "x" name="x" qual="" unused=true line=14
+call fn=0 "self.step" name="step" qual="self" unused=true line=15
+call fn=0 "Self::go" name="go" qual="Self" unused=true line=16
+call fn=0 "walk" name="walk" qual="" unused=false line=17
+site kind=4 "`static mut` item" depth=0 fn=-1 line=1
+site kind=5 "macro_rules!" depth=0 fn=-1 line=2
+site kind=8 "function pointer type" depth=0 fn=0 line=3
+site kind=2 "`loop` without a bound" depth=0 fn=0 line=6
+site kind=2 "unbounded loop `while true`" depth=0 fn=0 line=7
+site kind=3 "discarded call result `let _ = f()`" depth=0 fn=0 line=9
+site kind=3 "`unwrap` hides an error" depth=0 fn=0 line=10
+site kind=7 "" depth=2 fn=0 line=12
+site kind=7 "" depth=2 fn=0 line=13

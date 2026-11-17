@@ -8,7 +8,7 @@ import (
 )
 
 //go:embed nasa_p10.cue
-var source []byte
+var source []byte // semscope: allow(NASA-P10-06) embedded data; Source returns a copy, so no caller writes it
 
 // Name is the name of the ruleset on the command line.
 const Name = "nasa-p10"

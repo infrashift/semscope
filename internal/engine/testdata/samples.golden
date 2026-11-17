@@ -1,0 +1,67 @@
+-: error: NASA-P10-05: cpp: 0 assertions in 2 functions (average 0.00, min 2)
+-: error: NASA-P10-05: go: 1 assertions in 3 functions (average 0.33, min 2)
+-: error: NASA-P10-05: python: 1 assertions in 1 functions (average 1.00, min 2)
+-: error: NASA-P10-05: zig: 2 assertions in 4 functions (average 0.50, min 2)
+sample_a.c:3:1: error: NASA-P10-08: directive `token_paste`
+sample_a.c:4:1: error: NASA-P10-08: directive `variadic_macro`
+sample_a.c:5:1: error: NASA-P10-08: directive `undef`
+sample_a.c:11:1: error: NASA-P10-06: file-scope variable `counter`
+sample_a.c:13:1: error: NASA-P10-06: file-scope variable
+sample_a.c:13:5: error: NASA-P10-09: function pointer
+sample_a.c:14:1: error: NASA-P10-01: recursion: f -> f
+sample_a.c:17:5: error: NASA-P10-02: loop with a constant true condition
+sample_a.c:18:5: error: NASA-P10-02: `for` loop without a condition
+sample_a.c:20:5: error: NASA-P10-01: `goto` statement
+sample_a.c:22:5: warning: NASA-P10-03: allocation `malloc` in function `f`
+sample_a.c:22:5: error: NASA-P10-07: unused result of `malloc`
+sample_a.c:24:10: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+sample_a.c:25:5: error: NASA-P10-10: construct `gets`
+sample_a.c:25:16: error: NASA-P10-10: construct `// NOLINT`
+sample_a.go:3:8: error: NASA-P10-10: construct `"unsafe"`
+sample_a.go:5:5: error: NASA-P10-06: package variable `hook`
+sample_a.go:5:10: error: NASA-P10-09: function type
+sample_a.go:6:5: error: NASA-P10-06: package variable `count`
+sample_a.go:8:8: error: NASA-P10-09: function type
+sample_a.go:10:1: error: NASA-P10-08: directive `go:linkname`
+sample_a.go:13:2: error: NASA-P10-02: `for` loop without a condition
+sample_a.go:17:2: error: NASA-P10-07: discarded call result `_ = f(...)`
+sample_a.go:18:2: error: NASA-P10-07: discarded call result `x, _ := f(...)`
+sample_a.go:19:2: error: NASA-P10-01: `goto` statement
+sample_a.go:22:9: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+sample_a.go:26:16: error: NASA-P10-09: function type
+sample_a.go:26:27: error: NASA-P10-09: function type
+sample_a.go:28:1: error: NASA-P10-10: construct `// nolint`
+sample_a.py:1:8: error: NASA-P10-10: construct `ctypes`
+sample_a.py:3:1: error: NASA-P10-01: recursion: walk -> walk
+sample_a.py:4:5: error: NASA-P10-06: `global` statement
+sample_a.py:6:5: error: NASA-P10-02: unbounded loop `while True`
+sample_a.py:12:5: error: NASA-P10-07: swallowed exception `except: pass`
+sample_a.py:15:5: error: NASA-P10-08: dynamic code `exec`
+sample_a.py:15:16: error: NASA-P10-10: construct `# noqa`
+sample_a.rs:1:1: error: NASA-P10-06: `static mut` item
+sample_a.rs:2:1: error: NASA-P10-08: directive `macro_rules!`
+sample_a.rs:3:1: error: NASA-P10-01: recursion: walk -> walk
+sample_a.rs:3:20: error: NASA-P10-09: function pointer type
+sample_a.rs:6:5: error: NASA-P10-02: `loop` without a bound
+sample_a.rs:7:5: error: NASA-P10-02: unbounded loop `while true`
+sample_a.rs:9:5: error: NASA-P10-07: discarded call result `let _ = f()`
+sample_a.rs:10:13: error: NASA-P10-07: `unwrap` hides an error
+sample_a.rs:11:13: warning: NASA-P10-03: allocation `Box::new` in function `walk`
+sample_a.rs:12:12: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+sample_a.rs:13:12: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+sample_a.rs:14:5: error: NASA-P10-10: construct `unsafe { x(); }`
+sample_a.zig:4:1: error: NASA-P10-06: container-level `var counter`
+sample_a.zig:8:5: error: NASA-P10-02: unbounded loop `while (true)`
+sample_a.zig:11:5: error: NASA-P10-07: discarded call result `_ = f(...)`
+sample_a.zig:12:15: error: NASA-P10-07: swallowed error `catch {}`
+sample_a.zig:13:5: error: NASA-P10-07: `catch unreachable` hides an error
+sample_a.zig:14:21: error: NASA-P10-07: swallowed error `else |_| {}`
+sample_a.zig:17:14: error: NASA-P10-09: pointer to a function
+sample_a.zig:18:14: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+sample_a.zig:19:15: error: NASA-P10-08: directive `@cImport`
+sample_a.zig:20:15: error: NASA-P10-10: construct `@ptrFromInt`
+sample_b.cpp:1:19: error: NASA-P10-01: recursion: m -> m
+sample_b.cpp:2:23: warning: NASA-P10-03: allocation `new` in function `n`
+sample_b.zig:6:5: error: NASA-P10-01: recursion: m -> m
+sample_b.zig:9:9: error: NASA-P10-07: discarded call result `_ = f(...)`
+66 finding(s) in 7 file(s)

@@ -19,7 +19,8 @@ const (
 )
 
 // errFindings tells run that the scan wrote its report and found errors.
-var errFindings = errors.New("findings at the error level") //nolint:gochecknoglobals // sentinel error value
+// semscope: allow(NASA-P10-06) a sentinel error value; the program never writes it
+var errFindings = errors.New("findings at the error level")
 
 // run executes the command line args and returns the process exit code.
 // It prints each error once, on stderr.
