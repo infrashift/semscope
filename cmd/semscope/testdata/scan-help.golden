@@ -1,0 +1,17 @@
+Scan the source files under each path with the active rules of the ruleset.
+The default path is the current directory.
+The exit status is 1 when a finding has the error level.
+
+Usage:
+  semscope scan [paths...] [flags]
+
+Flags:
+      --disable-rule strings   the same as --omit-rule
+      --enable-rule strings    enable the rules with these IDs
+      --format string          the output format: text, json or sarif (default "text")
+  -h, --help                   help for scan
+      --omit-rule strings      omit the rules with these IDs
+  -o, --output string          the output file (default stdout)
+  -r, --ruleset stringArray    a built-in ruleset, a .cue file or a directory; repeat the flag to add overlays (default nasa-p10)
+      --sarif-version string   the SARIF version: 2.1.0, or 2.2 (an OASIS draft) (default "2.1.0")
+      --set stringArray        override a rule parameter: RULE_ID.param=value (a list value is comma-separated)

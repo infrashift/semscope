@@ -32,6 +32,18 @@ func decodeRules(v cue.Value) ([]Rule, error) {
 	return rules, nil
 }
 
+// optionalString returns the string at path in v, or "" when the field is absent.
+func optionalString(v cue.Value, path string) string {
+	assert.That(v.Exists(), "v exists")
+	f := v.LookupPath(cue.ParsePath(path))
+	if !f.Exists() {
+		return ""
+	}
+	s, err := f.String()
+	assert.That(err == nil, "the schema types the field as a string")
+	return s
+}
+
 // decodeRule decodes one concrete rule.
 func decodeRule(v cue.Value) (Rule, error) {
 	var rule Rule

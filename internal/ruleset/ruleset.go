@@ -103,6 +103,9 @@ type Rule struct {
 
 // Resolved is the result of Load.
 type Resolved struct {
+	// Name and Description come from the last source that sets them.
+	Name        string
+	Description string
 	// Sources holds the name of each source, in load sequence.
 	Sources []string
 	// Rules holds every rule, sorted by ID. An omitted rule has Enabled false.
@@ -178,7 +181,12 @@ func Load(opts Options) (Resolved, error) {
 	assert.That(len(rules) <= MaxRules, "decodeRules enforces MaxRules")
 	assert.That(sort.SliceIsSorted(rules, func(i, j int) bool { return rules[i].ID < rules[j].ID }),
 		"the rules are sorted by ID")
-	return Resolved{Sources: sources, Rules: rules}, nil
+	return Resolved{
+		Name:        optionalString(v, "name"),
+		Description: optionalString(v, "description"),
+		Sources:     sources,
+		Rules:       rules,
+	}, nil
 }
 
 // cueError formats a CUE error with its source positions.

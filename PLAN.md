@@ -80,7 +80,7 @@ Tracking: [ISSUE-001](.okfw/issues/issue-001-phase-1-repository-bootstrap-gates-
 Tracking: [ISSUE-002](.okfw/issues/issue-002-phase-2-version-package-and-cobra-cli--01a1e97296d0.md)
 
 - [x] **Task 2.1: Version package.** Add `internal/version` with `Version`, `Commit` and `BuildDate`. The `build` task sets them through `-ldflags`. Without `-ldflags`, the package reads the VCS fields of `debug.ReadBuildInfo`. The package lists the supported SARIF versions `2.1.0` and `2.2`.
-- [ ] **Task 2.2: Cobra CLI.** Build the CLI with `github.com/spf13/cobra`:
+- [x] **Task 2.2: Cobra CLI.** Build the CLI with `github.com/spf13/cobra`:
   - `semscope --version`, `semscope -v` and `semscope version` print the version metadata. The output is the same on each run.
   - `semscope scan [paths...]` takes the flags in the next items.
   - `--ruleset, -r <name-or-path>`: a built-in ruleset (default `nasa-p10`), or one or more `.cue` files or directories.

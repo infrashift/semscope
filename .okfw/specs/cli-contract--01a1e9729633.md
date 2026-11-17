@@ -13,7 +13,7 @@ status: "draft"
 
 # CLI contract
 
-This spec states the intended contract. Task 2.2 implements it.
+Task 2.2 implements the commands and the flags. Task 4.1 adds the scan engine and the exit status 1. The help text of each command has golden tests in `cmd/semscope/testdata/`.
 
 ## Commands
 | Command | Effect |
