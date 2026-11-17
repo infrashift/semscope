@@ -1,156 +1,150 @@
-# `PLAN.md` — Semscope Implementation Plan for Claude Code
+# semscope implementation plan
 
-Save the following specification as `PLAN.md` in the root of `[github.com/infrashift/semscope](https://github.com/infrashift/semscope)`:
+semscope scans source code with composable CUE rulesets. The first built-in ruleset is `nasa-p10`, the NASA Power of 10 rules. semscope writes the findings as SARIF 2.1.0, SARIF 2.2, JSON or text.
 
-```markdown
-# SEMSCOPE Implementation Plan
+This file is the phase checklist. Each phase has a mirror issue in the OKF wiki (`.okfw/issues/`). The wiki records the decisions and the reasons for them.
 
-## 0. Operational Directives & Quality Gates (Mandatory)
+## 0. Operational directives and quality gates
 
-1. **Iterative Verify-Lint-Repeat Loop:**
-   Execute this plan strictly phase-by-phase and task-by-task. After completing any code or documentation task, run the full verification suite:
-   - `python3 scripts/nasa-lint.py`
-   - `python3 scripts/ste-check.py`
-   - `go test -v -race ./...`
-   - `golangci-lint run`
-   Do not proceed to the next task until all checks exit with status `0` and zero warnings.
+### 0.1 Verify-lint-repeat loop
 
-2. **NASA Power of 10 Code Compliance:**
-   Every Go file in `semscope` must obey Gerard J. Holzmann's Power of 10 rules (https://en.wikipedia.org/wiki/The_Power_of_10:_Rules_for_Developing_Safety-Critical_Code):
-   - **Rule 1 (Simple Control Flow):** Zero recursion (direct or indirect), zero `goto`. Use explicit bounded stacks for AST/CST traversal and call-graph cycle checks.
-   - **Rule 2 (Fixed Loop Bounds):** Every loop must have a statically verifiable upper bound (`MaxFiles`, `MaxASTNodes`, `MaxStackDepth`) with an explicit guard error if breached.
-   - **Rule 3 (No Dynamic Allocation After Init):** Pre-allocate worker pools, AST node traversal stacks, and result buffers during engine initialization (`NewEngine`).
-   - **Rule 4 (Short Functions):** Maximum 60 lines per function.
-   - **Rule 5 (Assertion Density):** Enforce minimum two precondition/invariant checks per function where applicable.
-   - **Rule 6 (Smallest Scope):** Declare variables at the narrowest lexical scope.
-   - **Rule 7 (Check All Returns):** Check every error return value and parameter; never discard errors with `_`.
-   - **Rule 8 (Restricted Preprocessor / Codegen):** Keep build tags and code generation minimal and deterministic.
-   - **Rule 9 (Restricted Indirection):** Avoid deep pointer chains and dynamic function pointer tables where static dispatch suffices.
-   - **Rule 10 (Zero Warnings):** Compile and pass all static analyzers with zero warnings.
+Run the phases in sequence. Run the tasks of a phase in sequence. After each task, run the full gate:
 
-3. **ASD-STE100 & Clinical Documentation Style (Vizzini Standard):**
-   All Markdown files, OKF wiki pages, CLI help strings, and code comments must pass `scripts/ste-check.py` and adhere to these constraints:
-   - **Clinical Precision & Zero Marketing Fluff:** Write with dry, clinical objectivity. Never use marketing adjectives or intensifiers ("seamless", "blazingly fast", "robust", "effortless", "powerful", "modern", "out-of-the-box", "simply", "easily").
-   - **Non-Possessive Pronouns:** Never use possessive second-person pronouns ("your"). Replace "your" with deterministic articles such as "the" (e.g., write "the ruleset file" instead of "your ruleset file").
-   - **Sentence Length Limits:** Maximum **20 words** for procedural steps (imperatives, list items). Maximum **25 words** for descriptive prose sentences.
-   - **Active Voice Only:** Prohibit passive constructions ("is parsed by", "was created", "will be evaluated"). State the actor explicitly ("The parser reads the source file").
-   - **Lexical Economy (One Term Per Concept):** Maintain a 1:1 mapping between technical terms and concepts. Avoid nominalizations (`-tion`, `-ment`, `-ance`) and ambiguous `-ing` gerunds.
-   - **One Instruction Per Sentence:** Do not combine sequential actions into a single sentence.
+1. Run `zmake check` for the ZMakefile.
+2. Run `zmake -f Makefile check` for the Makefile.
+3. Fix each failure. Then run both gates again.
+4. Commit the task when both gates pass.
 
----
+`zmake check` runs these checks:
 
-## Phase 1: Repository Bootstrap, Baseline Linters & OKF Wiki
+- `python3 -I scripts/nasa-lint.py`: the Zig oracle. It reads `src/**/*.zig` only, so it finds no functions in this repository.
+- `python3 -I scripts/nasa-lint-go.py` and its fixture tests: the Go gate for the rules R1, R2, R4, R5, R7 and R9.
+- `gofmt -l`, `go vet ./...` and `golangci-lint run`.
+- `go test -race ./...`.
+- `okfw validate --all` and `okfw validate --okf`.
+- `python3 -I scripts/ste-check.py`.
+- From Task 4.1: `semscope scan --ruleset nasa-p10` on the semscope sources.
 
-- [ ] **Task 1.1: Go Module & Directory Layout**
-  Initialize `github.com/infrashift/semscope` (Go 1.23+). Create the package structure:
-  - `cmd/semscope/` (Entrypoint and `spf13/cobra` CLI commands)
-  - `internal/version/` (Build-time version, commit, date, and supported SARIF versions)
-  - `internal/ruleset/` (CUE ruleset loader, rule composition/omission/override evaluator, and embedded `nasa-p10` ruleset)
-  - `internal/parser/` (Go `go/ast` + Tree-sitter CST parsers for multi-language code analysis)
-  - `internal/engine/` (Non-recursive bounded AST matcher, structural query evaluator, and metric analyzer)
-  - `internal/report/` (SARIF v2.1.0 and v2.2+ generator via `go-sarif/v3`, plus text/JSON output)
-  - `rules/nasa_p10/` (Embedded CUE definition of the NASA Power of 10 ruleset)
-  - `scripts/` (Baseline linter scripts copied from `zmake`)
+Each check must exit with status 0 and report zero warnings. Do not weaken a test or a check to make a gate pass. Each suppression comment needs a reason.
 
-- [ ] **Task 1.2: Copy Baseline Linter Scripts from `zmake`**
-  Copy the two reference linter scripts from `_my_workspace_/github.com/infrashift/zmake/scripts/` into `scripts/`:
-  - `scripts/nasa-lint.py` (Serves as both the mandatory code gate and the **baseline test oracle** for `semscope`'s NASA Power of 10 ruleset).
-  - `scripts/ste-check.py` (Enforces ASD-STE100 compliance on all documentation and comments).
-  Inspect `scripts/nasa-lint.py` thoroughly and document every check, threshold, regex/AST rule, and file-type target it implements.
+### 0.2 NASA Power of 10 rules
 
-- [ ] **Task 1.3: OKF Wiki Initialization & MCP Connection**
-  - Review `_my_workspace_/github.com/infrashift/zmake/.okfw` to identify the common OKF wiki bundles, frontmatter schemas, and MADR templates.
-  - Initialize the repository OKF wiki using `~/.local/bin/okfw` configured with the standard bundles from `zmake/.okfw`.
-  - Connect to the OKF wiki MCP server and author the foundational architecture docs and ADR-0001 (Composable CUE Code Rulesets and NASA Power of 10 Baseline).
-  - Run `python3 scripts/ste-check.py` on all wiki and Markdown files until green.
+Every Go file in semscope obeys the Power of 10 rules of Gerard J. Holzmann. ADR-0003 in the wiki adapts the rules to Go.
 
----
+- **R1 Simple control flow:** Do not use recursion, direct or indirect. Do not use `goto`. Walk trees with a Tree-sitter cursor or an explicit bounded stack.
+- **R2 Fixed loop bounds:** Each loop has a static upper bound, for example `MaxFiles`, `MaxASTNodes` or `MaxTreeDepth`. A loop that reaches its bound returns an error.
+- **R3 Limited allocation:** Go allocates memory at run time. ADR-0003 records this deviation. `NewEngine` sizes the worker pool, the stacks and the result buffers. Hard limits cap all other memory use.
+- **R4 Short functions:** A function has 60 lines or fewer.
+- **R5 Assertion density:** The average is two or more `assert.That` calls per function. Assertions check programmer errors only. Bad input gives an error, not an assertion.
+- **R6 Smallest scope:** Declare each variable in the smallest scope. Do not add mutable package state.
+- **R7 Check all returns:** Check each error. Do not discard a call result with `_`. Validate each parameter.
+- **R8 Limited code generation:** Keep build tags and code generation to a minimum. Generated code is the same on each run.
+- **R9 Restricted indirection:** Do not add function types, function tables or deep pointer chains. Use static dispatch.
+- **R10 Zero warnings:** The compiler and all static analyzers report zero warnings.
 
-## Phase 2: Cobra CLI, `--version`, and Ruleset Overrides
+### 0.3 ASD-STE100 documentation style
 
-- [ ] **Task 2.1: Version Package (`internal/version`)**
-  Implement `internal/version` with build-time `-ldflags` variables (`Version`, `Commit`, `BuildDate`) and supported SARIF schema versions (`2.1.0`, `2.2`).
+All Markdown files, OKF wiki pages, CLI help strings and code comments follow ASD-STE100 Simplified Technical English. `scripts/ste-check.py` checks them.
 
-- [ ] **Task 2.2: Cobra CLI & Flags (`cmd/semscope`)**
-  Build the CLI using `github.com/spf13/cobra`:
-  - Support `semscope --version` (and `-v` / `semscope version`) outputting deterministic version metadata.
-  - Implement `semscope scan [paths...]` with flags for full ruleset customization:
-    - `--ruleset, -r <name-or-path>`: Select a built-in ruleset (default: `nasa-p10`) or one or more user-defined `.cue` files/directories.
-    - `--enable-rule <id[,id...]>`: Explicitly enable specific rules.
-    - `--omit-rule, --disable-rule <id[,id...]>`: Omit specific rules from the active ruleset.
-    - `--set <rule_id.param=value>`: Override rule parameters or thresholds from the CLI (e.g., `--set NASA-P10-04.max_lines=50`).
-    - `--format <sarif|text|json>`: Output format.
-    - `--sarif-version <2.1.0|2.2>`: Target SARIF specification version (default `2.1.0`, supporting `2.2` and higher).
-    - `--output, -o <file>`: Output file path (defaults to stdout).
-  - Implement `semscope rules list` and `semscope rules inspect <ruleset>` to display active rules, omitted rules, and effective parameter bounds.
-  - Verify with `nasa-lint.py`, `ste-check.py`, and `go test ./...`. Repeat until green.
+- Write with clinical precision. Do not use marketing words, for example `seamless`, `robust` or `powerful`.
+- Do not use the possessive `your`. Write `the ruleset file`, not `your ruleset file`.
+- Keep each procedural step to 20 words or fewer. Keep each descriptive sentence to 25 words or fewer.
+- Use active voice. Name the actor: "The parser reads the source file."
+- Use one term for one concept. Prefer a verb to a noun form: write "configure", not "configuration". The check does not flag noun forms, because `function` and `assertion` have the same suffixes.
+- Write one instruction in each sentence.
 
----
+Task order: run 2.1, then 3.1 and 3.2, then 2.2. The `scan` and `rules` commands need the ruleset engine.
 
-## Phase 3: Composable CUE Ruleset Engine & NASA Power of 10 (`internal/ruleset`)
+## Phase 1: Repository bootstrap, gates and OKF wiki
 
-- [ ] **Task 3.1: Extensible CUE Ruleset Schema (`internal/ruleset/schema.cue`)**
-  Using `cuelang.org/go/cue/cuecontext`, define a strict CUE schema supporting user-defined rulesets and composition:
-  - Rules are keyed by stable ID (`rules: [ID=string]: #Rule & { id: ID }`).
-  - Every `#Rule` includes:
-    - `id`: Stable identifier (e.g., `"NASA-P10-01"`).
-    - `enabled`: `bool | *true` (allows users to omit a rule in a custom overlay via `rules: "NASA-P10-03": enabled: false`).
-    - `severity`: `*"error" | "warning" | "note"`.
-    - `languages`: `[...("go" | "c" | "cpp" | "zig" | "python" | "rust")]`.
-    - `title` and `message`: Clinical description and violation template.
-    - `params`: Open struct `{ [string]: int | string | bool | [...string] }` for user-tunable thresholds (e.g., `max_lines: *60 | int`, `min_assertions: *2 | int`).
-    - `check`: Discriminated union defining the analyzer check type (`"no_goto_or_recursion"`, `"bounded_loops"`, `"no_dynamic_alloc"`, `"max_function_lines"`, `"min_assertions"`, `"narrowest_scope"`, `"checked_returns"`, `"restricted_preprocessor"`, `"max_pointer_indirection"`, `"ast_query"`, `"token_ban"`).
-  - Support loading a base ruleset (like `nasa-p10`), unifying user `.cue` overlay files to add new custom rules, omitting disabled rules (`enabled: false` or `--omit-rule`), and applying parameter overrides.
+- [x] **Task 1.0: Repository and build files.** Initialize git. Add `.gitignore`, `ZMakefile` and `Makefile`. The two build files hold the same tasks.
+- [x] **Task 1.1: Go module and package layout.** Initialize `github.com/infrashift/semscope` with Go 1.25. Add these packages:
+  - `cmd/semscope/`: the entry point and the `spf13/cobra` commands.
+  - `internal/assert/`: the assertion primitive for rule R5.
+  - `internal/version/`: the build version, commit, date and supported SARIF versions.
+  - `internal/ruleset/`: the CUE ruleset loader, overlays, omissions and overrides.
+  - `internal/parser/`: Tree-sitter parsers for Go, C, C++, Zig, Python and Rust.
+  - `internal/engine/`: the bounded, non-recursive checks and the structural query evaluator.
+  - `internal/report/`: SARIF 2.1.0 and 2.2 through `go-sarif/v3`, plus JSON and text.
+  - `rules/nasa_p10/`: the embedded CUE source of the `nasa-p10` ruleset.
+  - `scripts/`: the gate scripts.
+  - `.golangci.yml`: a golangci-lint v2 configuration for the Power of 10 rules.
+- [x] **Task 1.2: Baseline linter scripts.** Copy `nasa-lint.py` and `ste-check.py` from zmake into `scripts/`. `nasa-lint.py` reads Zig only. It becomes the Zig oracle for the parity tests. Write `scripts/nasa-lint-go.py`, a Go port of its six checks, with golden fixture tests.
+- [x] **Task 1.2b: Documentation style gate.** Remove the open code fence that hid this file from `ste-check.py`. Rewrite this file in STE. Add the marketing words and `your` to the banned list. Extend the check to Go comments and to cobra `Short` and `Long` strings.
+- [ ] **Task 1.3: OKF wiki.** Copy the wiki layout of zmake: `architecture/`, `specs/`, `decisions/`, `issues/`, `daily/` and two root guides. Write the architecture overview, the specs, ADR-0001 to ADR-0005 and one issue for each phase. Record the check inventory of `nasa-lint.py` as a spec. Use the okfw MCP server or the `okfw` CLI.
 
-- [ ] **Task 3.2: First Supported Ruleset — NASA Power of 10 (`rules/nasa_p10/nasa_p10.cue`)**
-  Implement the complete NASA Power of 10 ruleset (`nasa-p10`) in embedded CUE, matching and generalizing every check in `scripts/nasa-lint.py`:
-  - `NASA-P10-01`: Simple control flow (prohibit `goto`, `setjmp`/`longjmp`, and direct/indirect recursion).
-  - `NASA-P10-02`: Fixed upper bounds on all loops (reject unbounded `for {}` / `while(true)` or loops lacking an explicit upper-bound comparison or range bound).
-  - `NASA-P10-03`: No dynamic heap allocation after initialization (flag runtime heap allocations/escapes or banned allocator calls outside init phases).
-  - `NASA-P10-04`: Function length limit (`params.max_lines: *60 | int`).
-  - `NASA-P10-05`: Assertion / precondition density (`params.min_assertions: *2 | int` per non-trivial function).
-  - `NASA-P10-06`: Smallest possible lexical scope for data declarations (flag mutable package/global state or wide-scope variables).
-  - `NASA-P10-07`: Check return values of all non-void functions and validate parameters (flag blank-identifier `_ = fn()` error drops and unhandled call expressions).
-  - `NASA-P10-08`: Restricted preprocessor / macro / conditional build complexity.
-  - `NASA-P10-09`: Restricted pointer indirection (`params.max_pointer_depth: *1 | int`) and function pointer restrictions.
-  - `NASA-P10-10`: Zero compiler/analyzer warnings and banned unsafe constructs.
-  - Write unit tests verifying that user CUE files can: (a) add a custom rule `CUSTOM-01`, (b) omit `NASA-P10-05` via `enabled: false` or `--omit-rule`, and (c) modify `NASA-P10-04.params.max_lines` to `40`.
+## Phase 2: Version package and Cobra CLI
 
----
+- [ ] **Task 2.1: Version package.** Add `internal/version` with `Version`, `Commit` and `BuildDate`. The `build` task sets them through `-ldflags`. Without `-ldflags`, the package reads the VCS fields of `debug.ReadBuildInfo`. The package lists the supported SARIF versions `2.1.0` and `2.2`.
+- [ ] **Task 2.2: Cobra CLI.** Build the CLI with `github.com/spf13/cobra`:
+  - `semscope --version`, `semscope -v` and `semscope version` print the version metadata. The output is the same on each run.
+  - `semscope scan [paths...]` takes the flags in the next items.
+  - `--ruleset, -r <name-or-path>`: a built-in ruleset (default `nasa-p10`), or one or more `.cue` files or directories.
+  - `--enable-rule <id[,id...]>`: enable the given rules.
+  - `--omit-rule, --disable-rule <id[,id...]>`: remove the given rules from the active ruleset.
+  - `--set <rule_id.param=value>`: override a rule parameter, for example `--set NASA-P10-04.max_lines=50`.
+  - `--format <sarif|text|json>`: the output format.
+  - `--sarif-version <2.1.0|2.2>`: the SARIF version. The default is `2.1.0`. SARIF 2.2 is an OASIS draft.
+  - `--output, -o <file>`: the output file. The default is stdout.
+  - `semscope rules list` and `semscope rules inspect <ruleset>` show the active rules, the omitted rules and the effective parameters.
+  - An unknown rule ID or parameter in a flag gives an error.
 
-## Phase 4: Bounded Static Analysis Engine & `nasa-lint.py` Parity (`internal/engine`)
+## Phase 3: Composable CUE ruleset engine
 
-- [ ] **Task 4.1: Non-Recursive AST Analyzer (`internal/parser` & `internal/engine`)**
-  Implement the code analysis engine adhering strictly to NASA Power of 10 Rules 1–10:
-  - Use explicit pre-allocated node stacks (`[]astNodeFrame`) to walk syntax trees with zero recursion.
-  - Implement call-graph construction using iterative Tarjan/BFS cycle detection on a fixed-capacity adjacency table to detect direct and indirect recursion (`NASA-P10-01`).
-  - Implement AST structural checkers for Rules 1 through 10 plus custom user-defined Tree-sitter S-expression / AST pattern queries (`ast_query`) so users can define arbitrary new code rules in CUE without modifying Go code.
+- [ ] **Task 3.1: CUE ruleset schema.** Write `internal/ruleset/schema.cue`. Load it with `cuelang.org/go/cue/cuecontext`. The schema has these parts:
+  - The `rules` map uses the stable rule ID as the key: `rules: [ID=string]: #Rule & {id: ID}`.
+  - `id`: the stable identifier, for example `"NASA-P10-01"`.
+  - `enabled`: `bool | *true`. An overlay sets `enabled: false` to omit a rule.
+  - `severity`: `*"error" | "warning" | "note"`.
+  - `languages`: a list of `go`, `c`, `cpp`, `zig`, `python` and `rust`.
+  - `title` and `message`: a clinical description and the finding template.
+  - `params`: an open struct of tunable values, for example `max_lines: *60 | int`.
+  - `check`: a union with the key `kind`. The kinds are `no_goto_or_recursion`, `bounded_loops`, `no_dynamic_alloc`, `max_function_lines`, `min_assertions`, `narrowest_scope`, `checked_returns`, `restricted_preprocessor`, `max_pointer_indirection`, `ast_query` and `token_ban`.
+  - The loader reads a base ruleset. It unifies the overlay files in sequence. It applies `--set`, then `--enable-rule` and `--omit-rule`.
+  - The base ruleset declares each tunable value as a CUE default. An overlay value then replaces the default and does not conflict with it.
+- [ ] **Task 3.2: NASA Power of 10 ruleset.** Write `rules/nasa_p10/nasa_p10.cue` with parameters for each language. It matches every check of `nasa-lint.py` and `nasa-lint-go.py`. It adds checks for the other rules.
+  - `NASA-P10-01`: no `goto`, no `setjmp` or `longjmp`, and no direct or indirect recursion.
+  - `NASA-P10-02`: no loop without a static bound, for example `for {}`, `while (true)` or `loop {}`.
+  - `NASA-P10-03`: no allocator calls outside the init functions.
+  - `NASA-P10-04`: function length, `params.max_lines: *60 | int`.
+  - `NASA-P10-05`: assertion density, `params.min_assertions: *2 | int` and `params.mode: *"average" | "per_function"`.
+  - `NASA-P10-06`: no mutable global state.
+  - `NASA-P10-07`: no discarded call results and no swallowed errors.
+  - `NASA-P10-08`: limits on macros, conditional compilation and build directives.
+  - `NASA-P10-09`: pointer depth, `params.max_pointer_depth: *1 | int`, and no function pointer types.
+  - `NASA-P10-10`: no unsafe constructs and no lint suppressions without a reason.
+  - Unit tests: a user CUE file adds the custom rule `CUSTOM-01`. A user CUE file or `--omit-rule` omits `NASA-P10-05`. A user CUE file or `--set` sets the `max_lines` of `NASA-P10-04` to 40.
 
-- [ ] **Task 4.2: Differential Parity Testing Against `scripts/nasa-lint.py`**
-  Create a comprehensive test harness (`internal/engine/nasa_parity_test.go`) that runs both `python3 scripts/nasa-lint.py` and `semscope scan --ruleset nasa-p10` against:
-  1. Dedicated violation fixtures (`testdata/nasa_p10/violations/`) triggering each of the 10 rules individually.
-  2. Clean compliant fixtures (`testdata/nasa_p10/compliant/`).
-  3. Custom user ruleset fixtures (`testdata/custom_rulesets/`) testing rule addition, rule omission, and threshold changes.
-  4. The `semscope` source tree itself (`cmd/`, `internal/`).
-  Iterate until `semscope` achieves 100% detection parity with `nasa-lint.py` and passes all checks.
+## Phase 4: Bounded static analysis engine and parity
 
----
+- [ ] **Task 4.1: Non-recursive analyzer.** Implement `internal/parser` and `internal/engine` under the rules R1 to R10:
+  - Walk each syntax tree with a Tree-sitter cursor. Do not use recursion.
+  - Build the call graph in a table with a fixed capacity. Find the cycles with an iterative Tarjan algorithm.
+  - Implement one checker for each check kind. Dispatch through a `switch`, not a function table.
+  - Run user Tree-sitter queries (`ast_query`). A user then adds a code rule in CUE without a change to the Go code.
+  - Return an error when the work exceeds a file, node, depth or finding limit.
+  - Turn on the self-scan gate.
+- [ ] **Task 4.2: Differential parity tests.** Write `internal/engine/nasa_parity_test.go`. It runs the oracles and `semscope scan --ruleset nasa-p10` on these inputs:
+  1. Violation fixtures in `testdata/nasa_p10/violations/`, one for each rule.
+  2. Compliant fixtures in `testdata/nasa_p10/compliant/`.
+  3. Custom ruleset fixtures in `testdata/custom_rulesets/` for rule addition, rule omission and threshold changes.
+  4. The semscope sources in `cmd/` and `internal/`.
+  5. An optional corpus through `SEMSCOPE_PARITY_CORPUS`, for example the zmake `src/` tree.
 
-## Phase 5: SARIF v2.1.0+ Reporting & Final Self-Hosting Gate (`internal/report`)
+  On the fixtures, semscope and the oracles report the same set of file, line and rule. A divergence on the corpus needs a fix, or an entry with a reason in `testdata/nasa_p10/parity-divergences.json`. semscope does not copy a known defect of an oracle.
 
-- [ ] **Task 5.1: SARIF v2.1.0 and v2.2+ Producer (`github.com/owenrumney/go-sarif/v3`)**
-  Implement the SARIF reporter using `github.com/owenrumney/go-sarif/v3`:
-  - Support both `pkg/report/v210/sarif` (SARIF v2.1.0) and `pkg/report/v22/sarif` (SARIF v2.2) selectable via `--sarif-version`.
-  - Populate `tool.driver.name` (`"semscope"`), `tool.driver.version`, `tool.driver.informationUri`, and `tool.driver.rules` (only including active, non-omitted rules from the resolved CUE ruleset).
-  - Record each violation with repository-relative `artifactLocation.uri`, 1-based `startLine`, `startColumn`, `endLine`, `endColumn`, `ruleId`, and `level`.
-  - Validate the generated SARIF report via `rep.Validate()` before writing to output.
+## Phase 5: SARIF reports and self-hosting gate
 
-- [ ] **Task 5.2: Final Self-Hosting Verification & OKF Wiki Sync**
-  Execute the full self-hosting gate:
-  1. `python3 scripts/nasa-lint.py`
-  2. `python3 scripts/ste-check.py`
-  3. `./bin/semscope --version`
-  4. `./bin/semscope scan --ruleset nasa-p10 --format sarif --sarif-version 2.1.0 --output semscope-self.sarif .`
-  5. `./bin/semscope scan --ruleset nasa-p10 --format sarif --sarif-version 2.2 --output semscope-self-v22.sarif .`
-  6. `go test -v -race ./...`
-  Sync final architecture records and usage documentation to the OKF wiki via MCP and verify zero violations across the entire repository.
+- [ ] **Task 5.1: SARIF producer.** Implement the SARIF writer with `github.com/owenrumney/go-sarif/v3`:
+  - Use `pkg/report/v210/sarif` for SARIF 2.1.0 and `pkg/report/v22/sarif` for SARIF 2.2. The `--sarif-version` flag selects one.
+  - Set `tool.driver.name` to `"semscope"`. Set `tool.driver.version`, `tool.driver.informationUri` and `tool.driver.rules`. The rules list holds only the active rules.
+  - Give each finding a repository-relative `artifactLocation.uri`, a `ruleId` and a `level`. Add the 1-based `startLine`, `startColumn`, `endLine` and `endColumn`.
+  - Call `rep.Validate()` before the writer writes the report.
+- [ ] **Task 5.2: Self-hosting gate and wiki sync.** Run the full gate:
+  1. Run `zmake check` and `zmake -f Makefile check`.
+  2. Run `zmake build`.
+  3. Run `./bin/semscope --version`.
+  4. Run `./bin/semscope scan --ruleset nasa-p10 --format sarif --sarif-version 2.1.0 --output semscope-self.sarif .`.
+  5. Run `./bin/semscope scan --ruleset nasa-p10 --format sarif --sarif-version 2.2 --output semscope-self-v22.sarif .`.
+
+  Write `README.md`. Sync the architecture records and the usage notes to the OKF wiki. Verify zero violations in the repository.

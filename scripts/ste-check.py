@@ -4,6 +4,10 @@
 Errors (exit 1): banned words and phrases, procedural steps over 20 words,
 descriptive sentences over 25 words.
 Warnings (exit 0): possible passive voice.
+The check reads the Markdown files, the OKF wiki, the full-line comments of
+the Go sources in cmd, internal and rules, and the cobra Short and Long help
+strings. It skips Go test files, testdata, directive comments (`//go:`,
+`//nolint`, `// nasa-lint:`, `// semscope:`) and tab-indented code in comments.
 Run from the repository root: python3 -I scripts/ste-check.py
 Adapted from the whac-a-leak checker.
 """
@@ -16,11 +20,18 @@ MAX_PROCEDURAL = 20
 BANNED = [
     "should", "will", "won't", "would", "please", "simply", "just", "very",
     "really", "easily", "is expected to", "are expected to", "can be seen",
+    # Marketing words and the possessive "your" (PLAN.md section 0.3).
+    "seamless", "seamlessly", "blazingly", "robust", "effortless", "effortlessly",
+    "powerful", "out-of-the-box", "your",
 ]
 BANNED_RE = re.compile(r"\b(" + "|".join(re.escape(b) for b in BANNED) + r")\b", re.I)
 PASSIVE_RE = re.compile(r"\b(is|are|was|were|be|been|being)\s+\w+ed\b", re.I)
 SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=\S)")
 STEP_RE = re.compile(r"^\d+\.\s")
+GO_DIRS = ("cmd", "internal", "rules")
+GO_COMMENT_RE = re.compile(r"^\s*//(.*)$")
+GO_SKIP_COMMENTS = ("go:", "nolint", " nasa-lint:", " semscope:")
+HELP_RE = re.compile(r'\b(?:Short|Long):\s*("(?:\\.|[^"\\])*"|`[^`]*`)')
 
 
 def files(root):
@@ -30,6 +41,32 @@ def files(root):
         rel = p.relative_to(root / ".okfw")
         if rel.parts[0] not in ("daily", "ephemeral") and p.name not in ("index.md", "log.md"):
             yield p
+
+
+def go_files(root):
+    for d in GO_DIRS:
+        for p in sorted((root / d).rglob("*.go")):
+            if not p.name.endswith("_test.go") and "testdata" not in p.relative_to(root).parts:
+                yield p
+
+
+def go_blocks(text):
+    """Yield (first line index, lines) for each comment block and each help string."""
+    block, start = [], 0
+    for i, line in enumerate(text.split("\n")):
+        m = GO_COMMENT_RE.match(line)
+        body = m.group(1) if m else None
+        if body is not None and not body.startswith(GO_SKIP_COMMENTS) and not body.startswith("\t"):
+            start = start if block else i
+            block.append(body.strip())
+            continue
+        if block:
+            yield start, block
+        block = []
+    if block:
+        yield start, block
+    for m in HELP_RE.finditer(text):
+        yield text.count("\n", 0, m.start(1)), m.group(1)[1:-1].split("\n")
 
 
 def clean(line):
@@ -114,6 +151,9 @@ def main():
 
     for p in files(root):
         check(p, p.read_text(encoding="utf-8"), report)
+    for p in go_files(root):
+        for start, block in go_blocks(p.read_text(encoding="utf-8")):
+            check(p, "\n" * start + "\n".join(block), report)
     print(f"ste-check: {counts['error']} error(s), {counts['warning']} warning(s)")
     return 1 if counts["error"] else 0
 
