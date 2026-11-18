@@ -22,6 +22,7 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 
 ## Decision
 - `nasa-lint.py` is the Zig oracle. It stays byte-identical with the zmake copy. A fix goes into both copies.
+- Since zmake Phase 24, `make lint` of zmake runs semscope when it is on the `PATH`. The zmake copy of `nasa-lint.py` is the fallback for CI.
 - `nasa-lint-go.py` is the Go oracle. Its [check inventory](/specs/nasa-lint-go-py-check-inventory--01a1e9729621.md) lists its rules.
 - On the fixtures in `testdata/nasa_p10/`, semscope and the oracle report the same set of file, line and rule. The R5 averages match to two decimals.
 - On a real corpus, for example the zmake `src/` tree, each divergence needs a fix or a record in `testdata/nasa_p10/parity-divergences.json`.
