@@ -16,7 +16,7 @@ COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo unknown)
 BUILD_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMIT) -X $(VERSION_PKG).BuildDate=$(BUILD_DATE)
 
-.PHONY: all build install test lint fmt docs-style docs-dev docs-build wiki selfscan sarif parity check
+.PHONY: all build install test lint fmt docs-style docs-dev docs-dev-up docs-dev-down docs-build wiki selfscan sarif parity check
 
 all: check
 
@@ -53,6 +53,14 @@ docs-style:
 ## docs-dev: run the Astro Starlight site locally (bun)
 docs-dev:
 	cd docs && $(BUN) install && $(BUN) --bun run dev
+
+## docs-dev-up: start the site in the background (astro dev --background)
+docs-dev-up:
+	cd docs && $(BUN) install && $(BUN) --bun run astro dev --background
+
+## docs-dev-down: stop the site server of docs-dev or docs-dev-up (astro dev stop)
+docs-dev-down:
+	cd docs && $(BUN) --bun run astro dev stop
 
 ## docs-build: build the site into docs/dist (the same build as the Pages deploy)
 docs-build:

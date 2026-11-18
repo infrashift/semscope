@@ -33,6 +33,8 @@ The `ZMakefile` declares each target as a task, with no `.PHONY` list:
 | `zmake sarif` | Write the SARIF 2.1.0 and 2.2 reports of the repository |
 | `zmake parity` | Compare semscope with the oracles on the Zig and Go corpora |
 | `zmake docs-dev` | Serve this site with live reload (bun) |
+| `zmake docs-dev-up` | Start the same server in the background (`astro dev --background`) |
+| `zmake docs-dev-down` | Stop the server of `docs-dev` or `docs-dev-up` (`astro dev stop`) |
 | `zmake docs-build` | Build this site into `docs/dist`, the same build as the Pages deploy |
 
 `check` does not build the site, so the Go gates do not need bun.

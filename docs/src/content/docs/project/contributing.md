@@ -59,9 +59,14 @@ All Markdown files, wiki pages, help strings and code comments follow ASD-STE100
 The site lives in `docs/`. The pages are Markdown files in `docs/src/content/docs/`.
 
 ```sh
-zmake docs-dev     # serve the site with live reload at http://localhost:4321/semscope/
-zmake docs-build   # build the site into docs/dist
+zmake docs-dev        # serve the site with live reload at http://localhost:4321/semscope/
+zmake docs-dev-up     # start the same server in the background
+zmake docs-dev-down   # stop the server of docs-dev or docs-dev-up
+zmake docs-build      # build the site into docs/dist
 ```
+
+If Ctrl+C does not stop the `docs-dev` server, run `zmake docs-dev-down`.
+Astro records the server in `docs/.astro/dev.json`, and `docs-dev-down` stops that server.
 
 The sidebar is in `docs/astro.config.mjs`. Add each new page to it.
 A push to `main` that changes `docs/` deploys the site. A pull request only builds it.
