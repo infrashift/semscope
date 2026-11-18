@@ -8,6 +8,7 @@ semscope needs Go 1.26 or later and a C compiler, because cgo builds the Tree-si
 
 1. Run `zmake build`.
 2. Run `./bin/semscope --version`.
+3. Run `zmake install` to copy the binary to `~/.local/bin/semscope`. Set `PREFIX` to use another directory.
 
 ## Scan
 

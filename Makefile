@@ -6,6 +6,7 @@ PYTHON ?= python3
 GOLANGCI_LINT ?= $(shell $(GO) env GOPATH)/bin/golangci-lint
 GOFMT ?= $(shell $(GO) env GOROOT)/bin/gofmt
 GO_DIRS := cmd internal rules
+PREFIX ?= $(HOME)/.local
 PARITY_CORPUS ?= $(shell $(PYTHON) -I scripts/parity_corpora.py zig)
 PARITY_GO_CORPUS ?= $(shell $(PYTHON) -I scripts/parity_corpora.py go)
 VERSION_PKG := github.com/infrashift/semscope/internal/version
@@ -14,13 +15,18 @@ COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo unknown)
 BUILD_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMIT) -X $(VERSION_PKG).BuildDate=$(BUILD_DATE)
 
-.PHONY: all build test lint fmt docs-style wiki selfscan sarif parity check
+.PHONY: all build install test lint fmt docs-style wiki selfscan sarif parity check
 
 all: check
 
 ## build: compile the semscope binary into bin/
 build:
 	$(GO) build -trimpath -ldflags "$(LDFLAGS)" -o bin/semscope ./cmd/semscope
+
+## install: copy the semscope binary to $(PREFIX)/bin
+install: build
+	install -d $(PREFIX)/bin
+	install -m 0755 bin/semscope $(PREFIX)/bin/semscope
 
 ## test: run the unit tests with the race detector
 test:
