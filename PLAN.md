@@ -192,3 +192,5 @@ Tracking: [ISSUE-008](.okfw/issues/issue-008-zig-limits-of-semscope-found-by-the
 - [x] **Task 7.3: Oracle defects.** Fix the defects of `nasa-lint.py` that ISSUE-007 lists.
   - Use the semscope node keys in R1, count each line for the innermost function, and read R7 across lines.
   - Add the fixture `scripts/testdata/nasa-lint/corpus-forms` and fix the semscope defects that the fix shows.
+- [x] **Task 7.4: Zig 0.15 asm clobbers.** Let `asm_clobbers` of the patched grammar read an anonymous struct literal (ISSUE-009).
+  - Put the SHA-256 of `parser.c` in `binding.go`, so the Go build cache sees a new parser.

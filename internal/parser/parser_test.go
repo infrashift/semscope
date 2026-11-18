@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -174,6 +176,39 @@ func TestZigPrefixCalleesAndCommentBlocks(t *testing.T) {
 	}
 	if swallowed != 1 {
 		t.Errorf("a catch block with a comment only gave %d findings, want 1", swallowed)
+	}
+}
+
+func TestZigAsmStructClobbers(t *testing.T) {
+	p := newTestParser(t)
+	src := "pub fn a() u64 {\n    return asm volatile (\"ecall\"\n        : [ret] \"={x10}\" (-> u64),\n        : [number] \"{x17}\" (1),\n        : .{\n          .memory = true,\n        });\n}\n\npub fn b() void {}\n"
+	f, tree, err := p.Parse("asm.zig", Zig, []byte(src))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tree.Close()
+	if tree.RootNode().HasError() || len(f.Functions) != 2 {
+		t.Fatalf("struct clobbers: error %v, %d functions, want no error and 2: %s",
+			tree.RootNode().HasError(), len(f.Functions), tree.RootNode().ToSexp())
+	}
+}
+
+// TestZigParserHash checks that the binding names the hash of the generated
+// parser. The Go build cache does not see a new parser.c, because the cgo
+// include is outside the binding package (ADR-0010).
+func TestZigParserHash(t *testing.T) {
+	const dir = "../../third_party/tree-sitter-zig/"
+	parserC, err := os.ReadFile(dir + "src/parser.c")
+	if err != nil {
+		t.Fatal(err)
+	}
+	binding, err := os.ReadFile(dir + "bindings/go/binding.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	sum := sha256.Sum256(parserC)
+	if want := "// parser.c sha256: " + hex.EncodeToString(sum[:]); !strings.Contains(string(binding), want) {
+		t.Fatalf("binding.go does not hold %q: put the hash of the new parser.c in binding.go", want)
 	}
 }
 

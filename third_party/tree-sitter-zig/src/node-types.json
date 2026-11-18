@@ -375,6 +375,10 @@
       "required": false,
       "types": [
         {
+          "type": "anonymous_struct_initializer",
+          "named": true
+        },
+        {
           "type": "multiline_string",
           "named": true
         },

@@ -7,19 +7,5 @@
     "side": "semscope",
     "reason": "the interface method Cleanup(func()) has an unnamed func-typed parameter; a line regex cannot tell it from a call with a func literal",
     "issue": "ISSUE-007"
-  },
-  {
-    "corpus": "zig-std-0.17.1",
-    "side": "stats",
-    "oracle": [
-      12004,
-      1871
-    ],
-    "semscope": [
-      11978,
-      1871
-    ],
-    "reason": "tree-sitter-zig reads only strings as asm clobbers; Zig 0.15 writes a struct literal, so semscope loses 26 syscall functions of os/linux/alpha.zig, riscv32.zig and riscv64.zig",
-    "issue": "ISSUE-009"
   }
 ]

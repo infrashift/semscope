@@ -444,7 +444,10 @@ module.exports = grammar({
       $.expression,
       ')',
     ),
-    asm_clobbers: $ => seq(':', optionalCommaSep(choice($.string, $.multiline_string))),
+    asm_clobbers: $ => seq(':', choice(
+      optionalCommaSep(choice($.string, $.multiline_string)),
+      $.anonymous_struct_initializer,
+    )),
 
     if_expression: $ => prec.right(seq(
       $._if_prefix,

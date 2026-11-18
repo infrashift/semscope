@@ -23,7 +23,9 @@ Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. The Zig tokenize
 
 ## Decision
 - Keep a patched copy of the v1.1.2 grammar in `third_party/tree-sitter-zig`. The `replace` directive in `go.mod` selects it.
-- The patch removes three rules from `grammar.js`: `async_expression`, `await_expression` and `using_namespace_declaration`. It changes no other rule.
+- The patch removes three rules from `grammar.js`: `async_expression`, `await_expression` and `using_namespace_declaration`.
+- The patch lets `asm_clobbers` read an anonymous struct literal, the clobber form of Zig 0.15 ([ISSUE-009](/issues/issue-009-the-zig-grammar-does-not-read-asm-clobbers-of-zig-0-15--01a1ebef12f0.md)).
+- The patch changes no other rule.
 - Generate `src/parser.c` with `tree-sitter-cli` 0.25.10, the version of the go-tree-sitter runtime.
 - Base the copy on v1.1.2, not on master. Master also puts call arguments in an `arguments` node, and the adapter reads the v1.1.2 node shapes.
 - The self-scan excludes `third_party`. golangci-lint and `nasa-lint-go.py` do not read it, because it is a separate Go module.
@@ -31,6 +33,7 @@ Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. The Zig tokenize
 ## Consequences
 - Zig code before 0.15 that uses `async`, `await` or `usingnamespace` gives parse errors. semscope targets current Zig.
 - The repository holds a generated parser of about 6 MB.
+- The Go build cache does not see a new `parser.c`, because the binding includes it from outside its package. `binding.go` holds the SHA-256 of `parser.c`, so a new parser changes `binding.go` too. `TestZigParserHash` fails when the hash is old.
 - An update of the grammar is a manual task: apply the patch to the new `grammar.js` and generate again. `third_party/tree-sitter-zig/README.md` gives the steps.
 - Upstream can take the patch. A pull request is outside this task.
 
