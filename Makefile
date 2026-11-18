@@ -57,6 +57,7 @@ docs-dev:
 ## docs-dev-up: start the site in the background (astro dev --background)
 docs-dev-up:
 	cd docs && $(BUN) install && $(BUN) --bun run astro dev --background
+	@echo "docs: $$($(PYTHON) -I -c 'import json; print(json.load(open("docs/.astro/dev.json"))["url"] + "/semscope/")')"
 
 ## docs-dev-down: stop the site server of docs-dev or docs-dev-up (astro dev stop)
 docs-dev-down:
