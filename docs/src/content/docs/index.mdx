@@ -1,0 +1,56 @@
+---
+title: semscope
+description: semscope scans Go, C, C++, Zig, Python and Rust source code with composable CUE rulesets. It writes the findings as text, JSON or SARIF.
+template: splash
+hero:
+  tagline: A static analyzer for safety-critical code. The rules are CUE values. An overlay adds, omits or tunes a rule without a change to the Go code.
+  actions:
+    - text: Get Started
+      link: getting-started/
+      icon: right-arrow
+    - text: nasa-p10 Rules
+      link: reference/nasa-p10/
+      variant: secondary
+    - text: GitHub
+      link: https://github.com/infrashift/semscope
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+```console
+$ semscope scan .
+-: error: NASA-P10-05: go: 0 assertions in 2 functions (average 0.00, min 2)
+main.go:5:5: error: NASA-P10-06: package variable `counter`
+main.go:7:1: error: NASA-P10-01: recursion: walk -> walk
+main.go:15:2: error: NASA-P10-02: `for` loop without a condition
+semscope: 4 finding(s) in 1 file(s): 4 error(s), 0 warning(s), 0 note(s)
+```
+
+<CardGrid>
+	<Card title="Composable CUE rulesets" icon="puzzle">
+		A ruleset is a CUE value. The loader unifies a base ruleset with each overlay in sequence.
+		The `--set` and `--omit-rule` flags tune the result on the command line.
+	</Card>
+	<Card title="Six languages, one engine" icon="seti:config">
+		Tree-sitter parses Go, C, C++, Zig, Python and Rust. One adapter for each
+		language gives the checks a flat record of the file.
+	</Card>
+	<Card title="NASA Power of 10" icon="approve-check">
+		The built-in ruleset `nasa-p10` holds the ten NASA/JPL rules for safety-critical code.
+		Two oracle scripts define the parity of six rules.
+	</Card>
+	<Card title="SARIF 2.1.0 and 2.2" icon="document">
+		semscope writes text, JSON or SARIF. It validates each SARIF report against its JSON schema before it writes the report.
+	</Card>
+</CardGrid>
+
+## Next steps
+
+<CardGrid>
+	<LinkCard title="Getting Started" href="getting-started/" description="Build semscope and run the first scan." />
+	<LinkCard title="Rulesets & Overlays" href="guides/rulesets/" description="Extend nasa-p10 or write a new rule in CUE." />
+	<LinkCard title="CI Integration" href="guides/ci-integration/" description="Stop a build on a finding and upload SARIF to GitHub." />
+	<LinkCard title="CLI Reference" href="reference/cli/" description="Each command, flag and exit status." />
+</CardGrid>

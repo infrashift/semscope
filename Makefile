@@ -3,6 +3,7 @@
 
 GO ?= go
 PYTHON ?= python3
+BUN ?= bun
 GOLANGCI_LINT ?= $(shell $(GO) env GOPATH)/bin/golangci-lint
 GOFMT ?= $(shell $(GO) env GOROOT)/bin/gofmt
 GO_DIRS := cmd internal rules
@@ -15,7 +16,7 @@ COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo unknown)
 BUILD_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMIT) -X $(VERSION_PKG).BuildDate=$(BUILD_DATE)
 
-.PHONY: all build install test lint fmt docs-style wiki selfscan sarif parity check
+.PHONY: all build install test lint fmt docs-style docs-dev docs-build wiki selfscan sarif parity check
 
 all: check
 
@@ -48,6 +49,14 @@ fmt:
 ## docs-style: check the documentation against ASD-STE100 rules
 docs-style:
 	$(PYTHON) -I scripts/ste-check.py --strict
+
+## docs-dev: run the Astro Starlight site locally (bun)
+docs-dev:
+	cd docs && $(BUN) install && $(BUN) --bun run dev
+
+## docs-build: build the site into docs/dist (the same build as the Pages deploy)
+docs-build:
+	cd docs && $(BUN) install --frozen-lockfile && $(BUN) --bun run build
 
 ## wiki: validate the OKF wiki
 wiki:

@@ -4,6 +4,7 @@
 
 GO ?= go
 PYTHON ?= python3
+BUN ?= bun
 GOLANGCI_LINT ?= $(shell $(GO) env GOPATH)/bin/golangci-lint
 GOFMT ?= $(shell $(GO) env GOROOT)/bin/gofmt
 GO_DIRS := cmd internal rules
@@ -48,6 +49,14 @@ LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMI
 ## docs-style: check the documentation against ASD-STE100 rules
 @docs-style:
     $(PYTHON) -I scripts/ste-check.py --strict
+
+## docs-dev: run the Astro Starlight site locally (bun)
+@docs-dev:
+    cd docs && $(BUN) install && $(BUN) --bun run dev
+
+## docs-build: build the site into docs/dist (the same build as the Pages deploy)
+@docs-build:
+    cd docs && $(BUN) install --frozen-lockfile && $(BUN) --bun run build
 
 ## wiki: validate the OKF wiki
 @wiki:

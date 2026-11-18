@@ -194,3 +194,19 @@ Tracking: [ISSUE-008](.okfw/issues/issue-008-zig-limits-of-semscope-found-by-the
   - Add the fixture `scripts/testdata/nasa-lint/corpus-forms` and fix the semscope defects that the fix shows.
 - [x] **Task 7.4: Zig 0.15 asm clobbers.** Let `asm_clobbers` of the patched grammar read an anonymous struct literal (ISSUE-009).
   - Put the SHA-256 of `parser.c` in `binding.go`, so the Go build cache sees a new parser.
+
+## Phase 8: Documentation site on GitHub Pages
+
+Tracking: [ISSUE-010](.okfw/issues/issue-010-phase-8-documentation-site-on-github-pages--01a1ed3cf4ce.md)
+
+- [x] **Task 8.1: Site scaffold and build tasks.** Add an Astro Starlight site in `docs/`, the same setup as the zmake site ([ADR-0011](.okfw/decisions/adr-0011-document-semscope-with-astro-starlight-on-github-pages--01a1ed3cd653.md)).
+  - Use Astro 7, Starlight 0.41 and bun 1.3.9. Commit `docs/bun.lock`.
+  - Set the Astro `base` to `/semscope`. Use the Starlight `splash` template for the landing page.
+  - Add the tasks `docs-dev` and `docs-build` to the `ZMakefile` and the `Makefile`. `check` does not build the site.
+- [x] **Task 8.2: Pages.** Write the guides, the reference and the project pages in ASD-STE100.
+  - Guides: scanning, rulesets and overlays, output formats, suppressions and excludes, CI integration.
+  - Reference: the CLI, the `nasa-p10` rules, the ruleset schema and the make targets.
+  - Take each example output from a real run of semscope.
+- [x] **Task 8.3: Pages workflow.** Add `.github/workflows/docs-release.yml`.
+  - A pull request builds the site. A push to `main` builds the site and deploys it to GitHub Pages.
+  - The repository Pages source must be "GitHub Actions".

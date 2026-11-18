@@ -2,6 +2,8 @@
 
 semscope scans source code with composable CUE rulesets. The built-in ruleset `nasa-p10` holds the NASA/JPL Power of 10 rules for safety-critical code. semscope reads Go, C, C++, Zig, Python and Rust. It writes the findings as text, JSON, SARIF 2.1.0 or SARIF 2.2.
 
+The documentation site is at https://infrashift.github.io/semscope/. It has the guides, the CLI reference and the rules of `nasa-p10`.
+
 ## Build
 
 semscope needs Go 1.26 or later and a C compiler, because cgo builds the Tree-sitter grammars. The gates also need Python 3, golangci-lint v2, okfw and zmake.
@@ -93,5 +95,6 @@ Write `// semscope: allow(NASA-P10-07) <reason>` on the line of the finding or o
 
 - `zmake check` runs every gate: the oracle scripts, gofmt, go vet, golangci-lint, the race tests, the wiki checks, the STE check and the self-scan.
 - `zmake -f Makefile check` runs the same gates from the GNU Make file.
+- `zmake docs-dev` serves the documentation site in `docs/` with live reload. `zmake docs-build` builds it. Both need bun 1.3.9.
 - `zmake parity` compares semscope with the oracles on real code: zmake, the Zig standard library and six Go modules. `scripts/parity_corpora.py` finds them.
 - `PLAN.md` is the phase checklist. The OKF wiki in `.okfw/` records the design decisions and the specs.

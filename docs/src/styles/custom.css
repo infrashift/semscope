@@ -1,0 +1,34 @@
+/* semscope Starlight theme: a scope teal on a deep slate background.
+
+   Starlight's own theme rules live in a cascade layer, and unlayered rules
+   like these win over layered ones regardless of specificity. A plain :root
+   override of a scale color therefore leaks into light mode as well, so the
+   dark-only values are scoped to data-theme="dark" (which Starlight sets on
+   <html> after resolving "auto"). */
+:root {
+	--sl-content-width: 52rem;
+}
+
+:root[data-theme='dark'] {
+	--sl-color-accent-low: hsl(174, 55%, 13%);
+	--sl-color-accent: hsl(172, 70%, 45%);
+	--sl-color-accent-high: hsl(170, 75%, 82%);
+	--sl-color-black: hsl(210, 35%, 8%);
+	--sl-color-gray-6: hsl(210, 28%, 14%);
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: hsl(172, 60%, 88%);
+	--sl-color-accent: hsl(176, 85%, 26%);
+	--sl-color-accent-high: hsl(178, 80%, 16%);
+}
+
+/* Inline code contrast */
+:root[data-theme='light'] .sl-markdown-content :not(pre) > code {
+	background-color: hsl(172, 35%, 93%);
+	color: hsl(178, 70%, 20%);
+}
+
+.sl-markdown-content table :not(pre) > code {
+	white-space: nowrap;
+}
