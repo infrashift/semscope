@@ -94,7 +94,7 @@ Write `// semscope: allow(NASA-P10-07) <reason>` on the line of the finding or o
 
 ## Development
 
-- `zmake check` runs every gate: the oracle scripts, gofmt, go vet, golangci-lint, the race tests, the wiki checks, the STE checks and the self-scan. The lexis check runs only when lexis is on the PATH.
+- `zmake check` runs every gate: the oracle scripts, gofmt, go vet, golangci-lint, the race tests, the wiki checks, the STE checks and the self-scan. The lexiscope check runs only when lexiscope is on the PATH. `lexis` is a short alias of lexiscope.
 - `zmake -f Makefile check` runs the same gates from the GNU Make file.
 - `zmake docs-dev` serves the documentation site in `docs/` with live reload. `zmake docs-dev-up` starts the server in the background, and `zmake docs-dev-down` stops it. `zmake docs-build` builds the site. These tasks need bun 1.3.9.
 - `zmake parity` compares semscope with the oracles on real code: zmake, the Zig standard library and six Go modules. `scripts/parity_corpora.py` finds them.

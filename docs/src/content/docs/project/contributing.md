@@ -35,7 +35,7 @@ Each change follows this loop. Do not commit work while a gate fails.
 | test | `go test -race ./...` | Unit tests with the race detector |
 | wiki | `okfw validate --all`, `okfw validate --okf` | Frontmatter schema, OKF conformance, links |
 | docs-style | `scripts/ste-check.py --strict` | ASD-STE100 style |
-| docs-lexis | `lexis scan --ruleset ste-100 --ruleset vocabulary.cue --fail-on note`, when lexis is on the PATH | ASD-STE100 style of the Markdown files |
+| docs-lexiscope | `lexiscope scan --ruleset ste-100 --ruleset vocabulary.cue --fail-on note`, when lexiscope is on the PATH | ASD-STE100 style of the Markdown files |
 | selfscan | `semscope scan -r nasa-p10 -r .semscope.cue --fail-level warning .` | semscope on its own sources |
 
 ## Power of 10 rules for the Go code
@@ -48,7 +48,7 @@ Each change follows this loop. Do not commit work while a gate fails.
 
 ## Documentation style
 
-All Markdown files, wiki pages, help strings and code comments follow ASD-STE100 Simplified Technical English. `scripts/ste-check.py` checks them. lexis also checks the Markdown files, with the terms of `vocabulary.cue`.
+All Markdown files, wiki pages, help strings and code comments follow ASD-STE100 Simplified Technical English. `scripts/ste-check.py` checks them. [lexiscope](https://infrashift.github.io/lexiscope/) also checks the Markdown files, with the terms of `vocabulary.cue`.
 
 - Keep each procedural step to 20 words or fewer. Keep each descriptive sentence to 25 words or fewer.
 - Use active voice. Name the actor: "The parser reads the source file."

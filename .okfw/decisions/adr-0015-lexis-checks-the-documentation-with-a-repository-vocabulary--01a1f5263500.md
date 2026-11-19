@@ -52,3 +52,6 @@ lexis runs semscope in its own lint task (lexis ADR-0011). That task runs semsco
 - [ADR-0006](/decisions/adr-0006-zmake-runs-the-development-gates--01a1e97296ad.md): zmake runs the gates.
 - [Wiki conventions](/wiki-conventions--01a1e97256ee.md): the style rules.
 - [ISSUE-015](/issues/issue-015-phase-13-lexis-checks-the-documentation--01a1f5265a5d.md)
+
+## Later change
+- 2026-11-19: lexis is now lexiscope (lexis ADR-0012). The gate is `docs-lexiscope`, and the variable is `LEXISCOPE`. [ISSUE-016](/issues/issue-016-phase-14-the-documentation-gate-uses-the-name-lexiscope--01a1f548ca52.md) records the change.

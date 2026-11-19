@@ -1,8 +1,9 @@
 // The vocabulary of the semscope repository: technical terms of this project
-// that the lexis rules STE-100-06 and STE-100-07 do not report. The
-// docs-lexis gate loads this file over the built-in ste-100 ruleset of lexis:
+// that the lexiscope rules STE-100-06 and STE-100-07 do not report. The
+// docs-lexiscope gate loads this file over the built-in ste-100 ruleset of
+// lexiscope:
 //
-//	lexis scan --ruleset ste-100 --ruleset vocabulary.cue ...
+//	lexiscope scan --ruleset ste-100 --ruleset vocabulary.cue ...
 //
 // Add a term only when it names a concept of the project, a tool or a
 // standard. Rewrite other prose.

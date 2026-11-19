@@ -61,7 +61,7 @@ All documentation follows ASD-STE100 Simplified Technical English. This includes
   - *gate*: one check in `zmake check`. *task* and *phase*: units of work in `PLAN.md`.
 - Do not use the words `should`, `will`, `would`, `please`, `simply`, `just`, `very`, `really`, `easily` or `your`. Do not use marketing language.
 - Run `zmake docs-style`. The check (`scripts/ste-check.py`) reports banned words and long sentences as errors. It reports possible passive voice as warnings. The gate allows zero warnings.
-- Run `zmake docs-lexis`. lexis also reports noun forms, -ing forms and unapproved words. Each finding fails the gate. Add a term to `vocabulary.cue` only when it names a concept of the project, a tool or a standard ([ADR-0015](/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md)).
+- Run `zmake docs-lexiscope`. lexiscope also reports noun forms, -ing forms and unapproved words. Each finding fails the gate. Add a term to `vocabulary.cue` only when it names a concept of the project, a tool or a standard ([ADR-0015](/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md)).
 
 ## Housekeeping
 - Use `okfw move` and `okfw delete`. Do not use `mv` or `rm`. The okfw commands repair links and update the `index.md` listings.

@@ -65,7 +65,7 @@ The engine has a fixed upper bound for each kind of work: files, file size, synt
 `zmake selfscan` runs `semscope scan -r nasa-p10 -r .semscope.cue --fail-level warning .` on the whole repository. The overlay `.semscope.cue` turns off NASA-P10-03 for the R3 deviation of ADR-0003. It also excludes the Python gate scripts. `zmake sarif` writes the same scan as SARIF 2.1.0 and SARIF 2.2.
 
 ## Documentation checks
-`zmake docs-style` checks the documentation with `scripts/ste-check.py`. `zmake docs-lexis` scans the Markdown files with lexis and the repository vocabulary `vocabulary.cue`, when lexis is on the PATH. [ADR-0015](/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md) records the gate.
+`zmake docs-style` checks the documentation with `scripts/ste-check.py`. `zmake docs-lexiscope` scans the Markdown files with lexiscope and the repository vocabulary `vocabulary.cue`, when lexiscope is on the PATH. [ADR-0015](/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md) records the gate.
 
 ## Related
 - [ADR-0002](/decisions/adr-0002-composable-cue-rulesets-with-a-nasa-p10-baseline--01a1e9729667.md): composable CUE rulesets.

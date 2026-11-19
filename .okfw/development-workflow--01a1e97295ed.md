@@ -38,10 +38,10 @@ Every change follows this loop. Do not report or commit work while a gate fails.
 | test | `go test -race ./...` | Unit tests with the race detector |
 | wiki | `okfw validate --all`, `okfw validate --okf` | Frontmatter schema, OKF conformance, links |
 | docs-style | `scripts/ste-check.py` | ASD-STE100 style |
-| docs-lexis | `lexis scan --ruleset ste-100 --ruleset vocabulary.cue --fail-on note`, when lexis is on the PATH | ASD-STE100 style of the Markdown files, with the repository vocabulary |
+| docs-lexiscope | `lexiscope scan --ruleset ste-100 --ruleset vocabulary.cue --fail-on note`, when lexiscope is on the PATH | ASD-STE100 style of the Markdown files, with the repository vocabulary |
 | selfscan | `semscope scan --ruleset nasa-p10` (from Task 4.1) | semscope on its own sources |
 
-[ADR-0015](/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md) records the `docs-lexis` gate. `zmake check` does not build the docs site. `zmake docs-build` builds it with bun ([ADR-0011](/decisions/adr-0011-document-semscope-with-astro-starlight-on-github-pages--01a1ed3cd653.md)).
+[ADR-0015](/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md) records the `docs-lexiscope` gate. `lexis` is a short alias of lexiscope. `zmake check` does not build the docs site. `zmake docs-build` builds it with bun ([ADR-0011](/decisions/adr-0011-document-semscope-with-astro-starlight-on-github-pages--01a1ed3cd653.md)).
 
 The ZMakefile (zmake, with `@name:` tasks) and the Makefile (GNU Make syntax) hold the same tasks. zmake reads the ZMakefile first, also with `--legacy`. Run `zmake -f Makefile check` to run the Makefile.
 

@@ -24,7 +24,7 @@ Run the phases in sequence. Run the tasks of a phase in sequence. After each tas
 - `okfw validate --all` and `okfw validate --okf`.
 - `python3 -I scripts/ste-check.py`.
 - From Task 4.1: `semscope scan --ruleset nasa-p10` on the semscope sources.
-- From Phase 13: `lexis scan --ruleset ste-100 --ruleset vocabulary.cue` on the Markdown files, when lexis is on the PATH.
+- From Phase 13: `lexiscope scan --ruleset ste-100 --ruleset vocabulary.cue` on the Markdown files, when lexiscope is on the PATH. `lexis` is a short alias of lexiscope.
 
 Each check must exit with status 0 and report zero warnings. Do not weaken a test or a check to make a gate pass. Each suppression comment needs a reason.
 
@@ -53,7 +53,7 @@ All Markdown files, OKF wiki pages, CLI help strings and code comments follow AS
 - Use active voice. Name the actor: "The parser reads the source file."
 - Use one term for one concept. Prefer a verb to a noun form: write "configure", not "configuration". The check does not flag noun forms, because `function` and `assertion` have the same suffixes.
 - Write one instruction in each sentence.
-- From Phase 13, lexis also checks the Markdown files. It reports noun forms and -ing forms. `vocabulary.cue` lists the terms of the project that it accepts.
+- From Phase 13, lexiscope also checks the Markdown files. It reports noun forms and -ing forms. `vocabulary.cue` lists the terms of the project that it accepts.
 
 Task order: run 2.1, then 3.1 and 3.2, then 2.2. The `scan` and `rules` commands need the ruleset engine.
 
@@ -262,3 +262,23 @@ Acceptance criteria:
 - `zmake check` and `zmake -f Makefile check` pass with lexis on the PATH.
 - The lexis scan gives 0 errors, 0 warnings and 0 notes.
 - `zmake -n check` and `make -n check` print the same commands.
+
+## Phase 14: The documentation gate uses the name lexiscope
+
+Issue: [ISSUE-016](.okfw/issues/issue-016-phase-14-the-documentation-gate-uses-the-name-lexiscope--01a1f548ca52.md)
+
+lexis has the official name lexiscope from lexis commit `c8963c9` (lexis ADR-0012). `lexis` is a short alias of lexiscope.
+
+- [x] **Task 14.1: Make files.** Rename the gate `docs-lexis` to `docs-lexiscope` in the `ZMakefile` and the `Makefile`.
+  - Rename the variables `LEXIS`, `DOCS_LEXIS_PATHS` and `DOCS_LEXIS_FLAGS` to `LEXISCOPE`, `DOCS_LEXISCOPE_PATHS` and `DOCS_LEXISCOPE_FLAGS`.
+  - Set the default of `LEXISCOPE` to `lexiscope`. The comments and the message name lexiscope.
+- [x] **Task 14.2: Documents.** Use the name lexiscope in the current documents.
+  - Update `CLAUDE.md`, `README.md`, `vocabulary.cue`, the wiki guides, the architecture overview and the site pages.
+  - Keep the old name in the records. Add a dated note to ADR-0015.
+
+Acceptance criteria:
+
+- `zmake -n check`, `make -n check` and `zmake -f Makefile -n check` print the same commands.
+- `LEXISCOPE=no-such-tool zmake docs-lexiscope` prints a message and passes.
+- `zmake check` and `zmake -f Makefile check` pass with lexiscope on the PATH.
+- The lexiscope scan gives 0 errors, 0 warnings and 0 notes.
