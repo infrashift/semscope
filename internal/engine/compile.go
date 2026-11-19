@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	ts "github.com/tree-sitter/go-tree-sitter"
+	ts "github.com/infrashift/ztree/bindings/go"
 
 	"github.com/infrashift/semscope/internal/assert"
 	"github.com/infrashift/semscope/internal/parser"
@@ -72,12 +72,10 @@ func (cr *compiledRule) compileQuery(lang parser.Language, src string) error {
 	}
 	idx, found := q.CaptureIndexForName(violationCapture)
 	if !found {
-		q.Close()
 		return fmt.Errorf("engine: rule %s: %s query has no @%s capture", cr.rule.ID, lang, violationCapture)
 	}
 	assert.That(idx < uint(len(q.CaptureNames())), "the capture index is valid")
 	if idx > math.MaxUint32 {
-		q.Close()
 		return fmt.Errorf("engine: rule %s: %s query has too many captures", cr.rule.ID, lang)
 	}
 	cr.queries[lang], cr.capture[lang] = q, uint32(idx)
@@ -87,8 +85,7 @@ func (cr *compiledRule) compileQuery(lang parser.Language, src string) error {
 
 func (cr *compiledRule) close() {
 	assert.That(cr.queries != nil, "the rule has a query map")
-	for lang, q := range cr.queries {
-		q.Close()
+	for lang := range cr.queries {
 		delete(cr.queries, lang)
 	}
 	assert.That(len(cr.queries) == 0, "each query is closed")

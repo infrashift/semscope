@@ -225,7 +225,6 @@ func (e *Engine) processFile(wk worker, s source) fileResult {
 	if f.Exempt {
 		return fileResult{file: f}
 	}
-	defer tree.Close()
 	findings := e.checkFile(f, src, tree, wk.cursor)
 	f.Stripped = nil
 	assert.That(f.Path == s.rel, "the file keeps its relative path")

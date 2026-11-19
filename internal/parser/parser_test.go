@@ -64,11 +64,10 @@ func checkSampleGolden(t *testing.T, p *Parser, path string) {
 	if !ok {
 		t.Fatalf("Detect(%s) failed", path)
 	}
-	f, tree, err := p.Parse(path, lang, src)
+	f, _, err := p.Parse(path, lang, src)
 	if err != nil {
 		t.Fatal(err)
 	}
-	tree.Close()
 	got := summary(f)
 	golden := path + ".golden"
 	if os.Getenv("SEMSCOPE_UPDATE_GOLDEN") == "1" {
@@ -88,11 +87,10 @@ func checkSampleGolden(t *testing.T, p *Parser, path string) {
 func TestStrippedBlanksCommentsAndStrings(t *testing.T) {
 	p := newTestParser(t)
 	src := "package a\n\n// goto x\nvar s = \"for {\" // tail\nvar r = `\nfor {\n`\n"
-	f, tree, err := p.Parse("a.go", Go, []byte(src))
+	f, _, err := p.Parse("a.go", Go, []byte(src))
 	if err != nil {
 		t.Fatal(err)
 	}
-	tree.Close()
 	joined := strings.Join(f.Stripped, "\n")
 	if strings.Contains(joined, "goto") || strings.Contains(joined, "for") || len(f.Stripped) != len(f.Lines) {
 		t.Fatalf("stripped = %q", f.Stripped)
@@ -118,11 +116,10 @@ func TestTestFilesAreExempt(t *testing.T) {
 func TestCallsHaveNames(t *testing.T) {
 	p := newTestParser(t)
 	src := "fn f(n: usize) void {\n    for ((n - 1)..(2 * n)) |_| {}\n    for (0..(n - 1) / 2) |_| {}\n    g();\n}\n"
-	f, tree, err := p.Parse("range.zig", Zig, []byte(src))
+	f, _, err := p.Parse("range.zig", Zig, []byte(src))
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer tree.Close()
 	for _, c := range f.Calls {
 		if c.Name == "" {
 			t.Errorf("call without a name: callee %q at line %d", c.Callee, c.Pos.Line)
@@ -137,7 +134,6 @@ func TestZig017Identifiers(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer tree.Close()
 	if tree.RootNode().HasError() {
 		t.Fatalf("Zig 0.17 identifiers give a parse error: %s", tree.RootNode().ToSexp())
 	}
@@ -156,11 +152,10 @@ func TestZig017Identifiers(t *testing.T) {
 func TestZigPrefixCalleesAndCommentBlocks(t *testing.T) {
 	p := newTestParser(t)
 	src := "fn f(T: type) void {\n    _ = ?Span(T);\n    if (!valid(T)) {}\n    const q: *Q(T) = undefined;\n    g() catch {\n        // ignored\n    };\n}\n"
-	f, tree, err := p.Parse("p.zig", Zig, []byte(src))
+	f, _, err := p.Parse("p.zig", Zig, []byte(src))
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer tree.Close()
 	var names []string
 	for _, c := range f.Calls {
 		names = append(names, c.Name)
@@ -186,7 +181,6 @@ func TestZigAsmStructClobbers(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer tree.Close()
 	if tree.RootNode().HasError() || len(f.Functions) != 2 {
 		t.Fatalf("struct clobbers: error %v, %d functions, want no error and 2: %s",
 			tree.RootNode().HasError(), len(f.Functions), tree.RootNode().ToSexp())
@@ -208,7 +202,6 @@ func TestZigEmptyContainersAndRareForms(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer tree.Close()
 	if tree.RootNode().HasError() || len(f.Functions) != 2 {
 		t.Fatalf("rare forms: error %v, %d functions, want no error and 2: %s",
 			tree.RootNode().HasError(), len(f.Functions), tree.RootNode().ToSexp())

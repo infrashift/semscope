@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	ts "github.com/tree-sitter/go-tree-sitter"
+	ts "github.com/infrashift/ztree/bindings/go"
 
 	"github.com/infrashift/semscope/internal/assert"
 )
@@ -54,17 +54,16 @@ func New(limits Limits) (*Parser, error) {
 	return p, nil
 }
 
-// Close frees the Tree-sitter parser.
+// Close releases the Tree-sitter parser. Go owns the memory of ztree.
 func (p *Parser) Close() {
 	assert.That(p.grammars != nil, "New made the grammars")
 	assert.That(p.ts != nil, "the parser is open")
-	p.ts.Close()
 	p.ts = nil
 	assert.That(p.ts == nil, "the parser is closed")
 }
 
 // Parse parses src as lang. For a test file it returns a File with Exempt
-// set and a nil tree. Else the caller closes the returned tree.
+// set and a nil tree.
 func (p *Parser) Parse(path string, lang Language, src []byte) (*File, *ts.Tree, error) {
 	assert.That(p.ts != nil, "the parser is open")
 	if len(src) > p.limits.MaxFileBytes {
@@ -85,12 +84,11 @@ func (p *Parser) Parse(path string, lang Language, src []byte) (*File, *ts.Tree,
 		}
 		p.current = lang
 	}
-	tree := p.ts.Parse(src, nil)
-	if tree == nil {
-		return nil, nil, fmt.Errorf("%s: the parser gave no tree", path)
+	tree, err := p.ts.Parse(src)
+	if err != nil {
+		return nil, nil, fmt.Errorf("%s: %w", path, err)
 	}
 	if err := p.w.run(f, src, tree.RootNode(), p.limits); err != nil {
-		tree.Close()
 		return nil, nil, err
 	}
 	assert.That(len(f.Stripped) == len(f.Lines), "the stripped text keeps every line")

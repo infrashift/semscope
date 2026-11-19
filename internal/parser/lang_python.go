@@ -1,7 +1,7 @@
 package parser
 
 import (
-	ts "github.com/tree-sitter/go-tree-sitter"
+	ts "github.com/infrashift/ztree/bindings/go"
 
 	"github.com/infrashift/semscope/internal/assert"
 )

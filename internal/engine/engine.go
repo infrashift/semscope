@@ -13,7 +13,7 @@ import (
 	"path"
 	"runtime"
 
-	ts "github.com/tree-sitter/go-tree-sitter"
+	ts "github.com/infrashift/ztree/bindings/go"
 
 	"github.com/infrashift/semscope/internal/assert"
 	"github.com/infrashift/semscope/internal/parser"
@@ -129,7 +129,6 @@ func (e *Engine) Close() {
 		e.rules[i].close()
 	}
 	for _, w := range e.workers {
-		w.cursor.Close()
 		w.parser.Close()
 	}
 	e.rules, e.workers = nil, nil

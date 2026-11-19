@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	ts "github.com/tree-sitter/go-tree-sitter"
+	ts "github.com/infrashift/ztree/bindings/go"
 
 	"github.com/infrashift/semscope/internal/assert"
 )
@@ -33,7 +33,6 @@ func (w *walker) run(f *File, src []byte, root *ts.Node, limits Limits) error {
 	w.f, w.src, w.lang, w.limits, w.records = f, src, f.Lang, limits, 0
 	w.fnStack, w.fnEnds, w.blanks = w.fnStack[:0], w.fnEnds[:0], w.blanks[:0]
 	c := root.Walk()
-	defer c.Close()
 	depth := 0
 	for steps := 0; steps < limits.MaxNodes; steps++ {
 		n := c.Node()

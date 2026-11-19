@@ -4,13 +4,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	tszig "github.com/tree-sitter-grammars/tree-sitter-zig/bindings/go"
-	ts "github.com/tree-sitter/go-tree-sitter"
-	tsc "github.com/tree-sitter/tree-sitter-c/bindings/go"
-	tscpp "github.com/tree-sitter/tree-sitter-cpp/bindings/go"
-	tsgo "github.com/tree-sitter/tree-sitter-go/bindings/go"
-	tspy "github.com/tree-sitter/tree-sitter-python/bindings/go"
-	tsrust "github.com/tree-sitter/tree-sitter-rust/bindings/go"
+	ts "github.com/infrashift/ztree/bindings/go"
 
 	"github.com/infrashift/semscope/internal/assert"
 )
@@ -66,17 +60,17 @@ func Grammar(lang Language) (*ts.Language, bool) {
 	var g *ts.Language
 	switch lang {
 	case Go:
-		g = ts.NewLanguage(tsgo.Language())
+		g = ts.NewLanguage(ts.LangGo)
 	case C:
-		g = ts.NewLanguage(tsc.Language())
+		g = ts.NewLanguage(ts.LangC)
 	case CPP:
-		g = ts.NewLanguage(tscpp.Language())
+		g = ts.NewLanguage(ts.LangCPP)
 	case Zig:
-		g = ts.NewLanguage(tszig.Language())
+		g = ts.NewLanguage(ts.LangZig)
 	case Python:
-		g = ts.NewLanguage(tspy.Language())
+		g = ts.NewLanguage(ts.LangPython)
 	case Rust:
-		g = ts.NewLanguage(tsrust.Language())
+		g = ts.NewLanguage(ts.LangRust)
 	}
 	assert.That(g == nil || g.AbiVersion() > 0, "a grammar has an ABI version")
 	return g, g != nil
