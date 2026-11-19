@@ -17,4 +17,5 @@
 * [ISSUE-011: Phase 9: the Zig grammar of ztree](issue-011-phase-9-the-zig-grammar-of-ztree--01a1f3fdc1c1.md) - semscope takes the Zig grammar of ztree, so that both give the same trees for empty containers and three rare Zig forms.
 * [ISSUE-012: Phase 10: the ztree runtime](issue-012-phase-10-the-ztree-runtime--01a1f4bf5f39.md) - semscope parses with the ztree Go binding in place of go-tree-sitter, and the gates build libztree.a first.
 * [ISSUE-013: The unused Zig grammar in third_party](issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md) - third_party/tree-sitter-zig and its replace directive have no user in the build since semscope uses the ztree runtime.
+* [ISSUE-014: The Go parity corpus lost five modules](issue-014-the-go-parity-corpus-lost-five-modules--01a1f5102109.md) - scripts/parity_corpora.py listed go-tree-sitter after semscope removed it, so go list failed and the Go parity corpus held the fixture only.
 

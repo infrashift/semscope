@@ -25,7 +25,6 @@ GO_MODULES = (
     "github.com/spf13/pflag",
     "github.com/owenrumney/go-sarif/v3",
     "cuelang.org/go",
-    "github.com/tree-sitter/go-tree-sitter",
     "golang.org/x/tools",
 )
 
@@ -53,8 +52,11 @@ def zig_corpora():
 
 def go_corpora():
     entries = [f"corpus-forms={pathlib.Path('scripts/testdata/nasa-lint-go/corpus-forms').resolve()}"]
-    listing = run(["go", "list", "-m", "-f", "{{.Path}}@{{.Version}}={{.Dir}}", *GO_MODULES])
-    entries += [line for line in listing.split("\n") if "=" in line and not line.endswith("=")]
+    # One `go list` for each module: when one module is not a dependency,
+    # `go list` fails, and only that module is skipped (ISSUE-014).
+    for module in GO_MODULES:
+        listing = run(["go", "list", "-m", "-f", "{{.Path}}@{{.Version}}={{.Dir}}", module])
+        entries += [line for line in listing.split("\n") if "=" in line and not line.endswith("=")]
     return entries
 
 

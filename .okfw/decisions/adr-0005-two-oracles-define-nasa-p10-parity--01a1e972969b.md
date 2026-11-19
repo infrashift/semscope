@@ -44,7 +44,7 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 ## Corpora (Task 6.3)
 - `scripts/parity_corpora.py` gives the default corpora of `zmake parity`.
 - The Zig corpora are the fixture `scripts/testdata/nasa-lint/corpus-forms`, zmake and the standard library of the installed Zig (`zig-std-<version>`).
-- The Go corpora are the fixture `scripts/testdata/nasa-lint-go/corpus-forms` and six modules of the module cache: cobra, pflag, go-sarif, CUE, go-tree-sitter and x/tools.
+- The Go corpora are the fixture `scripts/testdata/nasa-lint-go/corpus-forms` and five modules of the module cache: cobra, pflag, go-sarif, CUE and x/tools. Until [ISSUE-014](/issues/issue-014-the-go-parity-corpus-lost-five-modules--01a1f5102109.md), the list also held go-tree-sitter.
 - A divergence record has one of three forms. A line record names one file, line and rule. A class record gives the exact count of the other differences of one rule and one side. A stats record gives the R5 counts of both tools.
 - A class record is only for a defect with many instances, for example the false call edges of `nasa-lint.py` on the Zig standard library. The test fails when the count changes in either direction, and also on a stale record.
 - `nasa-lint-go.py` is a semscope script. A defect that a corpus shows gets a fix and a fixture, not a record.
@@ -55,6 +55,10 @@ Results on 2026-11-17:
 - x/tools: one line record. A line regex cannot see an unnamed func-typed parameter of an interface method.
 - Zig 0.17.1 standard library: exact parity after the fixes of [ISSUE-007](/issues/issue-007-oracle-defects-found-by-the-corpus-parity-test--01a1ebb7320f.md) and [ISSUE-009](/issues/issue-009-the-zig-grammar-does-not-read-asm-clobbers-of-zig-0-15--01a1ebef12f0.md): 12004 functions and 1871 assertions in both tools.
 - The corpora found eight semscope defects and nine `nasa-lint-go.py` defects. Task 6.3 fixes them.
+
+Results on 2026-11-19, with the ztree runtime ([ISSUE-014](/issues/issue-014-the-go-parity-corpus-lost-five-modules--01a1f5102109.md)):
+- The nine corpora pass: the two fixtures, zmake, the Zig 0.17.1 standard library, cobra, pflag, go-sarif, CUE and x/tools.
+- The line record of x/tools stays valid. There is no new divergence.
 
 ## Alternatives considered
 - **Bug-for-bug parity.** Rejected: semscope then reports false recursion and misses assertions in one-line functions.

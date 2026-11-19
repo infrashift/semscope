@@ -235,3 +235,11 @@ Tracking: [ISSUE-013](.okfw/issues/issue-013-the-unused-zig-grammar-in-third-par
 - [x] **Task 11.1: Remove the grammar copy.** Remove `third_party/tree-sitter-zig`, its `replace` directive and `TestZigParserHash` ([ADR-0014](.okfw/decisions/adr-0014-the-zig-grammar-lives-in-ztree-only--01a1f4d211fc.md)).
   - Remove the `third_party` entry of `.semscope.cue`.
   - Mark ADR-0010 and ADR-0012 as deprecated. Update the site pages.
+
+## Phase 12: The Go parity corpus
+
+Tracking: [ISSUE-014](.okfw/issues/issue-014-the-go-parity-corpus-lost-five-modules--01a1f5102109.md)
+
+- [x] **Task 12.1: Corpus list.** Remove `go-tree-sitter` from `GO_MODULES` in `scripts/parity_corpora.py`. Run one `go list -m` for each module, so a missing module skips that module only.
+  - `zmake parity` passes on the three Zig corpora and the six Go corpora with the ztree runtime.
+  - Update the corpus list of ADR-0005.
