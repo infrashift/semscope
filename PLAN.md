@@ -210,3 +210,11 @@ Tracking: [ISSUE-010](.okfw/issues/issue-010-phase-8-documentation-site-on-githu
 - [x] **Task 8.3: Pages workflow.** Add `.github/workflows/docs-release.yml`.
   - A pull request builds the site. A push to `main` builds the site and deploys it to GitHub Pages.
   - The repository Pages source must be "GitHub Actions".
+
+## Phase 9: The Zig grammar of ztree
+
+Tracking: [ISSUE-011](.okfw/issues/issue-011-phase-9-the-zig-grammar-of-ztree--01a1f3fdc1c1.md)
+
+- [x] **Task 9.1: Zig grammar.** Take the `grammar.js` of ztree in `third_party/tree-sitter-zig` ([ADR-0012](.okfw/decisions/adr-0012-the-zig-grammar-of-ztree--01a1f3fda243.md)).
+  - The grammar adds empty containers and three rare forms to the patch of ADR-0010.
+  - Generate `src/parser.c` with `tree-sitter-cli` 0.25.10 and put its SHA-256 in `binding.go`.

@@ -83,3 +83,11 @@ Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. No release of
 This site lives in `docs/`. It uses Astro, Starlight and bun 1.3.9, the same
 versions as the zmake site. A GitHub Actions workflow deploys it to GitHub
 Pages. `zmake check` does not build the site, so the Go gates do not need bun.
+
+### ADR-0012: The Zig grammar of ztree
+
+semscope takes the patched Zig grammar of ztree. It adds four changes to the
+patch of ADR-0010. A container can be empty. A container field can be an error
+set. A slice can hold an `if` type. The asm clobbers can be an identifier. The
+generated parser is the same as the parser of ztree, so both give the same
+trees.

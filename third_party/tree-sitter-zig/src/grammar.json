@@ -227,6 +227,10 @@
                           {
                             "type": "SYMBOL",
                             "name": "comptime_type_expression"
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "error_set_declaration"
                           }
                         ]
                       }
@@ -250,6 +254,10 @@
                       {
                         "type": "SYMBOL",
                         "name": "comptime_type_expression"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "error_set_declaration"
                       }
                     ]
                   }
@@ -1108,8 +1116,16 @@
           "value": "{"
         },
         {
-          "type": "SYMBOL",
-          "name": "_container_members"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_container_members"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -1150,8 +1166,16 @@
           "value": "{"
         },
         {
-          "type": "SYMBOL",
-          "name": "_container_members"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_container_members"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -1217,8 +1241,16 @@
           "value": "{"
         },
         {
-          "type": "SYMBOL",
-          "name": "_container_members"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_container_members"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -1323,8 +1355,16 @@
           "value": "{"
         },
         {
-          "type": "SYMBOL",
-          "name": "_container_members"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_container_members"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -2656,6 +2696,10 @@
             {
               "type": "SYMBOL",
               "name": "anonymous_struct_initializer"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
             }
           ]
         }
@@ -4700,8 +4744,17 @@
             }
           },
           {
-            "type": "SYMBOL",
-            "name": "type_expression"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "type_expression"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "if_type_expression"
+              }
+            ]
           }
         ]
       }

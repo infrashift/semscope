@@ -8,14 +8,18 @@ This directory holds a patched copy of the Tree-sitter Zig grammar. semscope use
 - License: MIT. See `LICENSE`.
 
 ## Patch
-Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. The release grammar still reserves them. Zig 0.17 code uses `await` as an identifier, for example in `std.Io`, so the release grammar gives parse errors. Zig 0.15 also writes the clobbers of `asm` as a struct literal, for example `: .{ .rcx = true }`. The release grammar reads strings only. The patch changes four rules of `grammar.js`:
+Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. The release grammar still reserves them. Zig 0.17 code uses `await` as an identifier, for example in `std.Io`, so the release grammar gives parse errors. Zig 0.15 also writes the clobbers of `asm` as a struct literal, for example `: .{ .rcx = true }`. The release grammar reads strings only. `grammar.js` is the same as the grammar of ztree (`third_party/grammars/zig/` in ztree, ADR-0012 in the semscope wiki). The patch changes these rules:
 
 1. It removes `async_expression` and its reference in `expression`.
 2. It removes `await_expression` and its reference in `expression`.
 3. It removes `using_namespace_declaration` and its reference in the container members.
 4. `asm_clobbers` also reads an anonymous struct literal (ISSUE-009 in the semscope wiki).
+5. The bodies of `struct`, `enum`, `union` and `opaque` can be empty. The release grammar puts a MISSING `identifier` in `struct {}`.
+6. `container_field` also reads an error set as the field type or as a tuple field, for example `w: error{A},`.
+7. `slice_type` also reads an `if` type, for example `[]if (c) A else B`.
+8. `asm_clobbers` also reads an identifier, for example `: clobbers);`.
 
-The patch changes no other rule. Upstream master after v1.1.2 also puts call arguments in an `arguments` node. This copy does not take that change, so the node shapes stay the same as in v1.1.2.
+The patch changes no other rule. Make a change in ztree first, then copy `grammar.js` here. Upstream master after v1.1.2 also puts call arguments in an `arguments` node. This copy does not take that change, so the node shapes stay the same as in v1.1.2.
 
 ## Files
 - `grammar.js`: the patched grammar.

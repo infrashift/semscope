@@ -379,6 +379,10 @@
           "named": true
         },
         {
+          "type": "identifier",
+          "named": true
+        },
+        {
           "type": "multiline_string",
           "named": true
         },
@@ -1043,6 +1047,10 @@
             "named": true
           },
           {
+            "type": "error_set_declaration",
+            "named": true
+          },
+          {
             "type": "false",
             "named": false
           },
@@ -1066,6 +1074,10 @@
         "types": [
           {
             "type": "comptime_type_expression",
+            "named": true
+          },
+          {
+            "type": "error_set_declaration",
             "named": true
           },
           {
@@ -1183,7 +1195,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "comptime_declaration",
@@ -1872,7 +1884,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "comptime_declaration",
@@ -2079,6 +2091,10 @@
           "named": true
         },
         {
+          "type": "if_type_expression",
+          "named": true
+        },
+        {
           "type": "type_expression",
           "named": true
         }
@@ -2142,7 +2158,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "comptime_declaration",
@@ -2341,7 +2357,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "comptime_declaration",

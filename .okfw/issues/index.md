@@ -14,4 +14,5 @@
 * [ISSUE-008: Zig limits of semscope found by the corpus parity test](issue-008-zig-limits-of-semscope-found-by-the-corpus-parity-test--01a1ebb73216.md) - The Zig grammar v1.1.2 lags Zig 0.17, and the Zig call graph gives same-name functions of one file one node.
 * [ISSUE-009: The Zig grammar does not read asm clobbers of Zig 0.15](issue-009-the-zig-grammar-does-not-read-asm-clobbers-of-zig-0-15--01a1ebef12f0.md) - Zig 0.15 writes asm clobbers as a struct literal; tree-sitter-zig reads strings only, so 26 syscall functions of the Zig standard library are lost.
 * [ISSUE-010: Phase 8: Documentation site on GitHub Pages](issue-010-phase-8-documentation-site-on-github-pages--01a1ed3cf4ce.md) - Add an Astro Starlight documentation site in docs/, docs-dev and docs-build tasks, and a GitHub Actions workflow that deploys the site to GitHub Pages.
+* [ISSUE-011: Phase 9: the Zig grammar of ztree](issue-011-phase-9-the-zig-grammar-of-ztree--01a1f3fdc1c1.md) - semscope takes the Zig grammar of ztree, so that both give the same trees for empty containers and three rare Zig forms.
 

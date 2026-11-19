@@ -36,6 +36,7 @@ Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. The Zig tokenize
 - The Go build cache does not see a new `parser.c`, because the binding includes it from outside its package. `binding.go` holds the SHA-256 of `parser.c`, so a new parser changes `binding.go` too. `TestZigParserHash` fails when the hash is old.
 - An update of the grammar is a manual task: apply the patch to the new `grammar.js` and generate again. `third_party/tree-sitter-zig/README.md` gives the steps.
 - Upstream can take the patch. A pull request is outside this task.
+- [ADR-0012](/decisions/adr-0012-the-zig-grammar-of-ztree--01a1f3fda243.md) replaces this grammar with the grammar of ztree. It adds empty containers and three rare forms.
 
 ## Alternatives considered
 - **Wait for a release.** Rejected: master does not remove the keywords.

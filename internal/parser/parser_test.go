@@ -193,6 +193,28 @@ func TestZigAsmStructClobbers(t *testing.T) {
 	}
 }
 
+// TestZigEmptyContainersAndRareForms checks the four changes that the grammar
+// takes from ztree (ADR-0012): empty containers, an error set as a container
+// field, a slice of an if type and an identifier as the asm clobbers.
+func TestZigEmptyContainersAndRareForms(t *testing.T) {
+	p := newTestParser(t)
+	src := "const A = struct {};\nconst B = enum {};\nconst C = union {};\nconst D = *opaque {};\n" +
+		"const P = struct { w: error{A}, v: error{ B, C } = undefined };\n" +
+		"const T = struct { error{foo}, u8 };\n" +
+		"const S = struct { vec: []const if (c) A else B };\n" +
+		"fn g() void {\n    asm volatile (\"svc #0\"\n        : [r] \"={x0}\" (-> usize),\n        : [n] \"{x8}\" (n),\n        : clobbers);\n}\n\n" +
+		"fn h() void {}\n"
+	f, tree, err := p.Parse("forms.zig", Zig, []byte(src))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tree.Close()
+	if tree.RootNode().HasError() || len(f.Functions) != 2 {
+		t.Fatalf("rare forms: error %v, %d functions, want no error and 2: %s",
+			tree.RootNode().HasError(), len(f.Functions), tree.RootNode().ToSexp())
+	}
+}
+
 // TestZigParserHash checks that the binding names the hash of the generated
 // parser. The Go build cache does not see a new parser.c, because the cgo
 // include is outside the binding package (ADR-0010).

@@ -15,4 +15,5 @@
 * [ADR-0009: Type information for the Go check of NASA-P10-07](adr-0009-type-information-for-the-go-check-of-nasa-p10-07--01a1eba86090.md) - When go_types is true, semscope loads the Go packages with golang.org/x/tools/go/packages and reports each call, defer and go statement that drops an error result.
 * [ADR-0010: A patched Zig grammar for Zig 0.17](adr-0010-a-patched-zig-grammar-for-zig-0-17--01a1ebe05590.md) - semscope keeps a patched copy of tree-sitter-zig v1.1.2 without the keywords async, await and usingnamespace, because no release reads Zig 0.17.
 * [ADR-0011: Document semscope with Astro Starlight on GitHub Pages](adr-0011-document-semscope-with-astro-starlight-on-github-pages--01a1ed3cd653.md) - An Astro Starlight site in docs/, built with bun and deployed to GitHub Pages by GitHub Actions; the docs toolchain stays outside the Go build and the check gate.
+* [ADR-0012: The Zig grammar of ztree](adr-0012-the-zig-grammar-of-ztree--01a1f3fda243.md) - semscope takes the patched Zig grammar of ztree, which adds empty containers and three rare forms to the patch of ADR-0010.
 

@@ -1,7 +1,7 @@
 // The cgo include of ../../src/parser.c is outside this package, so the Go
 // build cache does not see a new parser.c. The hash below changes this file
 // with each new parser.c, and a semscope test checks it:
-// parser.c sha256: 175d799a6aa10770ac3162c3409f217ff0b866c0104fa285ad17b1e1af64d4a3
+// parser.c sha256: 1eb3ae82f298dfa64801d7e1698a33bcd0d4417c961255a7959840976de8e512
 package tree_sitter_zig
 
 // #cgo CFLAGS: -std=c11 -fPIC
