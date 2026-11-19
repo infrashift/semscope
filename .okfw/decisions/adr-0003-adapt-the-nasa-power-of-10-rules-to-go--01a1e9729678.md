@@ -15,10 +15,10 @@ description: "semscope follows the Power of 10 rules where Go allows; nasa-lint-
 
 **Status:** Accepted
 **Date:** 2026-11-17
-**Source:** User request (`PLAN.md` section 0.2). zmake ADR-0003 adapts the rules to Zig. Gerard J. Holzmann, "The Power of 10: Rules for Developing Safety-Critical Code" (2006).
+**Source:** User request (`PLAN.md` section 0.2). zmake ADR-0003 adapts the rules to Zig. Gerard J. Holzmann, "The Power of 10" (2006).
 
 ## Context
-The rules target C. Go has garbage collection, closures and interfaces, and no `assert` statement. `nasa-lint.py` checks Zig only. Some rules need an adaptation.
+The rules target C. Go has garbage collection, closures and interfaces, and no `assert` statement. `nasa-lint.py` checks Zig only. Some rules need changes for Go.
 
 ## Decision
 | Rule | semscope adaptation | Check |
@@ -45,14 +45,14 @@ The rules target C. Go has garbage collection, closures and interfaces, and no `
 - An input that exceeds a limit fails with a clear error.
 - The Go gate exempts the test files. golangci-lint still checks them.
 - The self-scan turns off NASA-P10-03 through the overlay `.semscope.cue`. The overlay records the reason.
-- The overlay also excludes `scripts`: the Python gate tooling. `nasa-lint.py` stays byte-identical, because it is the Zig oracle.
+- The overlay also excludes `scripts`: the Python gate scripts. `nasa-lint.py` stays byte-identical, because it is the Zig oracle.
 - Each package variable of semscope carries `semscope: allow(NASA-P10-06) <reason>`: two embedded files, one compiled pattern and one sentinel error.
 - The self-scan and `nasa-lint-go.py` report the same R5 counts and the same R7 lines for the semscope sources.
 
 ## Alternatives considered
 - **Literal R3: no allocation after initialization.** Rejected: Go cannot satisfy it. The runtime, the parser and the CUE evaluator allocate.
 - **A minimum of two assertions in each function.** Rejected for the gate: trivial functions then need assertions without value. The `per_function` mode stays available.
-- **Rewrite `nasa-lint.py` for Go.** Rejected: the script then stops being a faithful Zig oracle.
+- **Rewrite `nasa-lint.py` for Go.** Rejected: the script is then no longer a faithful Zig oracle.
 
 ## Related
 - [nasa-lint-go.py check inventory](/specs/nasa-lint-go-py-check-inventory--01a1e9729621.md)

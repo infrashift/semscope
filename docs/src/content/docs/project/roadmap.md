@@ -18,10 +18,12 @@ description: The phases of the semscope implementation plan and their state.
 | 9 | The Zig grammar of ztree: empty containers and three rare Zig forms | Complete |
 | 10 | The ztree runtime in place of go-tree-sitter | Complete |
 | 11 | The Zig grammar lives in ztree only | Complete |
+| 12 | The Go parity corpus holds six Go modules again | Complete |
+| 13 | lexis checks the documentation with a repository vocabulary | Complete |
 
 ## Releases
 
-semscope has no binary release. Build it from source. See [Getting Started](../../getting-started/).
+semscope has no binary release. Build it from source. The [build steps](../../getting-started/) tell how.
 
 ## Known limits
 

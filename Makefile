@@ -1,5 +1,5 @@
 # semscope development gates. Plain GNU Make syntax, so GNU Make and zmake can run this file.
-# The ZMakefile holds the same tasks in modern mode. Run `zmake -f Makefile check` for this file.
+# The ZMakefile holds the same tasks in zmake syntax, with `@name:` tasks. Run `zmake -f Makefile check` for this file.
 
 GO ?= go
 PYTHON ?= python3
@@ -11,6 +11,13 @@ GOLANGCI_LINT ?= $(shell $(GO) env GOPATH)/bin/golangci-lint
 GOFMT ?= $(shell $(GO) env GOROOT)/bin/gofmt
 GO_DIRS := cmd internal rules
 PREFIX ?= $(HOME)/.local
+# lexis checks the Markdown documentation against ASD-STE100 with the
+# vocabulary.cue of this repository (ADR-0015). docs-lexis runs it only when it
+# is on the PATH, so semscope does not depend on lexis. Each finding fails it.
+LEXIS ?= lexis
+DOCS_LEXIS_PATHS := README.md CLAUDE.md PLAN.md docs/src/content/docs .okfw
+DOCS_LEXIS_FLAGS := --ruleset ste-100 --ruleset vocabulary.cue --fail-on note \
+	--exclude .okfw/daily --exclude .okfw/ephemeral --exclude index.md --exclude log.md
 PARITY_CORPUS ?= $(shell $(PYTHON) -I scripts/parity_corpora.py zig)
 PARITY_GO_CORPUS ?= $(shell $(PYTHON) -I scripts/parity_corpora.py go)
 VERSION_PKG := github.com/infrashift/semscope/internal/version
@@ -19,7 +26,7 @@ COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo unknown)
 BUILD_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 LDFLAGS := -X $(VERSION_PKG).Version=$(VERSION) -X $(VERSION_PKG).Commit=$(COMMIT) -X $(VERSION_PKG).BuildDate=$(BUILD_DATE)
 
-.PHONY: all ztree build install test lint fmt docs-style docs-dev docs-dev-up docs-dev-down docs-build wiki selfscan sarif parity check
+.PHONY: all ztree build install test lint fmt docs-style docs-lexis docs-dev docs-dev-up docs-dev-down docs-build wiki selfscan sarif parity check
 
 all: check
 
@@ -57,6 +64,10 @@ fmt:
 docs-style:
 	$(PYTHON) -I scripts/ste-check.py --strict
 
+## docs-lexis: check the Markdown documentation with lexis and vocabulary.cue (each finding fails)
+docs-lexis:
+	if command -v $(LEXIS) >/dev/null 2>&1; then $(LEXIS) scan $(DOCS_LEXIS_FLAGS) $(DOCS_LEXIS_PATHS); else echo "docs-lexis: $(LEXIS) not found, so ste-check.py checks the documentation alone"; fi
+
 ## docs-dev: run the Astro Starlight site locally (bun)
 docs-dev:
 	cd docs && $(BUN) install && $(BUN) --bun run dev
@@ -93,4 +104,4 @@ parity: ztree
 	SEMSCOPE_PARITY_CORPUS="$(PARITY_CORPUS)" SEMSCOPE_PARITY_GO_CORPUS="$(PARITY_GO_CORPUS)" $(GO) test -count=1 -timeout 900s -run NasaParityCorpus -v ./internal/engine/
 
 ## check: run every gate
-check: lint test wiki docs-style selfscan
+check: lint test wiki docs-style docs-lexis selfscan

@@ -37,7 +37,7 @@ description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles
 - The divergence file documents each known oracle quirk that a corpus hits.
 
 ## Results
-- Fixtures: 14 trees, exact parity, including the oracle quirk that line rules apply inside Zig test helpers.
+- Fixtures: 14 trees, exact parity. The parity includes the oracle quirk that line rules apply inside Zig test helpers.
 - zmake `src/`: exact parity, with 306 functions and 614 assertions in both tools.
 - semscope sources: exact parity with `nasa-lint-go.py`.
 

@@ -5,14 +5,14 @@ description: The ZMakefile and Makefile tasks that build, test, lint and documen
 
 The semscope repository has two build files with the same tasks:
 
-- `ZMakefile` holds the tasks in zmake modern mode. `zmake check` reads it, because zmake finds a `ZMakefile` first.
+- `ZMakefile` holds the tasks in zmake syntax, with `@name:` tasks. `zmake check` reads it, because zmake finds a `ZMakefile` first.
 - `Makefile` holds the same tasks in plain GNU Make syntax. `zmake -f Makefile check` and `make check` read it.
 
 The `ZMakefile` declares each target as a task, with no `.PHONY` list:
 
 ```make
 ## check: run every gate
-@check: lint test wiki docs-style selfscan
+@check: lint test wiki docs-style docs-lexis selfscan
 
 ## docs-dev: run the Astro Starlight site locally (bun)
 @docs-dev:
@@ -28,9 +28,10 @@ The `ZMakefile` declares each target as a task, with no `.PHONY` list:
 | `zmake lint` | `gofmt -l`, `nasa-lint.py`, `nasa-lint-go.py` and its fixture tests, `go vet` and `golangci-lint run` |
 | `zmake fmt` | `gofmt -w` on the Go sources |
 | `zmake docs-style` | `scripts/ste-check.py --strict`: checks the documentation against ASD-STE100 rules |
+| `zmake docs-lexis` | `lexis scan` with `vocabulary.cue` on the Markdown files. Each finding fails it. It passes with a message when lexis is not on the PATH. |
 | `zmake wiki` | `okfw validate --all` and `okfw validate --okf` on the project wiki |
 | `zmake selfscan` | semscope scans its own sources with `nasa-p10` and the overlay `.semscope.cue` |
-| `zmake check` | `lint`, `test`, `wiki`, `docs-style` and `selfscan` |
+| `zmake check` | `lint`, `test`, `wiki`, `docs-style`, `docs-lexis` and `selfscan` |
 | `zmake sarif` | Write the SARIF 2.1.0 and 2.2 reports of the repository |
 | `zmake parity` | Compare semscope with the oracles on the Zig and Go corpora |
 | `zmake docs-dev` | Serve this site with live reload (bun) |
@@ -39,7 +40,7 @@ The `ZMakefile` declares each target as a task, with no `.PHONY` list:
 | `zmake docs-build` | Build this site into `docs/dist`, the same build as the Pages deploy |
 
 `check` does not build the site, so the Go gates do not need bun.
-`docs-style` checks the pages of this site, so `check` finds a style error in them.
+`docs-style` and `docs-lexis` check the pages of this site, so `check` finds a style error in them.
 
 Before a commit, run `zmake check` and `zmake -f Makefile check`. When you change the site, also run `zmake docs-build`.
 Fix each failure and run the gates again until all pass.
@@ -53,5 +54,6 @@ Fix each failure and run the gates again until all pass.
 | `BUN` | `bun` | The bun command for the site |
 | `PREFIX` | `$(HOME)/.local` | The install prefix |
 | `GOLANGCI_LINT` | `$(go env GOPATH)/bin/golangci-lint` | The golangci-lint binary |
+| `LEXIS` | `lexis` | The lexis binary of `docs-lexis` |
 
 Set a variable on the command line, for example `zmake install PREFIX=/usr/local`.

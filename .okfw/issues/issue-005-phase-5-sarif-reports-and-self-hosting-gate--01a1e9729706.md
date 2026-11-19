@@ -18,7 +18,7 @@ description: "Add the SARIF 2.1.0 and 2.2 writers and run the final self-hosting
 **Status/Phase:** closed · Phase 5
 
 ## Description
-Add the SARIF 2.1.0 and SARIF 2.2 writers through `go-sarif/v3`, then run the final self-hosting gate.
+Add the SARIF 2.1.0 and SARIF 2.2 writers through `go-sarif/v3`, then run the final self-scan gate.
 
 ## Acceptance Criteria
 - [x] `--sarif-version` selects `pkg/report/v210/sarif` or `pkg/report/v22/sarif`.

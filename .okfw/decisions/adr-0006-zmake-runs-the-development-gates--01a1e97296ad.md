@@ -18,10 +18,10 @@ description: "A ZMakefile and a Makefile hold the same gate tasks; zmake runs bo
 **Source:** User request on 2026-11-17: "use zmake rather than make. Construct Makefile(s) and ZMakefiles."
 
 ## Context
-semscope needs one command that runs every gate. zmake is the infrashift Make implementation. Its own repository keeps a ZMakefile and a Makefile with the same tasks.
+semscope needs one command that runs every gate. zmake is the Make tool of infrashift. Its own repository keeps a ZMakefile and a Makefile with the same tasks.
 
 ## Decision
-- `ZMakefile` holds the gates in zmake modern mode: `@name:` tasks and no `.PHONY` list.
+- `ZMakefile` holds the gates in zmake syntax: `@name:` tasks and no `.PHONY` list.
 - `Makefile` holds the same tasks in GNU Make syntax.
 - `zmake check` runs the ZMakefile. `zmake -f Makefile check` runs the Makefile.
 - Each task commit needs both gates green.

@@ -24,6 +24,7 @@ Run the phases in sequence. Run the tasks of a phase in sequence. After each tas
 - `okfw validate --all` and `okfw validate --okf`.
 - `python3 -I scripts/ste-check.py`.
 - From Task 4.1: `semscope scan --ruleset nasa-p10` on the semscope sources.
+- From Phase 13: `lexis scan --ruleset ste-100 --ruleset vocabulary.cue` on the Markdown files, when lexis is on the PATH.
 
 Each check must exit with status 0 and report zero warnings. Do not weaken a test or a check to make a gate pass. Each suppression comment needs a reason.
 
@@ -37,7 +38,7 @@ Every Go file in semscope obeys the Power of 10 rules of Gerard J. Holzmann. ADR
 - **R4 Short functions:** A function has 60 lines or fewer.
 - **R5 Assertion density:** The average is two or more `assert.That` calls per function. Assertions check programmer errors only. Bad input gives an error, not an assertion.
 - **R6 Smallest scope:** Declare each variable in the smallest scope. Do not add mutable package state.
-- **R7 Check all returns:** Check each error. Do not discard a call result with `_`. Validate each parameter.
+- **R7 Check all returns:** Check each error. Do not discard a call result with `_`. Check each parameter.
 - **R8 Limited code generation:** Keep build tags and code generation to a minimum. Generated code is the same on each run.
 - **R9 Restricted indirection:** Do not add function types, function tables or deep pointer chains. Use static dispatch.
 - **R10 Zero warnings:** The compiler and all static analyzers report zero warnings.
@@ -46,18 +47,19 @@ Every Go file in semscope obeys the Power of 10 rules of Gerard J. Holzmann. ADR
 
 All Markdown files, OKF wiki pages, CLI help strings and code comments follow ASD-STE100 Simplified Technical English. `scripts/ste-check.py` checks them.
 
-- Write with clinical precision. Do not use marketing words, for example `seamless`, `robust` or `powerful`.
+- Write precise, clinical text. Do not use marketing words, for example `seamless`, `robust` or `powerful`.
 - Do not use the possessive `your`. Write `the ruleset file`, not `your ruleset file`.
 - Keep each procedural step to 20 words or fewer. Keep each descriptive sentence to 25 words or fewer.
 - Use active voice. Name the actor: "The parser reads the source file."
 - Use one term for one concept. Prefer a verb to a noun form: write "configure", not "configuration". The check does not flag noun forms, because `function` and `assertion` have the same suffixes.
 - Write one instruction in each sentence.
+- From Phase 13, lexis also checks the Markdown files. It reports noun forms and -ing forms. `vocabulary.cue` lists the terms of the project that it accepts.
 
 Task order: run 2.1, then 3.1 and 3.2, then 2.2. The `scan` and `rules` commands need the ruleset engine.
 
 ## Phase 1: Repository bootstrap, gates and OKF wiki
 
-Tracking: [ISSUE-001](.okfw/issues/issue-001-phase-1-repository-bootstrap-gates-and-okf-wiki--01a1e97296be.md)
+Issue: [ISSUE-001](.okfw/issues/issue-001-phase-1-repository-bootstrap-gates-and-okf-wiki--01a1e97296be.md)
 
 - [x] **Task 1.0: Repository and build files.** Initialize git. Add `.gitignore`, `ZMakefile` and `Makefile`. The two build files hold the same tasks.
 - [x] **Task 1.1: Go module and package layout.** Initialize `github.com/infrashift/semscope` with Go 1.25. Add these packages:
@@ -77,7 +79,7 @@ Tracking: [ISSUE-001](.okfw/issues/issue-001-phase-1-repository-bootstrap-gates-
 
 ## Phase 2: Version package and Cobra CLI
 
-Tracking: [ISSUE-002](.okfw/issues/issue-002-phase-2-version-package-and-cobra-cli--01a1e97296d0.md)
+Issue: [ISSUE-002](.okfw/issues/issue-002-phase-2-version-package-and-cobra-cli--01a1e97296d0.md)
 
 - [x] **Task 2.1: Version package.** Add `internal/version` with `Version`, `Commit` and `BuildDate`. The `build` task sets them through `-ldflags`. Without `-ldflags`, the package reads the VCS fields of `debug.ReadBuildInfo`. The package lists the supported SARIF versions `2.1.0` and `2.2`.
 - [x] **Task 2.2: Cobra CLI.** Build the CLI with `github.com/spf13/cobra`:
@@ -95,7 +97,7 @@ Tracking: [ISSUE-002](.okfw/issues/issue-002-phase-2-version-package-and-cobra-c
 
 ## Phase 3: Composable CUE ruleset engine
 
-Tracking: [ISSUE-003](.okfw/issues/issue-003-phase-3-composable-cue-ruleset-engine--01a1e97296e2.md)
+Issue: [ISSUE-003](.okfw/issues/issue-003-phase-3-composable-cue-ruleset-engine--01a1e97296e2.md)
 
 - [x] **Task 3.1: CUE ruleset schema.** Write `internal/ruleset/schema.cue`. Load it with `cuelang.org/go/cue/cuecontext`. The schema has these parts:
   - The `rules` map uses the stable rule ID as the key: `rules: [ID=string]: #Rule & {id: ID}`.
@@ -123,19 +125,19 @@ Tracking: [ISSUE-003](.okfw/issues/issue-003-phase-3-composable-cue-ruleset-engi
 
 ## Phase 4: Bounded static analysis engine and parity
 
-Tracking: [ISSUE-004](.okfw/issues/issue-004-phase-4-bounded-engine-and-nasa-p10-parity--01a1e97296f3.md)
+Issue: [ISSUE-004](.okfw/issues/issue-004-phase-4-bounded-engine-and-nasa-p10-parity--01a1e97296f3.md)
 
-- [x] **Task 4.1: Non-recursive analyzer.** Implement `internal/parser` and `internal/engine` under the rules R1 to R10:
+- [x] **Task 4.1: Non-recursive analyzer.** Write `internal/parser` and `internal/engine` under the rules R1 to R10:
   - Walk each syntax tree with a Tree-sitter cursor. Do not use recursion.
   - Build the call graph in a table with a fixed capacity. Find the cycles with an iterative depth-first search, the same search as in the oracles.
-  - Implement one checker for each check kind. Dispatch through a `switch`, not a function table.
+  - Write one checker for each check kind. Dispatch through a `switch`, not a function table.
   - Run user Tree-sitter queries (`ast_query`). A user then adds a code rule in CUE without a change to the Go code.
   - Return an error when the work exceeds a file, node, depth or finding limit.
   - Turn on the self-scan gate.
 - [x] **Task 4.2: Differential parity tests.** Write `internal/engine/nasa_parity_test.go`. It runs the oracles and `semscope scan --ruleset nasa-p10` on these inputs:
   1. Violation fixtures in `testdata/nasa_p10/violations/`, one for each rule.
   2. Compliant fixtures in `testdata/nasa_p10/compliant/`.
-  3. Custom ruleset fixtures in `testdata/custom_rulesets/` for rule addition, rule omission and threshold changes.
+  3. Custom ruleset fixtures in `testdata/custom_rulesets/` that add a rule, omit a rule and change a threshold.
   4. The semscope sources in `cmd/` and `internal/`.
   5. An optional corpus through `SEMSCOPE_PARITY_CORPUS`, for example the zmake `src/` tree.
 
@@ -143,14 +145,14 @@ Tracking: [ISSUE-004](.okfw/issues/issue-004-phase-4-bounded-engine-and-nasa-p10
 
 ## Phase 5: SARIF reports and self-hosting gate
 
-Tracking: [ISSUE-005](.okfw/issues/issue-005-phase-5-sarif-reports-and-self-hosting-gate--01a1e9729706.md)
+Issue: [ISSUE-005](.okfw/issues/issue-005-phase-5-sarif-reports-and-self-hosting-gate--01a1e9729706.md)
 
-- [x] **Task 5.1: SARIF producer.** Implement the SARIF writer with `github.com/owenrumney/go-sarif/v3`:
+- [x] **Task 5.1: SARIF producer.** Write the SARIF writer with `github.com/owenrumney/go-sarif/v3`:
   - Use `pkg/report/v210/sarif` for SARIF 2.1.0 and `pkg/report/v22/sarif` for SARIF 2.2. The `--sarif-version` flag selects one.
   - Set `tool.driver.name` to `"semscope"`. Set `tool.driver.version`, `tool.driver.informationUri` and `tool.driver.rules`. The rules list holds only the active rules.
   - Give each finding a repository-relative `artifactLocation.uri`, a `ruleId` and a `level`. Add the 1-based `startLine`, `startColumn`, `endLine` and `endColumn`.
   - Call `rep.Validate()` before the writer writes the report.
-- [x] **Task 5.2: Self-hosting gate and wiki sync.** Run the full gate:
+- [x] **Task 5.2: Self-scan gate and wiki sync.** Run the full gate:
   1. Run `zmake check` and `zmake -f Makefile check`.
   2. Run `zmake build`.
   3. Run `./bin/semscope --version`.
@@ -158,11 +160,11 @@ Tracking: [ISSUE-005](.okfw/issues/issue-005-phase-5-sarif-reports-and-self-host
   5. Run `./bin/semscope scan --ruleset nasa-p10 -r .semscope.cue --format sarif --sarif-version 2.2 --output semscope-self-v22.sarif .`.
   6. Run `zmake sarif`. It runs steps 2, 4 and 5.
 
-  Write `README.md`. Sync the architecture records and the usage notes to the OKF wiki. Verify zero violations in the repository.
+  Write `README.md`. Sync the architecture records and the notes on how to use semscope to the OKF wiki. Verify zero violations in the repository.
 
 ## Phase 6: Exclude flag, Go type checks and parity corpora
 
-Tracking: [ISSUE-006](.okfw/issues/issue-006-phase-6-exclude-flag-go-type-checks-and-parity-corpora--01a1eba38e60.md)
+Issue: [ISSUE-006](.okfw/issues/issue-006-phase-6-exclude-flag-go-type-checks-and-parity-corpora--01a1eba38e60.md)
 
 - [x] **Task 6.1: Exclude flag.** Add `--exclude PATTERN` to `scan` and `rules inspect`. Repeat the flag to add patterns.
   - A flag pattern has the same syntax as a pattern in the `exclude` map of a ruleset.
@@ -181,7 +183,7 @@ Tracking: [ISSUE-006](.okfw/issues/issue-006-phase-6-exclude-flag-go-type-checks
 
 ## Phase 7: Zig limits of ISSUE-008 and the oracle defects of ISSUE-007
 
-Tracking: [ISSUE-008](.okfw/issues/issue-008-zig-limits-of-semscope-found-by-the-corpus-parity-test--01a1ebb73216.md)
+Issue: [ISSUE-008](.okfw/issues/issue-008-zig-limits-of-semscope-found-by-the-corpus-parity-test--01a1ebb73216.md)
 
 - [x] **Task 7.1: Zig container keys.** Key each Zig function by its container path, for example `Mutable.toFloat`.
   - A plain call looks in the container of the caller, then in each outer container, then in the file.
@@ -197,7 +199,7 @@ Tracking: [ISSUE-008](.okfw/issues/issue-008-zig-limits-of-semscope-found-by-the
 
 ## Phase 8: Documentation site on GitHub Pages
 
-Tracking: [ISSUE-010](.okfw/issues/issue-010-phase-8-documentation-site-on-github-pages--01a1ed3cf4ce.md)
+Issue: [ISSUE-010](.okfw/issues/issue-010-phase-8-documentation-site-on-github-pages--01a1ed3cf4ce.md)
 
 - [x] **Task 8.1: Site scaffold and build tasks.** Add an Astro Starlight site in `docs/`, the same setup as the zmake site ([ADR-0011](.okfw/decisions/adr-0011-document-semscope-with-astro-starlight-on-github-pages--01a1ed3cd653.md)).
   - Use Astro 7, Starlight 0.41 and bun 1.3.9. Commit `docs/bun.lock`.
@@ -213,7 +215,7 @@ Tracking: [ISSUE-010](.okfw/issues/issue-010-phase-8-documentation-site-on-githu
 
 ## Phase 9: The Zig grammar of ztree
 
-Tracking: [ISSUE-011](.okfw/issues/issue-011-phase-9-the-zig-grammar-of-ztree--01a1f3fdc1c1.md)
+Issue: [ISSUE-011](.okfw/issues/issue-011-phase-9-the-zig-grammar-of-ztree--01a1f3fdc1c1.md)
 
 - [x] **Task 9.1: Zig grammar.** Take the `grammar.js` of ztree in `third_party/tree-sitter-zig` ([ADR-0012](.okfw/decisions/adr-0012-the-zig-grammar-of-ztree--01a1f3fda243.md)).
   - The grammar adds empty containers and three rare forms to the patch of ADR-0010.
@@ -221,7 +223,7 @@ Tracking: [ISSUE-011](.okfw/issues/issue-011-phase-9-the-zig-grammar-of-ztree--0
 
 ## Phase 10: The ztree runtime
 
-Tracking: [ISSUE-012](.okfw/issues/issue-012-phase-10-the-ztree-runtime--01a1f4bf5f39.md)
+Issue: [ISSUE-012](.okfw/issues/issue-012-phase-10-the-ztree-runtime--01a1f4bf5f39.md)
 
 - [x] **Task 10.1: Merge.** Merge the branch `ztree-runtime` into `main` ([ADR-0013](.okfw/decisions/adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md)). The parser, the walker and the `ast_query` checker use the ztree Go binding.
 - [x] **Task 10.2: Build task and documents.** Add the task `ztree` to the `ZMakefile` and the `Makefile`. It builds `libztree.a` before the Go tasks.
@@ -230,7 +232,7 @@ Tracking: [ISSUE-012](.okfw/issues/issue-012-phase-10-the-ztree-runtime--01a1f4b
 
 ## Phase 11: The Zig grammar lives in ztree only
 
-Tracking: [ISSUE-013](.okfw/issues/issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md)
+Issue: [ISSUE-013](.okfw/issues/issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md)
 
 - [x] **Task 11.1: Remove the grammar copy.** Remove `third_party/tree-sitter-zig`, its `replace` directive and `TestZigParserHash` ([ADR-0014](.okfw/decisions/adr-0014-the-zig-grammar-lives-in-ztree-only--01a1f4d211fc.md)).
   - Remove the `third_party` entry of `.semscope.cue`.
@@ -238,8 +240,25 @@ Tracking: [ISSUE-013](.okfw/issues/issue-013-the-unused-zig-grammar-in-third-par
 
 ## Phase 12: The Go parity corpus
 
-Tracking: [ISSUE-014](.okfw/issues/issue-014-the-go-parity-corpus-lost-five-modules--01a1f5102109.md)
+Issue: [ISSUE-014](.okfw/issues/issue-014-the-go-parity-corpus-lost-five-modules--01a1f5102109.md)
 
-- [x] **Task 12.1: Corpus list.** Remove `go-tree-sitter` from `GO_MODULES` in `scripts/parity_corpora.py`. Run one `go list -m` for each module, so a missing module skips that module only.
+- [x] **Task 12.1: Corpus list.** Remove `go-tree-sitter` from `GO_MODULES` in `scripts/parity_corpora.py`. Run one `go list -m` for each module, so the script skips only a module that it cannot find.
   - `zmake parity` passes on the three Zig corpora and the six Go corpora with the ztree runtime.
   - Update the corpus list of ADR-0005.
+
+## Phase 13: lexis checks the documentation
+
+Issue: [ISSUE-015](.okfw/issues/issue-015-phase-13-lexis-checks-the-documentation--01a1f5265a5d.md)
+
+- [x] **Task 13.1: Vocabulary and text.** Bring the lexis findings of the Markdown documentation to 0 ([ADR-0015](.okfw/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md)).
+  - Put the technical terms of semscope in `vocabulary.cue`, each with a reason.
+  - Rewrite the other prose. Keep the decisions and the facts of each ADR.
+- [x] **Task 13.2: Gate.** Add the gate `docs-lexis` to the `ZMakefile` and the `Makefile`. `check` runs it after `docs-style`.
+  - The gate runs lexis only when lexis is on the PATH. Each finding fails it.
+  - Update `CLAUDE.md`, the wiki and the site pages.
+
+Acceptance criteria:
+
+- `zmake check` and `zmake -f Makefile check` pass with lexis on the PATH.
+- The lexis scan gives 0 errors, 0 warnings and 0 notes.
+- `zmake -n check` and `make -n check` print the same commands.

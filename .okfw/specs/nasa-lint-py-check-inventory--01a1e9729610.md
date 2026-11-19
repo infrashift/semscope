@@ -27,7 +27,7 @@ description: "Every check, threshold, pattern and quirk of scripts/nasa-lint.py,
 `strip_code` cleans each line in three steps. It blanks a line that starts with `\\` (a multiline string). It removes the string and character literals. It removes the `//` comment.
 
 ## Test exemption
-- A block that starts with `test ... {` is exempt from every rule. `block_end` finds the end of the block by brace counting.
+- A block that starts with `test ... {` is exempt from every rule. `block_end` counts the braces to find the end of the block.
 - A function with a name that starts with `test` or ends with `Test` is a test helper. It is exempt from R1, R4 and R5.
 - Quirk: the line rules R2, R7 and R9 still apply inside a test helper.
 
@@ -69,7 +69,7 @@ The line rules read each stripped line outside the test blocks. The text rules r
 | R7 | text | `\bcatch\s+unreachable\b` | `catch unreachable` hides an error |
 
 - For the discard rule, the call must be the whole value: `f()`, `a.f().g()`, `f() catch x` or `f().?`, but not `f().field`. A builtin call such as `_ = @intCast(x)` is not a discard.
-- A block with a comment only is empty after the code stripping, so `catch { // reason }` is a swallowed error.
+- A block with a comment only is empty after the script removes the comments, so `catch { // reason }` is a swallowed error.
 
 ## Suppression
 A comment `nasa-lint: allow(R<n>) <reason>` on the line or on the line above suppresses one finding. The tag works for the line rules, the text rules and for R4 on the `fn` line. For R1, the tag goes on the `fn` line of the first node of the cycle.

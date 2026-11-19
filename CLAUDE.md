@@ -6,6 +6,8 @@ semscope scans source code with composable CUE rulesets. `PLAN.md` is the phase 
 - Run `zmake check` and `zmake -f Makefile check` after each task. Commit only when both gates pass.
 - Go code obeys the Power of 10 rules of [ADR-0003](.okfw/decisions/adr-0003-adapt-the-nasa-power-of-10-rules-to-go--01a1e9729678.md). Use `assert.That` for programmer errors only.
 - Write all prose in ASD-STE100. `scripts/ste-check.py` checks it.
+- `zmake docs-lexis` checks the Markdown files with lexis and `vocabulary.cue`, when lexis is on the PATH ([ADR-0015](.okfw/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md)). Each finding fails it.
+- Add a term to `vocabulary.cue` only when it names a concept of the project, a tool or a standard. Rewrite other prose.
 
 <!-- BEGIN okfw -->
 ## Project knowledge base (okfw)

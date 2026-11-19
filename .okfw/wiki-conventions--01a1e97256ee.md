@@ -29,7 +29,7 @@ This guide defines how the semscope OKF wiki (`.okfw/`) stores project knowledge
 | `daily/` | daily note | `okfw daily`: what changed, what you learned, what is next. |
 
 ## PLAN.md and issues
-`PLAN.md` is the phase checklist. Each phase has a mirror issue (ISSUE-001 to ISSUE-005). Each phase heading in `PLAN.md` has a `Tracking:` line that links to its issue. When a phase is complete, tick the `PLAN.md` checkboxes and the acceptance criteria of the issue.
+`PLAN.md` is the phase checklist. Each phase has a mirror issue (ISSUE-001 to ISSUE-005). Each phase heading in `PLAN.md` has an `Issue:` line that links to its issue. When a phase is complete, tick the `PLAN.md` checkboxes and the acceptance criteria of the issue.
 
 ## ADRs (`decisions/`)
 - Title: `ADR-NNNN: <decision>`. Number ADRs in sequence. Do not reuse a number.
@@ -61,6 +61,7 @@ All documentation follows ASD-STE100 Simplified Technical English. This includes
   - *gate*: one check in `zmake check`. *task* and *phase*: units of work in `PLAN.md`.
 - Do not use the words `should`, `will`, `would`, `please`, `simply`, `just`, `very`, `really`, `easily` or `your`. Do not use marketing language.
 - Run `zmake docs-style`. The check (`scripts/ste-check.py`) reports banned words and long sentences as errors. It reports possible passive voice as warnings. The gate allows zero warnings.
+- Run `zmake docs-lexis`. lexis also reports noun forms, -ing forms and unapproved words. Each finding fails the gate. Add a term to `vocabulary.cue` only when it names a concept of the project, a tool or a standard ([ADR-0015](/decisions/adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md)).
 
 ## Housekeeping
 - Use `okfw move` and `okfw delete`. Do not use `mv` or `rm`. The okfw commands repair links and update the `index.md` listings.

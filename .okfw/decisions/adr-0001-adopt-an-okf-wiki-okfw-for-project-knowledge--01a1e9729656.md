@@ -20,11 +20,11 @@ description: "semscope records decisions, specs and open work in a local-first O
 The code does not record why semscope works the way it does. Decisions, rejected options, oracle quirks and open work need a durable home that agents and people can search.
 
 ## Decision
-semscope keeps a local-first OKF wiki in `.okfw/`. The `okfw` tool (v2026.10.2) manages it. The layout copies the zmake wiki. [Wiki conventions](/wiki-conventions--01a1e97256ee.md) defines the layout and the writing rules.
+semscope keeps a local-first OKF wiki in `.okfw/`. The `okfw` tool (v2026.10.2) manages it. The layout copies the zmake wiki. [Wiki conventions](/wiki-conventions--01a1e97256ee.md) defines the layout and the style rules.
 
 ## Consequences
 - Agents search the wiki before they derive an answer. The okfw MCP server in `.mcp.json` and the `okfw` CLI give the same operations.
-- `zmake wiki` validates the frontmatter, the OKF conformance and the links on each task.
+- `zmake wiki` checks the frontmatter, the OKF format and the links on each task.
 - Each phase has a mirror issue. `PLAN.md` stays the checklist.
 
 ## Alternatives considered

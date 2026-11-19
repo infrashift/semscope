@@ -3,7 +3,7 @@ title: nasa-p10 Rules
 description: The ten rules of the built-in ruleset nasa-p10, their parameters, and the parity with the oracle scripts.
 ---
 
-The built-in ruleset `nasa-p10` holds the NASA/JPL Power of 10 rules of Gerard J. Holzmann. The source is "The Power of 10: Rules for Developing Safety-Critical Code" (2006).
+The built-in ruleset `nasa-p10` holds the NASA/JPL Power of 10 rules of Gerard J. Holzmann. The source is "The Power of 10" (2006).
 semscope adapts each rule to Go, C, C++, Zig, Python and Rust.
 The source of the ruleset is `rules/nasa_p10/nasa_p10.cue`.
 

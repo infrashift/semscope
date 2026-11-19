@@ -26,7 +26,7 @@ semscope builds the active ruleset in this sequence:
 1. Read the first `--ruleset` value.
 2. Unify each next `--ruleset` value with the result, in the sequence of the flags.
 3. Apply each `--set` value.
-4. Validate the result against the schema.
+4. Check the result against the schema.
 5. Add each `--exclude` pattern to the exclude map.
 6. Apply `--enable-rule` and `--omit-rule`. These flags win over the `enabled` field of each source.
 
