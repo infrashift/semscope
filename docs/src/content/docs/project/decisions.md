@@ -91,3 +91,10 @@ patch of ADR-0010. A container can be empty. A container field can be an error
 set. A slice can hold an `if` type. The asm clobbers can be an identifier. The
 generated parser is the same as the parser of ztree, so both give the same
 trees.
+
+### ADR-0013: semscope uses the ztree runtime
+
+`internal/parser` and `internal/engine` use the Go binding of ztree, a
+Tree-sitter runtime in Zig. The grammars also come from ztree. The task
+`ztree` builds `libztree.a` before the Go tasks. The build needs a ztree
+checkout next to semscope.

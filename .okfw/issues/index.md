@@ -15,4 +15,6 @@
 * [ISSUE-009: The Zig grammar does not read asm clobbers of Zig 0.15](issue-009-the-zig-grammar-does-not-read-asm-clobbers-of-zig-0-15--01a1ebef12f0.md) - Zig 0.15 writes asm clobbers as a struct literal; tree-sitter-zig reads strings only, so 26 syscall functions of the Zig standard library are lost.
 * [ISSUE-010: Phase 8: Documentation site on GitHub Pages](issue-010-phase-8-documentation-site-on-github-pages--01a1ed3cf4ce.md) - Add an Astro Starlight documentation site in docs/, docs-dev and docs-build tasks, and a GitHub Actions workflow that deploys the site to GitHub Pages.
 * [ISSUE-011: Phase 9: the Zig grammar of ztree](issue-011-phase-9-the-zig-grammar-of-ztree--01a1f3fdc1c1.md) - semscope takes the Zig grammar of ztree, so that both give the same trees for empty containers and three rare Zig forms.
+* [ISSUE-012: Phase 10: the ztree runtime](issue-012-phase-10-the-ztree-runtime--01a1f4bf5f39.md) - semscope parses with the ztree Go binding in place of go-tree-sitter, and the gates build libztree.a first.
+* [ISSUE-013: The unused Zig grammar in third_party](issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md) - third_party/tree-sitter-zig and its replace directive have no user in the build since semscope uses the ztree runtime.
 

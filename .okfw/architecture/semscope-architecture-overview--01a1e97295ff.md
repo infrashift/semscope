@@ -13,7 +13,7 @@ status: "stable"
 
 # semscope architecture overview
 
-semscope is a Go command-line tool. It reads a CUE ruleset, parses source files with Tree-sitter and writes the findings as SARIF, JSON or text.
+semscope is a Go command-line tool. It reads a CUE ruleset, parses source files with ztree, a Tree-sitter runtime in Zig, and writes the findings as SARIF, JSON or text.
 
 ## Data flow
 1. `cmd/semscope` parses the flags with cobra.
@@ -40,6 +40,7 @@ The engine has a fixed upper bound for each kind of work: files, file size, synt
 
 ## Parser
 - One `parser.Parser` holds a Tree-sitter parser and the six grammars. A worker owns one parser.
+- The parser, the trees and the queries come from the ztree Go binding. cgo links `libztree.a` of the ztree checkout ([ADR-0013](/decisions/adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md)).
 - The walker visits the tree in pre-order with a `TreeCursor`. It does not use recursion. `MaxNodes` and `MaxDepth` bound the walk.
 - A stack with a fixed capacity (`MaxNesting`) tracks the enclosing function. The walker pops a function when a node starts after its last byte.
 - One adapter for each language turns nodes into a flat `parser.File`: functions, calls and sites. A site is a construct that a check reports, for example an unbounded loop or a global variable.
@@ -67,4 +68,5 @@ The engine has a fixed upper bound for each kind of work: files, file size, synt
 - [ADR-0002](/decisions/adr-0002-composable-cue-rulesets-with-a-nasa-p10-baseline--01a1e9729667.md): composable CUE rulesets.
 - [ADR-0003](/decisions/adr-0003-adapt-the-nasa-power-of-10-rules-to-go--01a1e9729678.md): the Power of 10 rules in Go.
 - [ADR-0004](/decisions/adr-0004-tree-sitter-parses-all-six-languages--01a1e9729689.md): Tree-sitter for all six languages.
+- [ADR-0013](/decisions/adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md): the ztree runtime.
 - [CUE ruleset schema](/specs/cue-ruleset-schema--01a1e9729645.md) and [CLI contract](/specs/cli-contract--01a1e9729633.md).

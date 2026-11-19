@@ -5,7 +5,8 @@ description: The development loop, the gates and the style rules for a change to
 
 ## Tools
 
-- Go 1.26 or later and a C compiler.
+- Go 1.26 or later, a C compiler and Zig 0.17.1.
+- A ztree checkout in `../ztree`. Set `ZTREE_DIR` for another directory.
 - Python 3 for the oracle scripts and the style check.
 - golangci-lint v2, okfw and zmake.
 - bun 1.3.9 for this site.

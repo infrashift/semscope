@@ -22,6 +22,7 @@ The `nasa-p10` ruleset targets Go, C, C++, Zig, Python and Rust. The parity test
 
 ## Decision
 - `internal/parser` uses `github.com/tree-sitter/go-tree-sitter` (v0.25) for all six languages, Go included.
+- Since Phase 10, the runtime and the grammars come from ztree, through its Go binding. [ADR-0013](/decisions/adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md) records that change. The rest of this decision stays.
 - The grammars: `tree-sitter-go`, `tree-sitter-c`, `tree-sitter-cpp`, `tree-sitter-python`, `tree-sitter-rust` and `tree-sitter-grammars/tree-sitter-zig`.
 - Since Task 7.2, the Zig grammar is a patched copy of `tree-sitter-zig` v1.1.2 in `third_party/tree-sitter-zig`. [ADR-0010](/decisions/adr-0010-a-patched-zig-grammar-for-zig-0-17--01a1ebe05590.md) records the patch.
 - Each language has one adapter. The adapter gives a flat record of the file: functions, calls, loops, assertions, discards, pointer types and directives.
@@ -40,4 +41,5 @@ The `nasa-p10` ruleset targets Go, C, C++, Zig, Python and Rust. The parity test
 
 ## Related
 - [Architecture overview](/architecture/semscope-architecture-overview--01a1e97295ff.md)
+- [ADR-0013](/decisions/adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md): the ztree runtime.
 - [ISSUE-004](/issues/issue-004-phase-4-bounded-engine-and-nasa-p10-parity--01a1e97296f3.md)

@@ -16,4 +16,5 @@
 * [ADR-0010: A patched Zig grammar for Zig 0.17](adr-0010-a-patched-zig-grammar-for-zig-0-17--01a1ebe05590.md) - semscope keeps a patched copy of tree-sitter-zig v1.1.2 without the keywords async, await and usingnamespace, because no release reads Zig 0.17.
 * [ADR-0011: Document semscope with Astro Starlight on GitHub Pages](adr-0011-document-semscope-with-astro-starlight-on-github-pages--01a1ed3cd653.md) - An Astro Starlight site in docs/, built with bun and deployed to GitHub Pages by GitHub Actions; the docs toolchain stays outside the Go build and the check gate.
 * [ADR-0012: The Zig grammar of ztree](adr-0012-the-zig-grammar-of-ztree--01a1f3fda243.md) - semscope takes the patched Zig grammar of ztree, which adds empty containers and three rare forms to the patch of ADR-0010.
+* [ADR-0013: semscope uses the ztree runtime](adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md) - internal/parser and internal/engine use the ztree Go binding in place of go-tree-sitter, and the gates build libztree.a first.
 

@@ -218,3 +218,12 @@ Tracking: [ISSUE-011](.okfw/issues/issue-011-phase-9-the-zig-grammar-of-ztree--0
 - [x] **Task 9.1: Zig grammar.** Take the `grammar.js` of ztree in `third_party/tree-sitter-zig` ([ADR-0012](.okfw/decisions/adr-0012-the-zig-grammar-of-ztree--01a1f3fda243.md)).
   - The grammar adds empty containers and three rare forms to the patch of ADR-0010.
   - Generate `src/parser.c` with `tree-sitter-cli` 0.25.10 and put its SHA-256 in `binding.go`.
+
+## Phase 10: The ztree runtime
+
+Tracking: [ISSUE-012](.okfw/issues/issue-012-phase-10-the-ztree-runtime--01a1f4bf5f39.md)
+
+- [x] **Task 10.1: Merge.** Merge the branch `ztree-runtime` into `main` ([ADR-0013](.okfw/decisions/adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md)). The parser, the walker and the `ast_query` checker use the ztree Go binding.
+- [x] **Task 10.2: Build task and documents.** Add the task `ztree` to the `ZMakefile` and the `Makefile`. It builds `libztree.a` before the Go tasks.
+  - Update the README, the architecture overview and the site pages.
+  - File [ISSUE-013](.okfw/issues/issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md) for the Zig grammar copy that has no user now.

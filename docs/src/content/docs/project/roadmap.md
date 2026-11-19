@@ -16,6 +16,7 @@ description: The phases of the semscope implementation plan and their state.
 | 7 | Zig container keys, the Zig 0.17 grammar and the oracle defects | Complete |
 | 8 | This documentation site on GitHub Pages | Complete |
 | 9 | The Zig grammar of ztree: empty containers and three rare Zig forms | Complete |
+| 10 | The ztree runtime in place of go-tree-sitter | Complete |
 
 ## Releases
 
@@ -25,5 +26,6 @@ semscope has no binary release. Build it from source. See [Getting Started](../.
 
 - The NASA-P10-03 check uses call names only, so its default severity is `warning`.
 - The Go check with type information of NASA-P10-07 needs the `go` command and a `go.mod`. Its default is off.
-- The Zig grammar is a patched copy of `tree-sitter-zig` v1.1.2, because no release reads Zig 0.17. It is the same as the Zig grammar of ztree.
+- The Zig grammar of ztree is a patched copy of `tree-sitter-zig` v1.1.2, because no release reads Zig 0.17.
+- The build needs a ztree checkout. ztree has no release yet.
 - The corpus parity test has one recorded divergence: an interface method in `golang.org/x/tools`.

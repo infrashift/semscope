@@ -6,11 +6,12 @@ The documentation site is at https://infrashift.github.io/semscope/. It has the 
 
 ## Build
 
-semscope needs Go 1.26 or later and a C compiler, because cgo builds the Tree-sitter grammars. The gates also need Python 3, golangci-lint v2, okfw and zmake.
+semscope needs Go 1.26 or later, a C compiler and Zig 0.17.1. cgo links `libztree.a` of the ztree checkout. The gates also need Python 3, golangci-lint v2, okfw and zmake.
 
-1. Run `zmake build`.
-2. Run `./bin/semscope --version`.
-3. Run `zmake install` to copy the binary to `~/.local/bin/semscope`. Set `PREFIX` to use another directory.
+1. Clone ztree next to semscope: `../ztree`. Set `ZTREE_DIR` to use another directory.
+2. Run `zmake build`. The task `ztree` builds `libztree.a` first.
+3. Run `./bin/semscope --version`.
+4. Run `zmake install` to copy the binary to `~/.local/bin/semscope`. Set `PREFIX` to use another directory.
 
 ## Scan
 

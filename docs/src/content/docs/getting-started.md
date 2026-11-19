@@ -8,17 +8,19 @@ semscope has no binary release. Build it from source on Linux.
 ## Prerequisites
 
 - Go 1.26 or later.
-- A C compiler. cgo builds the Tree-sitter grammars.
+- A C compiler and Zig 0.17.1. cgo links `libztree.a` of ztree, the Tree-sitter runtime of semscope.
 - zmake or GNU Make to run the build tasks. The commands below use zmake.
 
 ## Build and install
 
 1. Clone the repository: `git clone https://github.com/infrashift/semscope`.
-2. Go into the directory: `cd semscope`.
-3. Run `zmake build`. The task writes the binary to `bin/semscope`.
-4. Run `./bin/semscope --version` to check the build.
-5. Run `zmake install` to copy the binary to `~/.local/bin/semscope`.
+2. Clone ztree into the same parent directory: `git clone https://github.com/infrashift/ztree`.
+3. Go into the directory: `cd semscope`.
+4. Run `zmake build`. The task builds `libztree.a` in `../ztree`, then writes the binary to `bin/semscope`.
+5. Run `./bin/semscope --version` to check the build.
+6. Run `zmake install` to copy the binary to `~/.local/bin/semscope`.
 
+Set `ZTREE_DIR` when ztree is in a different directory.
 Set `PREFIX` to install into a different directory, for example `zmake install PREFIX=/usr/local`.
 With GNU Make, use `make build` and `make install`.
 

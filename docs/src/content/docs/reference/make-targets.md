@@ -21,6 +21,7 @@ The `ZMakefile` declares each target as a task, with no `.PHONY` list:
 
 | Target | Command |
 |---|---|
+| `zmake ztree` | `zig build lib --release` in `ZTREE_DIR` (default `../ztree`). `build`, `test`, `lint`, `selfscan` and `parity` run it first. |
 | `zmake build` | `go build` → `bin/semscope`, with the version, the commit and the build date |
 | `zmake install` | `build`, then copy `bin/semscope` to `$(PREFIX)/bin`. The default `PREFIX` is `~/.local`. |
 | `zmake test` | `go test -race ./...` |
