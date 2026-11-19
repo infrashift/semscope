@@ -10,11 +10,12 @@ tags:
 created: "2026-11-17T17:38:30-06:00"
 timestamp: "2026-11-17T17:38:30-06:00"
 description: "semscope keeps a patched copy of tree-sitter-zig v1.1.2 without the keywords async, await and usingnamespace, because no release reads Zig 0.17."
+status: "deprecated"
 ---
 
 # ADR-0010: A patched Zig grammar for Zig 0.17
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-0014](/decisions/adr-0014-the-zig-grammar-lives-in-ztree-only--01a1f4d211fc.md). The grammar lives in ztree only.
 **Date:** 2026-11-17
 **Source:** User request: the Zig limits of [ISSUE-008](/issues/issue-008-zig-limits-of-semscope-found-by-the-corpus-parity-test--01a1ebb73216.md) (`PLAN.md` Task 7.2).
 

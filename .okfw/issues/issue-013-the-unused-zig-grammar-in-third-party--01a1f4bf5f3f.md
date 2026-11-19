@@ -7,7 +7,8 @@ tags:
   - "issue"
   - "parser"
   - "zig"
-  - "open"
+  - "phase-11"
+  - "closed"
 created: "2026-11-19T10:59:04-06:00"
 timestamp: "2026-11-19T10:59:04-06:00"
 description: "third_party/tree-sitter-zig and its replace directive have no user in the build since semscope uses the ztree runtime."
@@ -15,7 +16,7 @@ description: "third_party/tree-sitter-zig and its replace directive have no user
 
 # ISSUE-013: The unused Zig grammar in third_party
 
-**Status/Phase:** open · no phase
+**Status/Phase:** closed · Phase 11
 
 ## Description
 Since [ADR-0013](/decisions/adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md), the grammars come from ztree. These parts of semscope have no user in the build:
@@ -26,7 +27,10 @@ Since [ADR-0013](/decisions/adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f
 A later change of the Zig grammar occurs in ztree only. The copy then differs from the grammar that semscope uses.
 
 ## Acceptance Criteria
-- [ ] Remove `third_party/tree-sitter-zig`, its `replace` directive and `TestZigParserHash`. Or record a reason to keep them.
-- [ ] Mark ADR-0010 and ADR-0012 as superseded where they name the copy.
-- [ ] Update the site pages that name `third_party/tree-sitter-zig`.
-- [ ] `zmake check`, `zmake -f Makefile check` and `zmake parity` pass.
+- [x] Remove `third_party/tree-sitter-zig`, its `replace` directive and `TestZigParserHash`. Or record a reason to keep them.
+- [x] Mark ADR-0010 and ADR-0012 as superseded where they name the copy.
+- [x] Update the site pages that name `third_party/tree-sitter-zig`.
+- [x] `zmake check`, `zmake -f Makefile check` and `zmake parity` pass.
+
+## Resolution
+Task 11.1 removes the copy, the `replace` directive, `TestZigParserHash` and the `third_party` entry of `.semscope.cue` ([ADR-0014](/decisions/adr-0014-the-zig-grammar-lives-in-ztree-only--01a1f4d211fc.md)). ADR-0014 deprecates ADR-0010 and ADR-0012. The Zig tests of `internal/parser` now check the grammar of ztree, and they pass.

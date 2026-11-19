@@ -227,3 +227,11 @@ Tracking: [ISSUE-012](.okfw/issues/issue-012-phase-10-the-ztree-runtime--01a1f4b
 - [x] **Task 10.2: Build task and documents.** Add the task `ztree` to the `ZMakefile` and the `Makefile`. It builds `libztree.a` before the Go tasks.
   - Update the README, the architecture overview and the site pages.
   - File [ISSUE-013](.okfw/issues/issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md) for the Zig grammar copy that has no user now.
+
+## Phase 11: The Zig grammar lives in ztree only
+
+Tracking: [ISSUE-013](.okfw/issues/issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md)
+
+- [x] **Task 11.1: Remove the grammar copy.** Remove `third_party/tree-sitter-zig`, its `replace` directive and `TestZigParserHash` ([ADR-0014](.okfw/decisions/adr-0014-the-zig-grammar-lives-in-ztree-only--01a1f4d211fc.md)).
+  - Remove the `third_party` entry of `.semscope.cue`.
+  - Mark ADR-0010 and ADR-0012 as deprecated. Update the site pages.

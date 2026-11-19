@@ -75,8 +75,8 @@ with the Go oracle does not change.
 ### ADR-0010: A patched Zig grammar for Zig 0.17
 
 Zig 0.17 has no keywords `async`, `await` and `usingnamespace`. No release of
-`tree-sitter-zig` removes them. semscope keeps a patched copy of v1.1.2 in
-`third_party/tree-sitter-zig`.
+`tree-sitter-zig` removes them. semscope kept a patched copy of v1.1.2 in
+`third_party/tree-sitter-zig`. ADR-0014 replaces this decision.
 
 ### ADR-0011: Document semscope with Astro Starlight on GitHub Pages
 
@@ -91,6 +91,7 @@ patch of ADR-0010. A container can be empty. A container field can be an error
 set. A slice can hold an `if` type. The asm clobbers can be an identifier. The
 generated parser is the same as the parser of ztree, so both give the same
 trees.
+ADR-0014 replaces this decision: the grammar now lives in ztree only.
 
 ### ADR-0013: semscope uses the ztree runtime
 
@@ -98,3 +99,9 @@ trees.
 Tree-sitter runtime in Zig. The grammars also come from ztree. The task
 `ztree` builds `libztree.a` before the Go tasks. The build needs a ztree
 checkout next to semscope.
+
+### ADR-0014: The Zig grammar lives in ztree only
+
+semscope removes its copy of the patched Zig grammar. The parser takes all
+grammars from ztree, so the copy had no user. A change of the Zig grammar
+occurs in ztree only. This decision deprecates ADR-0010 and ADR-0012.

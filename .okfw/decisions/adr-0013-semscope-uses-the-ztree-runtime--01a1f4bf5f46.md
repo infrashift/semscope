@@ -33,7 +33,7 @@ description: "internal/parser and internal/engine use the ztree Go binding in pl
 - The build needs a ztree checkout next to semscope and Zig 0.17.1.
 - `zig build lib` writes the SHA-256 of `libztree.a` into the binding (ztree ADR-0016). The Go build cache then links a new library.
 - `zmake check`, `zmake -f Makefile check` and `zmake parity` pass. The parity test passes on each corpus.
-- `third_party/tree-sitter-zig` has no user in the build. [ISSUE-013](/issues/issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md) tracks it.
+- `third_party/tree-sitter-zig` has no user in the build. [ADR-0014](/decisions/adr-0014-the-zig-grammar-lives-in-ztree-only--01a1f4d211fc.md) removes it ([ISSUE-013](/issues/issue-013-the-unused-zig-grammar-in-third-party--01a1f4bf5f3f.md)).
 
 ## Alternatives considered
 - **Keep go-tree-sitter.** Rejected: semscope and lexis then use two runtimes and two sets of grammars. ztree gives the same trees as the reference runtime on its corpora.

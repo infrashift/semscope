@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -205,25 +203,6 @@ func TestZigEmptyContainersAndRareForms(t *testing.T) {
 	if tree.RootNode().HasError() || len(f.Functions) != 2 {
 		t.Fatalf("rare forms: error %v, %d functions, want no error and 2: %s",
 			tree.RootNode().HasError(), len(f.Functions), tree.RootNode().ToSexp())
-	}
-}
-
-// TestZigParserHash checks that the binding names the hash of the generated
-// parser. The Go build cache does not see a new parser.c, because the cgo
-// include is outside the binding package (ADR-0010).
-func TestZigParserHash(t *testing.T) {
-	const dir = "../../third_party/tree-sitter-zig/"
-	parserC, err := os.ReadFile(dir + "src/parser.c")
-	if err != nil {
-		t.Fatal(err)
-	}
-	binding, err := os.ReadFile(dir + "bindings/go/binding.go")
-	if err != nil {
-		t.Fatal(err)
-	}
-	sum := sha256.Sum256(parserC)
-	if want := "// parser.c sha256: " + hex.EncodeToString(sum[:]); !strings.Contains(string(binding), want) {
-		t.Fatalf("binding.go does not hold %q: put the hash of the new parser.c in binding.go", want)
 	}
 }
 

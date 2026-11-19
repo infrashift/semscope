@@ -10,11 +10,12 @@ tags:
 created: "2026-11-19T07:27:28-06:00"
 timestamp: "2026-11-19T07:27:28-06:00"
 description: "semscope takes the patched Zig grammar of ztree, which adds empty containers and three rare forms to the patch of ADR-0010."
+status: "deprecated"
 ---
 
 # ADR-0012: The Zig grammar of ztree
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-0014](/decisions/adr-0014-the-zig-grammar-lives-in-ztree-only--01a1f4d211fc.md). The grammar lives in ztree only.
 **Date:** 2026-11-19
 **Source:** [ISSUE-011](/issues/issue-011-phase-9-the-zig-grammar-of-ztree--01a1f3fdc1c1.md). ztree ADR-0006 and ADR-0015.
 

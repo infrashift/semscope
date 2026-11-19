@@ -30,6 +30,4 @@ require (
 	google.golang.org/protobuf v1.33.0 // indirect
 )
 
-replace github.com/tree-sitter-grammars/tree-sitter-zig => ./third_party/tree-sitter-zig
-
 replace github.com/infrashift/ztree/bindings/go => ../ztree/bindings/go

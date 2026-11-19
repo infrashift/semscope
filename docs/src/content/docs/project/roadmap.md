@@ -17,6 +17,7 @@ description: The phases of the semscope implementation plan and their state.
 | 8 | This documentation site on GitHub Pages | Complete |
 | 9 | The Zig grammar of ztree: empty containers and three rare Zig forms | Complete |
 | 10 | The ztree runtime in place of go-tree-sitter | Complete |
+| 11 | The Zig grammar lives in ztree only | Complete |
 
 ## Releases
 
