@@ -41,6 +41,7 @@ This ADR replaces ADR-0004. The decisions of ADR-0004 stay, with C# as the seven
 - C# has no oracle. Fixtures alone test the C# checks, as for C, C++, Python and Rust.
 - A scan does not skip `bin` and `obj`. A .NET project adds these directories to the exclude map. A built-in skip of `bin` also skips the scripts of other languages.
 - A call in an interpolated string (`$"{F()}"`) gives no call record, because the walker blanks each string.
+- ztree does not compile a supertype pattern (ztree ADR-0007). The C# grammar has nine visible supertypes, for example `type`, `expression` and `statement`. A C# query names the concrete node types.
 - An overlay can add `"csharp"` to the languages of NASA-P10-03 with its own `alloc_calls`.
 
 ## Alternatives considered

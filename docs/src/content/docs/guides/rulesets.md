@@ -88,6 +88,8 @@ Two check kinds let a ruleset add a code rule without a change to the Go code.
 
 `ast_query` runs one Tree-sitter query for each language. Each `@violation` capture gives a finding.
 
+ztree does not compile a pattern of a supertype node. The C# grammar has visible supertypes, for example `type`, `expression` and `statement`. In a C# query, name the concrete node types, for example `predefined_type` in place of `type`.
+
 ```cue
 package overlay
 
