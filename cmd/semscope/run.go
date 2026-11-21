@@ -48,7 +48,7 @@ func newRootCmd(stdout, stderr io.Writer) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "semscope",
 		Short: "Scan source code with composable CUE rulesets",
-		Long: `semscope scans Go, C, C++, Zig, Python and Rust source code with CUE rulesets.
+		Long: `semscope scans Go, C, C++, Zig, Python, Rust and C# source code with CUE rulesets.
 The built-in ruleset nasa-p10 holds the NASA Power of 10 rules.
 semscope writes the findings as text, JSON or SARIF.`,
 		Version:       info.String(),

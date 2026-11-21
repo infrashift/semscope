@@ -21,7 +21,7 @@ status: "stable"
 - `exclude`: a map from a path pattern to a reason, for example `exclude: scripts: "tooling"`. A pattern uses `path.Match` syntax on paths relative to the scan root. It matches a path or a parent directory of the path. A map composes over overlays, and each entry needs a reason.
 - `#Rule`: `id`, `enabled?` (`bool`), `severity?` (`"error" | "warning" | "note"`), `languages` (one or more), `title`, `message`, `params` and `check`.
 - The loader sets `enabled` to `true` and `severity` to `"error"` when a rule omits them.
-- `#Language`: `"go" | "c" | "cpp" | "zig" | "python" | "rust"`.
+- `#Language`: `"go" | "c" | "cpp" | "zig" | "python" | "rust" | "csharp"`.
 - `params`: a map from a name to `int`, `string`, `bool` or `[...string]`.
 - `#PerLanguage`: a map from a language to a list of strings.
 - Each definition is a closed struct. An unknown field gives the error `field not allowed`.

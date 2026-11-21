@@ -19,4 +19,5 @@
 * [ADR-0013: semscope uses the ztree runtime](adr-0013-semscope-uses-the-ztree-runtime--01a1f4bf5f46.md) - internal/parser and internal/engine use the ztree Go binding in place of go-tree-sitter, and the gates build libztree.a first.
 * [ADR-0014: The Zig grammar lives in ztree only](adr-0014-the-zig-grammar-lives-in-ztree-only--01a1f4d211fc.md) - semscope removes its copy of the patched Zig grammar, because the parser takes all grammars from ztree since ADR-0013.
 * [ADR-0015: lexis checks the documentation with a repository vocabulary](adr-0015-lexis-checks-the-documentation-with-a-repository-vocabulary--01a1f5263500.md) - The docs-lexis gate scans the Markdown documentation with lexis and vocabulary.cue, fails on each finding and runs only when lexis is on the PATH.
+* [ADR-0016: Tree-sitter parses seven languages](adr-0016-tree-sitter-parses-seven-languages--01a1fecc5cce.md) - internal/parser reads Go, C, C++, Zig, Python, Rust and C# through the ztree runtime, with one adapter for each language; nasa-p10 applies to C# except NASA-P10-03.
 

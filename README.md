@@ -1,6 +1,6 @@
 # semscope
 
-semscope scans source code with composable CUE rulesets. The built-in ruleset `nasa-p10` holds the NASA/JPL Power of 10 rules for safety-critical code. semscope reads Go, C, C++, Zig, Python and Rust. It writes the findings as text, JSON, SARIF 2.1.0 or SARIF 2.2.
+semscope scans source code with composable CUE rulesets. The built-in ruleset `nasa-p10` holds the NASA/JPL Power of 10 rules for safety-critical code. semscope reads Go, C, C++, Zig, Python, Rust and C#. It writes the findings as text, JSON, SARIF 2.1.0 or SARIF 2.2.
 
 The documentation site is at https://infrashift.github.io/semscope/. It has the guides, the CLI reference and the rules of `nasa-p10`.
 

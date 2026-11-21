@@ -1,6 +1,6 @@
 ---
 title: semscope
-description: semscope scans Go, C, C++, Zig, Python and Rust source code with composable CUE rulesets. It writes the findings as text, JSON or SARIF.
+description: semscope scans Go, C, C++, Zig, Python, Rust and C# source code with composable CUE rulesets. It writes the findings as text, JSON or SARIF.
 template: splash
 hero:
   tagline: A static analyzer for safety-critical code. The rules are CUE values. An overlay adds, omits or tunes a rule without a change to the Go code.
@@ -33,8 +33,8 @@ semscope: 4 finding(s) in 1 file(s): 4 error(s), 0 warning(s), 0 note(s)
 		A ruleset is a CUE value. The loader unifies a base ruleset with each overlay in sequence.
 		The `--set` and `--omit-rule` flags tune the result on the command line.
 	</Card>
-	<Card title="Six languages, one engine" icon="seti:config">
-		Tree-sitter parses Go, C, C++, Zig, Python and Rust. One adapter for each
+	<Card title="Seven languages, one engine" icon="seti:config">
+		Tree-sitter parses Go, C, C++, Zig, Python, Rust and C#. One adapter for each
 		language gives the checks a flat record of the file.
 	</Card>
 	<Card title="NASA Power of 10" icon="approve-check">

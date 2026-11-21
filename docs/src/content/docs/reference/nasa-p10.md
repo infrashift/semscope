@@ -4,23 +4,23 @@ description: The ten rules of the built-in ruleset nasa-p10, their parameters, a
 ---
 
 The built-in ruleset `nasa-p10` holds the NASA/JPL Power of 10 rules of Gerard J. Holzmann. The source is "The Power of 10" (2006).
-semscope adapts each rule to Go, C, C++, Zig, Python and Rust.
+semscope adapts each rule to Go, C, C++, Zig, Python, Rust and C#.
 The source of the ruleset is `rules/nasa_p10/nasa_p10.cue`.
 
 ## Summary
 
 | Rule | Title | Check kind | Default severity | Languages |
 |---|---|---|---|---|
-| NASA-P10-01 | Simple control flow | `no_goto_or_recursion` | error | all six |
-| NASA-P10-02 | Fixed loop bounds | `bounded_loops` | error | all six |
+| NASA-P10-01 | Simple control flow | `no_goto_or_recursion` | error | all seven |
+| NASA-P10-02 | Fixed loop bounds | `bounded_loops` | error | all seven |
 | NASA-P10-03 | No dynamic allocation after initialization | `no_dynamic_alloc` | warning | Go, C, C++, Zig, Rust |
-| NASA-P10-04 | Short functions | `max_function_lines` | error | all six |
-| NASA-P10-05 | Assertion density | `min_assertions` | error | all six |
-| NASA-P10-06 | Smallest scope | `narrowest_scope` | error | all six |
-| NASA-P10-07 | Check return values | `checked_returns` | error | all six |
-| NASA-P10-08 | Limited preprocessor | `restricted_preprocessor` | error | all six |
-| NASA-P10-09 | Restricted pointers | `max_pointer_indirection` | error | Go, C, C++, Zig, Rust |
-| NASA-P10-10 | Zero warnings and no unsafe constructs | `ast_query` | error | all six |
+| NASA-P10-04 | Short functions | `max_function_lines` | error | all seven |
+| NASA-P10-05 | Assertion density | `min_assertions` | error | all seven |
+| NASA-P10-06 | Smallest scope | `narrowest_scope` | error | all seven |
+| NASA-P10-07 | Check return values | `checked_returns` | error | all seven |
+| NASA-P10-08 | Limited preprocessor | `restricted_preprocessor` | error | all seven |
+| NASA-P10-09 | Restricted pointers | `max_pointer_indirection` | error | Go, C, C++, Zig, Rust, C# |
+| NASA-P10-10 | Zero warnings and no unsafe constructs | `ast_query` | error | all seven |
 
 Each tunable value is a CUE default. An overlay or `--set` can change it. See [Rulesets & Overlays](../../guides/rulesets/).
 
@@ -35,11 +35,13 @@ semscope builds a call graph for each language and finds each cycle with an iter
 
 ## NASA-P10-02: Fixed loop bounds
 
-No loop without a condition that can end it, for example `for {}`, `while (true)`, `while True:` or `loop {}`.
+No loop without a condition that can end it, for example `for {}`, `for (;;)`, `while (true)`, `while True:` or `loop {}`.
 
 ## NASA-P10-03: No dynamic allocation after initialization
 
 No allocator call outside an init function. The check uses call names only, so the default severity is `warning`.
+
+The rule does not apply to Python and C#. In these languages, the runtime gives each object its memory, so most code breaks the rule.
 
 | Field | Default |
 |---|---|
@@ -77,14 +79,16 @@ In the `per_function` mode, semscope reports each function with too few assertio
 | Zig | `assert` |
 | Python | `assert` |
 | Rust | `assert!`, `assert_eq!`, `assert_ne!`, `debug_assert!`, `debug_assert_eq!`, `debug_assert_ne!` |
+| C# | `Debug.Assert`, `Trace.Assert`, and the same calls with a namespace, for example `System.Diagnostics.Debug.Assert` |
 
 ## NASA-P10-06: Smallest scope
 
-No mutable global state, for example a mutable package variable in Go.
+No mutable global state, for example a mutable package variable in Go or a `static` field in C# that is not `readonly` or `const`.
 
 ## NASA-P10-07: Check return values
 
 No discarded call results and no swallowed errors.
+In C#, `_ = F();` and an empty `catch` block for each exception are findings.
 For C and C++, `check.must_check_calls` names the calls with a result to check, for example `malloc`, `fopen`, `read` and `pthread_create`.
 
 | Parameter | Type | Default |
@@ -122,10 +126,11 @@ Limit the preprocessor and code generation to includes and simple constants.
 | Zig | `@cImport` |
 | Python | `exec`, `eval`, `compile` |
 | Rust | `macro_rules!` |
+| C# | `#define`, `#undef` |
 
 ## NASA-P10-09: Restricted pointers
 
-One level of pointer indirection at most, and no function pointers.
+One level of pointer indirection at most, and no function pointers. In C#, a function pointer is a `delegate*` type.
 
 | Parameter | Type | Default |
 |---|---|---|
@@ -143,6 +148,7 @@ No unsafe constructs, and no warning suppression without a reason. The rule is a
 | Zig | `@ptrFromInt`, `@intFromPtr`, `@ptrCast` and `@alignCast` |
 | Python | An import of `ctypes`. A `# noqa` or `# type: ignore` comment without a reason. |
 | Rust | Each `unsafe` block |
+| C# | Each `unsafe` block and each `unsafe` modifier. A `#pragma warning disable` without a reason in a comment. |
 
 ## Parity with the oracles
 
@@ -155,4 +161,4 @@ The checks of NASA-P10-01, -02, -04, -05, -07 and -09 match the oracles. The par
 On the fixtures in `testdata/nasa_p10/`, semscope and the oracle report the same set of file, line and rule. The averages of NASA-P10-05 match to two decimals.
 On a real corpus, each divergence needs a fix or a record with a reason in `testdata/nasa_p10/parity-divergences.json`.
 
-The rules NASA-P10-03, -06, -08 and -10 have no oracle. Fixtures alone test them. For C, C++, Python and Rust, fixtures alone test all the rules.
+The rules NASA-P10-03, -06, -08 and -10 have no oracle. Fixtures alone test them. For C, C++, Python, Rust and C#, fixtures alone test all the rules.

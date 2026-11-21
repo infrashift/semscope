@@ -282,3 +282,25 @@ Acceptance criteria:
 - `LEXISCOPE=no-such-tool zmake docs-lexiscope` prints a message and passes.
 - `zmake check` and `zmake -f Makefile check` pass with lexiscope on the PATH.
 - The lexiscope scan gives 0 errors, 0 warnings and 0 notes.
+
+## Phase 15: C# support
+
+Issue: [ISSUE-017](.okfw/issues/issue-017-phase-15-c-sharp-support--01a1fecc5cbb.md)
+
+ztree has a C# grammar from its Phase 22 (ztree ADR-0019). [ADR-0016](.okfw/decisions/adr-0016-tree-sitter-parses-seven-languages--01a1fecc5cce.md) replaces ADR-0004.
+
+- [x] **Task 15.1: Parser.** Read `.cs` files with `ts.LangCSharp`.
+  - Add `CSharp` to `internal/parser/language.go`, with the C# test files `*Test.cs` and `*Tests.cs`.
+  - Add the C# adapter `internal/parser/lang_csharp.go` and the C# string kinds.
+  - Resolve the C# calls of the recursion check in `internal/engine/recursion.go`.
+- [x] **Task 15.2: Rules.** Add `"csharp"` to `#Language` and to each rule of `nasa-p10` except NASA-P10-03.
+  - Add the C# data of NASA-P10-05, -08 and -10.
+  - Add a C# fixture to each rule directory of `testdata/nasa_p10/violations/` except R03, and a parser sample.
+- [x] **Task 15.3: Documents.** Record the decision in ADR-0016, and update the wiki, `README.md` and the site pages.
+
+Acceptance criteria:
+
+- `go run ./cmd/semscope scan -r nasa-p10` reports the expected findings of each C# fixture.
+- `zmake check` and `zmake -f Makefile check` pass.
+- The lexiscope scan gives 0 errors, 0 warnings and 0 notes.
+

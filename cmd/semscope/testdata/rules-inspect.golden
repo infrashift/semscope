@@ -5,29 +5,29 @@ active rules: 10
   CUSTOM-01  error  token_ban  No fmt.Println
       languages: go
   NASA-P10-01  error  no_goto_or_recursion  Simple control flow
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
   NASA-P10-02  error  bounded_loops  Fixed loop bounds
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
   NASA-P10-03  warning  no_dynamic_alloc  No dynamic allocation after initialization
       languages: go, c, cpp, zig, rust
   NASA-P10-04  error  max_function_lines  Short functions
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
       params: max_lines=40
   NASA-P10-06  error  narrowest_scope  Smallest scope
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
   NASA-P10-07  error  checked_returns  Check return values
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
       params: go_ignore_calls=["(*bytes.Buffer).Write", "(*bytes.Buffer).WriteByte", "(*bytes.Buffer).WriteRune", "(*bytes.Buffer).WriteString", "(*strings.Builder).Write", "(*strings.Builder).WriteByte", "(*strings.Builder).WriteRune", "(*strings.Builder).WriteString", "fmt.Fprint(*bytes.Buffer)", "fmt.Fprintf(*bytes.Buffer)", "fmt.Fprintln(*bytes.Buffer)", "fmt.Fprint(*strings.Builder)", "fmt.Fprintf(*strings.Builder)", "fmt.Fprintln(*strings.Builder)"] go_types=false
   NASA-P10-08  error  restricted_preprocessor  Limited preprocessor
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
       params: max_conditional_depth=2
   NASA-P10-09  error  max_pointer_indirection  Restricted pointers
-      languages: go, c, cpp, zig, rust
+      languages: go, c, cpp, zig, rust, csharp
       params: allow_function_pointers=false max_pointer_depth=1
   NASA-P10-10  error  ast_query  Zero warnings and no unsafe constructs
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
 
 omitted rules: 1
   NASA-P10-05  error  min_assertions  Assertion density
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
       params: min_assertions=2 mode="average"

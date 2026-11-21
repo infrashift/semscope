@@ -1,7 +1,8 @@
 c/a.c:2:1: error: NASA-P10-06: file-scope variable `counter`
+cs/a.cs:5:5: error: NASA-P10-06: mutable `static` field
 go/a.go:5:5: error: NASA-P10-06: package variable `counter`
 py/a.py:5:5: error: NASA-P10-06: `global` statement
 rs/a.rs:2:1: error: NASA-P10-06: `static mut` item
 zig/a.zig:5:1: error: NASA-P10-06: container-level `var counter`
 zig/a.zig:7:5: error: NASA-P10-06: container-level `var hits`
-semscope: 6 finding(s) in 5 file(s): 6 error(s), 0 warning(s), 0 note(s)
+semscope: 7 finding(s) in 6 file(s): 7 error(s), 0 warning(s), 0 note(s)

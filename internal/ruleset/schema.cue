@@ -14,7 +14,7 @@ package ruleset
 }
 
 // #Language names a language that the parser reads.
-#Language: "go" | "c" | "cpp" | "zig" | "python" | "rust"
+#Language: "go" | "c" | "cpp" | "zig" | "python" | "rust" | "csharp"
 
 // #PerLanguage maps a language to a list of names or patterns.
 #PerLanguage: [#Language]: [...string]

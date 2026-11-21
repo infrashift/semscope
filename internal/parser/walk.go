@@ -113,6 +113,8 @@ func (w *walker) visit(n *ts.Node) (bool, error) {
 		return w.visitPython(n, kind)
 	case Rust:
 		return w.visitRust(n, kind)
+	case CSharp:
+		return w.visitCSharp(n, kind)
 	}
 	return false, fmt.Errorf("%s: unknown language %q", w.f.Path, w.lang)
 }
@@ -120,7 +122,8 @@ func (w *walker) visit(n *ts.Node) (bool, error) {
 func isStringKind(kind string) bool {
 	switch kind {
 	case "interpreted_string_literal", "raw_string_literal", "rune_literal", "string_literal",
-		"char_literal", "system_lib_string", "string", "multiline_string", "character", "concatenated_string":
+		"char_literal", "system_lib_string", "string", "multiline_string", "character", "concatenated_string",
+		"verbatim_string_literal", "interpolated_string_expression", "character_literal":
 		return true
 	}
 	return false

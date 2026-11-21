@@ -8,12 +8,13 @@ tags:
   - "tree-sitter"
 created: "2026-11-17T06:19:23-06:00"
 timestamp: "2026-11-17T06:19:23-06:00"
+status: "deprecated"
 description: "internal/parser uses the cgo Tree-sitter bindings for Go, C, C++, Zig, Python and Rust, with one adapter for each language."
 ---
 
 # ADR-0004: Tree-sitter parses all six languages
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-0016](/decisions/adr-0016-tree-sitter-parses-seven-languages--01a1fecc5cce.md) on 2026-11-21
 **Date:** 2026-11-17
 **Source:** User decision on 2026-11-17: built-in checks for all six languages.
 

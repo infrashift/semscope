@@ -72,6 +72,8 @@ func resolve(f *parser.File, caller parser.Function, call parser.Call) string {
 	assert.That(caller.Key != "", "addFunction sets the key")
 	sc := scope(f)
 	switch {
+	case f.Lang == parser.CSharp:
+		return sc + "\x00" + csharpTarget(caller.Key, call)
 	case call.Qual == "":
 		return sc + "\x00" + call.Name
 	case f.Lang == parser.Go && caller.Recv != "" && call.Qual == caller.Recv:
@@ -89,6 +91,26 @@ func resolve(f *parser.File, caller parser.Function, call parser.Call) string {
 		return path.Join(path.Dir(f.Path), imp) + "\x00" + call.Name
 	}
 	return ""
+}
+
+// csharpTarget returns the key of the C# function that call names. A plain
+// call and a call through `this` name a function of the type of the caller.
+// A call through a type name, such as `Parser.Parse`, names a function of
+// that type. A call through `base` or a variable gives "".
+func csharpTarget(callerKey string, call parser.Call) string {
+	assert.That(callerKey != "", "addFunction sets the key")
+	assert.That(call.Name != "", "a call has a name")
+	if call.Qual != "" && call.Qual != "this" {
+		if call.Qual == "base" || strings.HasSuffix(call.Qual, "?") {
+			return ""
+		}
+		return call.Qual + "." + call.Name
+	}
+	cut := strings.Index(callerKey, ".")
+	if cut < 0 {
+		return call.Name
+	}
+	return callerKey[:cut+1] + call.Name
 }
 
 // buildGraph builds the call graph of the files of rule cr. A test function has no node.

@@ -1,6 +1,7 @@
 c/a.c:1:1: error: NASA-P10-04: function `long_fn` has 63 lines (max 60)
+cs/a.cs:3:5: error: NASA-P10-04: function `Grow` has 64 lines (max 60)
 go/internal/a/a.go:5:1: error: NASA-P10-04: function `long` has 61 lines (max 60)
 py/a.py:1:1: error: NASA-P10-04: function `long` has 62 lines (max 60)
 rs/a.rs:1:1: error: NASA-P10-04: function `long` has 63 lines (max 60)
 zig/src/a.zig:4:1: error: NASA-P10-04: function `long` has 61 lines (max 60)
-semscope: 5 finding(s) in 5 file(s): 5 error(s), 0 warning(s), 0 note(s)
+semscope: 6 finding(s) in 6 file(s): 6 error(s), 0 warning(s), 0 note(s)
