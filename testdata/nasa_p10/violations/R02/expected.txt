@@ -1,6 +1,9 @@
 c/a.c:2:5: error: NASA-P10-02: loop with a constant true condition
 c/a.c:3:5: error: NASA-P10-02: `for` loop without a condition
 c/a.c:4:5: error: NASA-P10-02: loop with a constant true condition
+cs/a.cs:5:9: error: NASA-P10-02: unbounded loop `while (true)`
+cs/a.cs:6:9: error: NASA-P10-02: `for` loop without a condition
+cs/a.cs:7:9: error: NASA-P10-02: unbounded loop `while (true)`
 go/internal/a/a.go:8:2: error: NASA-P10-02: `for` loop without a condition
 go/internal/a/a.go:16:2: error: NASA-P10-02: `for` loop without a condition
 go/internal/a/a.go:24:2: error: NASA-P10-02: `for` loop without a condition
@@ -9,4 +12,4 @@ rs/a.rs:2:5: error: NASA-P10-02: `loop` without a bound
 rs/a.rs:5:5: error: NASA-P10-02: unbounded loop `while true`
 zig/src/a.zig:7:5: error: NASA-P10-02: unbounded loop `while (true)`
 zig/src/a.zig:31:5: error: NASA-P10-02: unbounded loop `while (true)`
-semscope: 11 finding(s) in 5 file(s): 11 error(s), 0 warning(s), 0 note(s)
+semscope: 14 finding(s) in 6 file(s): 14 error(s), 0 warning(s), 0 note(s)

@@ -21,6 +21,7 @@ description: The phases of the semscope implementation plan and their state.
 | 12 | The Go parity corpus holds six Go modules again | Complete |
 | 13 | lexis checks the documentation with a repository vocabulary | Complete |
 | 14 | The documentation gate uses the official name lexiscope | Complete |
+| 15 | C# support | Complete |
 
 ## Releases
 

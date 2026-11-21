@@ -35,6 +35,8 @@ deviation from R3. The self-scan overlay `.semscope.cue` turns off NASA-P10-03.
 
 ### ADR-0004: Tree-sitter parses all six languages
 
+ADR-0016 replaces this decision.
+
 `internal/parser` uses the cgo Tree-sitter bindings for Go, C, C++, Zig,
 Python and Rust. Each language has one adapter. The adapter gives a flat
 record of the file: functions, calls, loops, assertions, discards, pointer
@@ -105,3 +107,17 @@ checkout next to semscope.
 semscope removes its copy of the patched Zig grammar. The parser takes all
 grammars from ztree, so the copy had no user. A change of the Zig grammar
 occurs in ztree only. This decision deprecates ADR-0010 and ADR-0012.
+
+### ADR-0015: lexis checks the documentation with a repository vocabulary
+
+The gate `docs-lexiscope` checks the Markdown files with lexiscope and
+`vocabulary.cue`, when lexiscope is on the PATH. Each finding fails it. The
+vocabulary holds only the terms of the project, of a tool or of a standard.
+
+### ADR-0016: Tree-sitter parses seven languages
+
+semscope also reads C# (`.cs`) files, with the C# grammar of ztree. The C#
+adapter gives the same flat record as the other adapters. `nasa-p10` applies
+to C#, except NASA-P10-03: each C# object comes from the runtime, so most
+code breaks that rule. This decision replaces ADR-0004.
+

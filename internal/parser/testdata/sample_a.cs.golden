@@ -1,0 +1,18 @@
+package="" imports=map[] exempt=false lines=34
+fn Walk key=Walker.Walk recv= lines=8-21 exempt=false
+fn Step key=Walker.Step recv= lines=23-23 exempt=false
+fn Count.get key=Walker.Count.get recv= lines=25-25 exempt=false
+call fn=0 "Debug.Assert" name="Assert" qual="Debug" unused=true line=10
+call fn=0 "Step" name="Step" qual="" unused=false line=13
+call fn=0 "Step" name="Step" qual="" unused=true line=15
+call fn=0 "Step" name="Step" qual="" unused=true line=18
+call fn=0 "this.Walk" name="Walk" qual="this" unused=true line=19
+call fn=0 "Walker.Step" name="Step" qual="Walker" unused=false line=20
+site kind=4 "mutable `static` field" depth=0 fn=-1 line=5
+site kind=8 "function pointer type" depth=0 fn=0 line=8
+site kind=2 "unbounded loop `while (true)`" depth=0 fn=0 line=11
+site kind=2 "`for` loop without a condition" depth=0 fn=0 line=12
+site kind=3 "discarded call result `_ = f()`" depth=0 fn=0 line=13
+site kind=7 "" depth=2 fn=0 line=14
+site kind=3 "swallowed exception, an empty `catch` block" depth=0 fn=0 line=18
+site kind=5 "define" depth=0 fn=-1 line=34

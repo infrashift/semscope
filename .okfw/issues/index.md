@@ -20,4 +20,5 @@
 * [ISSUE-014: The Go parity corpus lost five modules](issue-014-the-go-parity-corpus-lost-five-modules--01a1f5102109.md) - scripts/parity_corpora.py listed go-tree-sitter after semscope removed it, so go list failed and the Go parity corpus held the fixture only.
 * [ISSUE-015: Phase 13: lexis checks the documentation](issue-015-phase-13-lexis-checks-the-documentation--01a1f5265a5d.md) - A repository vocabulary and new text bring the lexis findings of the documentation to 0, and the docs-lexis gate keeps them at 0.
 * [ISSUE-016: Phase 14: the documentation gate uses the name lexiscope](issue-016-phase-14-the-documentation-gate-uses-the-name-lexiscope--01a1f548ca52.md) - The docs-lexis gate becomes docs-lexiscope, because the documentation linter lexis now has the official name lexiscope.
+* [ISSUE-017: Phase 15: C# support](issue-017-phase-15-c-sharp-support--01a1fecc5cbb.md) - semscope reads C# files and checks the nasa-p10 rules in them, except NASA-P10-03.
 

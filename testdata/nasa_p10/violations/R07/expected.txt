@@ -1,4 +1,6 @@
 c/a.c:3:5: error: NASA-P10-07: unused result of `fopen`
+cs/a.cs:9:9: error: NASA-P10-07: discarded call result `_ = f()`
+cs/a.cs:10:22: error: NASA-P10-07: swallowed exception, an empty `catch` block
 go/internal/a/a.go:14:2: error: NASA-P10-07: discarded call result `_ = f(...)`
 go/internal/a/a.go:15:2: error: NASA-P10-07: discarded call result `x, _ := f(...)`
 go/internal/a/a.go:16:2: error: NASA-P10-07: discarded call result `x, _ := f(...)`
@@ -13,4 +15,4 @@ zig/src/a.zig:15:11: error: NASA-P10-07: swallowed error `catch {}`
 zig/src/a.zig:16:5: error: NASA-P10-07: discarded call result `_ = f(...)`
 zig/src/a.zig:16:15: error: NASA-P10-07: `catch unreachable` hides an error
 zig/src/a.zig:19:7: error: NASA-P10-07: swallowed error `else |_| {}`
-semscope: 15 finding(s) in 5 file(s): 15 error(s), 0 warning(s), 0 note(s)
+semscope: 17 finding(s) in 6 file(s): 17 error(s), 0 warning(s), 0 note(s)

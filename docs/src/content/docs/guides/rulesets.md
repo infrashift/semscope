@@ -140,6 +140,6 @@ active rules: 11
 ...
 omitted rules: 1
   NASA-P10-05  error  min_assertions  Assertion density
-      languages: go, c, cpp, zig, python, rust
+      languages: go, c, cpp, zig, python, rust, csharp
       params: min_assertions=2 mode="average"
 ```

@@ -21,12 +21,13 @@ const (
 	Zig    Language = "zig"
 	Python Language = "python"
 	Rust   Language = "rust"
+	CSharp Language = "csharp"
 )
 
 // Languages returns all languages in a fixed sequence.
 func Languages() []Language {
-	out := []Language{Go, C, CPP, Zig, Python, Rust}
-	assert.That(len(out) == 6, "six languages")
+	out := []Language{Go, C, CPP, Zig, Python, Rust, CSharp}
+	assert.That(len(out) == 7, "seven languages")
 	return out
 }
 
@@ -48,6 +49,8 @@ func Detect(path string) (Language, bool) {
 		lang = Python
 	case ".rs":
 		lang = Rust
+	case ".cs":
+		lang = CSharp
 	}
 	_, known := Grammar(lang)
 	assert.That(lang == "" || known, "each detected language has a grammar")
@@ -71,13 +74,15 @@ func Grammar(lang Language) (*ts.Language, bool) {
 		g = ts.NewLanguage(ts.LangPython)
 	case Rust:
 		g = ts.NewLanguage(ts.LangRust)
+	case CSharp:
+		g = ts.NewLanguage(ts.LangCSharp)
 	}
 	assert.That(g == nil || g.AbiVersion() > 0, "a grammar has an ABI version")
 	return g, g != nil
 }
 
-// isTestFile reports whether the whole file holds tests: a Go _test.go file
-// or a Python test_*.py or *_test.py file.
+// isTestFile reports whether the whole file holds tests: a Go _test.go file,
+// a Python test_*.py or *_test.py file, or a C# *Test.cs or *Tests.cs file.
 func isTestFile(path string, lang Language) bool {
 	assert.That(path != "", "the path is not empty")
 	assert.That(lang != "", "the language is not empty")
@@ -88,6 +93,8 @@ func isTestFile(path string, lang Language) bool {
 		return strings.HasSuffix(base, "_test.go")
 	case Python:
 		return strings.HasPrefix(base, "test_") || strings.HasSuffix(base, "_test.py")
+	case CSharp:
+		return strings.HasSuffix(base, "Test.cs") || strings.HasSuffix(base, "Tests.cs")
 	}
 	return false
 }

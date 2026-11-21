@@ -1,4 +1,5 @@
 -: error: NASA-P10-05: cpp: 0 assertions in 2 functions (average 0.00, min 2)
+-: error: NASA-P10-05: csharp: 1 assertions in 3 functions (average 0.33, min 2)
 -: error: NASA-P10-05: go: 1 assertions in 3 functions (average 0.33, min 2)
 -: error: NASA-P10-05: python: 1 assertions in 1 functions (average 1.00, min 2)
 -: error: NASA-P10-05: zig: 2 assertions in 4 functions (average 0.50, min 2)
@@ -17,6 +18,16 @@ sample_a.c:22:5: error: NASA-P10-07: unused result of `malloc`
 sample_a.c:24:10: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
 sample_a.c:25:5: error: NASA-P10-10: construct `gets`
 sample_a.c:25:16: error: NASA-P10-10: construct `// NOLINT`
+sample_a.cs:5:5: error: NASA-P10-06: mutable `static` field
+sample_a.cs:8:5: error: NASA-P10-01: recursion: Walker.Walk -> Walker.Walk
+sample_a.cs:8:21: error: NASA-P10-09: function pointer type
+sample_a.cs:11:9: error: NASA-P10-02: unbounded loop `while (true)`
+sample_a.cs:12:9: error: NASA-P10-02: `for` loop without a condition
+sample_a.cs:13:9: error: NASA-P10-07: discarded call result `_ = f()`
+sample_a.cs:14:9: error: NASA-P10-09: 2 levels of pointer indirection (max 1)
+sample_a.cs:15:9: error: NASA-P10-10: construct `unsafe { Step(n); }`
+sample_a.cs:18:26: error: NASA-P10-07: swallowed exception, an empty `catch` block
+sample_a.cs:34:1: error: NASA-P10-08: directive `define`
 sample_a.go:3:8: error: NASA-P10-10: construct `"unsafe"`
 sample_a.go:5:5: error: NASA-P10-06: package variable `hook`
 sample_a.go:5:10: error: NASA-P10-09: function type
@@ -65,4 +76,4 @@ sample_b.cpp:2:23: warning: NASA-P10-03: allocation `new` in function `n`
 sample_b.zig:6:5: error: NASA-P10-01: recursion: S.m -> S.m
 sample_b.zig:9:9: error: NASA-P10-07: discarded call result `_ = f(...)`
 sample_b.zig:18:5: error: NASA-P10-06: container-level `var hits`
-67 finding(s) in 7 file(s)
+78 finding(s) in 8 file(s)

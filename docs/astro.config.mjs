@@ -13,7 +13,7 @@ export default defineConfig({
 		starlight({
 			title: 'semscope',
 			description:
-				'semscope scans Go, C, C++, Zig, Python and Rust source code with composable CUE rulesets, and writes the findings as text, JSON or SARIF.',
+				'semscope scans Go, C, C++, Zig, Python, Rust and C# source code with composable CUE rulesets, and writes the findings as text, JSON or SARIF.',
 			favicon: '/favicon.svg',
 			customCss: ['./src/styles/custom.css'],
 			social: [

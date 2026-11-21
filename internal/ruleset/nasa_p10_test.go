@@ -38,7 +38,7 @@ func TestNasaP10Defaults(t *testing.T) {
 	if findRule(t, r, "NASA-P10-03").Severity != "warning" || findRule(t, r, "NASA-P10-01").Severity != "error" {
 		t.Errorf("severities: R3 is not warning or R1 is not error")
 	}
-	if q := findRule(t, r, "NASA-P10-10").Check.Query; len(q) != 6 || !strings.Contains(q["go"], "@violation") {
+	if q := findRule(t, r, "NASA-P10-10").Check.Query; len(q) != 7 || !strings.Contains(q["csharp"], "@violation") {
 		t.Errorf("NASA-P10-10 queries = %v", q)
 	}
 }

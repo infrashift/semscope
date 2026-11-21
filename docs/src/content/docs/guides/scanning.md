@@ -23,6 +23,7 @@ semscope selects a parser from the file extension. It skips a file with a differ
 | Zig | `.zig` |
 | Python | `.py` |
 | Rust | `.rs` |
+| C# | `.cs` |
 
 A scan does not go into these directories:
 
@@ -30,12 +31,13 @@ A scan does not go into these directories:
 - `vendor`, `node_modules` and `testdata`.
 - The build output directories `zig-cache`, `zig-out`, `target` and `__pycache__`.
 
-To skip more paths, add patterns to the exclude map. See [Suppressions & Excludes](../suppressions-and-excludes/).
+A .NET project writes its build output to `bin` and `obj`. To skip them and more paths, add patterns to the exclude map. See [Suppressions & Excludes](../suppressions-and-excludes/).
 
 ## Test code
 
 semscope does not check a test file. A test file is a Go file with a name that ends in `_test.go`.
 A Python file with a name that starts with `test_` or ends in `_test.py` is also a test file.
+A C# file with a name that ends in `Test.cs` or `Tests.cs` is also a test file.
 
 In other files, a test function or a test helper is exempt from three checks: recursion, function length and the assertion average.
 
@@ -44,6 +46,9 @@ In other files, a test function or a test helper is exempt from three checks: re
 | Go | A name that starts with `test` or `Test`, or ends in `Test` |
 | Python | A name that starts with `test` |
 | Zig | A name that starts with `test` or ends in `Test` |
+| C# | A method with a test attribute: `[Test]`, `[TestCase]`, `[TestMethod]`, `[Fact]` or `[Theory]` |
+
+semscope also skips each C# class with the attribute `[TestClass]` or `[TestFixture]`.
 
 ## Rules and rulesets
 

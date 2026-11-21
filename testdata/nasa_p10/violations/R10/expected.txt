@@ -1,6 +1,8 @@
 c/a.c:5:5: error: NASA-P10-10: construct `gets`
 c/a.c:5:14: error: NASA-P10-10: construct `// NOLINT`
 c/a.c:6:5: error: NASA-P10-10: construct `strcpy`
+cs/a.cs:3:1: error: NASA-P10-10: construct `#pragma warning disable CS0168`
+cs/a.cs:7:9: error: NASA-P10-10: construct `unsafe { fixed (int* p = a) { return *p;...`
 go/a.go:3:8: error: NASA-P10-10: construct `"unsafe"`
 go/a.go:5:1: error: NASA-P10-10: construct `//nolint`
 py/a.py:1:8: error: NASA-P10-10: construct `ctypes`
@@ -8,4 +10,4 @@ py/a.py:2:8: error: NASA-P10-10: construct `# noqa`
 rs/a.rs:2:5: error: NASA-P10-10: construct `unsafe { *p }`
 zig/a.zig:2:12: error: NASA-P10-10: construct `@ptrCast`
 zig/a.zig:2:21: error: NASA-P10-10: construct `@alignCast`
-semscope: 10 finding(s) in 5 file(s): 10 error(s), 0 warning(s), 0 note(s)
+semscope: 12 finding(s) in 6 file(s): 12 error(s), 0 warning(s), 0 note(s)

@@ -2,6 +2,8 @@ c/a.c:3:1: error: NASA-P10-01: recursion: fact -> fact
 c/a.c:8:23: error: NASA-P10-01: `goto` statement
 c/a.c:9:9: error: NASA-P10-01: banned call `setjmp`
 cpp/a.cpp:3:5: error: NASA-P10-01: recursion: walk -> walk
+cs/a.cs:3:5: error: NASA-P10-01: recursion: Walker.Walk -> Walker.Walk
+cs/a.cs:6:9: error: NASA-P10-01: `goto` statement
 go/internal/a/a.go:8:1: error: NASA-P10-01: recursion: fact -> fact
 go/internal/a/a.go:23:1: error: NASA-P10-01: recursion: T.step -> T.walk -> T.step
 go/internal/a/a.go:37:3: error: NASA-P10-01: `goto` statement
@@ -12,4 +14,4 @@ zig/src/a.zig:5:1: error: NASA-P10-01: recursion: fact -> fact
 zig/src/a.zig:12:1: error: NASA-P10-01: recursion: ping -> pong -> ping
 zig/src/a.zig:24:1: error: NASA-P10-01: recursion: there -> back -> there
 zig/src/a.zig:31:5: error: NASA-P10-01: recursion: S.again -> S.again
-semscope: 14 finding(s) in 7 file(s): 14 error(s), 0 warning(s), 0 note(s)
+semscope: 16 finding(s) in 8 file(s): 16 error(s), 0 warning(s), 0 note(s)

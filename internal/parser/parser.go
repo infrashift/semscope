@@ -26,7 +26,7 @@ func DefaultLimits() Limits {
 	return l
 }
 
-// Parser parses files of all six languages. It is not safe for concurrent
+// Parser parses files of all seven languages. It is not safe for concurrent
 // use: give each worker its own Parser.
 type Parser struct {
 	ts       *ts.Parser
@@ -42,7 +42,7 @@ func New(limits Limits) (*Parser, error) {
 		limits.MaxNesting <= 0 || limits.MaxRecords <= 0 {
 		return nil, fmt.Errorf("parser: each limit must be positive: %+v", limits)
 	}
-	p := &Parser{ts: ts.NewParser(), grammars: make(map[Language]*ts.Language, 6), limits: limits}
+	p := &Parser{ts: ts.NewParser(), grammars: make(map[Language]*ts.Language, 7), limits: limits}
 	for _, lang := range Languages() {
 		g, ok := Grammar(lang)
 		assert.That(ok, "each language has a grammar")

@@ -28,7 +28,7 @@ Each definition is a closed struct. An unknown field gives the error `field not 
 | `params` | map from a name to an int, a string, a bool or a list of strings | Empty |
 | `check` | a struct with a `kind` field | Required |
 
-`#Language` is one of `"go"`, `"c"`, `"cpp"`, `"zig"`, `"python"` and `"rust"`.
+`#Language` is one of `"go"`, `"c"`, `"cpp"`, `"zig"`, `"python"`, `"rust"` and `"csharp"`.
 `#PerLanguage` is a map from a `#Language` to a list of strings.
 
 The schema gives no default for `enabled` and `severity`. The loader applies the defaults in Go after the unification.
@@ -61,7 +61,7 @@ A base ruleset can declare its own default, for example `severity: *"warning" | 
 CUE unification does not replace a concrete value. `max_lines: 60` and `max_lines: 40` conflict.
 So a base ruleset declares each tunable value as a default, for example `max_lines: *60 | int`. An overlay with `max_lines: 40` then selects 40.
 
-The same applies to lists. `nasa-p10` declares `languages: *["go", "c", "cpp", "zig", "python", "rust"] | [...]`, so an overlay can narrow the list.
+The same applies to lists. `nasa-p10` declares `languages: *["go", "c", "cpp", "zig", "python", "rust", "csharp"] | [...]`, so an overlay can narrow the list.
 
 ## Sources
 

@@ -43,7 +43,7 @@ func TestSamplesGolden(t *testing.T) {
 			paths = append(paths, path)
 		}
 	}
-	if err != nil || len(paths) != 7 {
+	if err != nil || len(paths) != 8 {
 		t.Fatalf("samples = %v, %v", paths, err)
 	}
 	for _, path := range paths {
@@ -103,7 +103,7 @@ func TestTestFilesAreExempt(t *testing.T) {
 	for _, tc := range []struct {
 		path string
 		lang Language
-	}{{"x_test.go", Go}, {"test_x.py", Python}, {"x_test.py", Python}} {
+	}{{"x_test.go", Go}, {"test_x.py", Python}, {"x_test.py", Python}, {"ParserTests.cs", CSharp}, {"ParserTest.cs", CSharp}} {
 		f, tree, err := p.Parse(tc.path, tc.lang, []byte("x"))
 		if err != nil || tree != nil || !f.Exempt {
 			t.Errorf("Parse(%s) = exempt %v, tree %v, err %v", tc.path, f != nil && f.Exempt, tree != nil, err)
@@ -233,7 +233,7 @@ func TestLimits(t *testing.T) {
 }
 
 func TestDetect(t *testing.T) {
-	for path, want := range map[string]Language{"a.go": Go, "a.h": C, "a.HPP": CPP, "a.zig": Zig, "a.py": Python, "a.rs": Rust} {
+	for path, want := range map[string]Language{"a.go": Go, "a.h": C, "a.HPP": CPP, "a.zig": Zig, "a.py": Python, "a.rs": Rust, "a.cs": CSharp} {
 		if got, ok := Detect(path); !ok || got != want {
 			t.Errorf("Detect(%s) = %s, %v", path, got, ok)
 		}
