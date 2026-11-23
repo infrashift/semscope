@@ -1,13 +1,13 @@
 ---
-id: "01a1e97f-a733-70b6-ae9b-2e9ca6be9ec0"
+x-okfw-id: "01a1e97f-a733-70b6-ae9b-2e9ca6be9ec0"
 title: "ADR-0007: cobra parses the command line"
 type: "ADR"
 tags:
   - "adr"
   - "cli"
   - "dependency"
-created: "2026-11-17T06:33:39-06:00"
-timestamp: "2026-11-17T06:33:39-06:00"
+x-okfw-created: "2026-11-17T06:33:39-06:00"
+x-okfw-timestamp: "2026-11-17T06:33:39-06:00"
 description: "semscope uses github.com/spf13/cobra for its commands and flags; command callbacks are function literals that ADR-0003 allows."
 ---
 

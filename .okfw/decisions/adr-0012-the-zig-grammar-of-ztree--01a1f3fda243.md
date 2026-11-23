@@ -1,5 +1,5 @@
 ---
-id: "01a1f3fd-a243-760d-b470-fa45ce9c4a63"
+x-okfw-id: "01a1f3fd-a243-760d-b470-fa45ce9c4a63"
 title: "ADR-0012: The Zig grammar of ztree"
 type: "ADR"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "parser"
   - "zig"
   - "dependency"
-created: "2026-11-19T07:27:28-06:00"
-timestamp: "2026-11-19T07:27:28-06:00"
+x-okfw-created: "2026-11-19T07:27:28-06:00"
+x-okfw-timestamp: "2026-11-19T07:27:28-06:00"
 description: "semscope takes the patched Zig grammar of ztree, which adds empty containers and three rare forms to the patch of ADR-0010."
 status: "deprecated"
 ---

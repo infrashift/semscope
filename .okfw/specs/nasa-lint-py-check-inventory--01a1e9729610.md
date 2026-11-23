@@ -1,5 +1,5 @@
 ---
-id: "01a1e972-9610-7350-8eab-f33d69563cd8"
+x-okfw-id: "01a1e972-9610-7350-8eab-f33d69563cd8"
 title: "nasa-lint.py check inventory"
 type: "Spec"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "nasa-p10"
   - "oracle"
   - "zig"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 description: "Every check, threshold, pattern and quirk of scripts/nasa-lint.py, the Zig oracle for the nasa-p10 ruleset."
 ---
 

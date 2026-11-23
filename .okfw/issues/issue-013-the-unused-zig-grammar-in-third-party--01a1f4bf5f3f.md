@@ -1,16 +1,16 @@
 ---
-id: "01a1f4bf-5f3f-7d7a-8037-1824c8c4e516"
+x-okfw-id: "01a1f4bf-5f3f-7d7a-8037-1824c8c4e516"
 title: "ISSUE-013: The unused Zig grammar in third_party"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "parser"
   - "zig"
   - "phase-11"
   - "closed"
-created: "2026-11-19T10:59:04-06:00"
-timestamp: "2026-11-19T10:59:04-06:00"
+x-okfw-created: "2026-11-19T10:59:04-06:00"
+x-okfw-timestamp: "2026-11-19T10:59:04-06:00"
 description: "third_party/tree-sitter-zig and its replace directive have no user in the build since semscope uses the ztree runtime."
 ---
 

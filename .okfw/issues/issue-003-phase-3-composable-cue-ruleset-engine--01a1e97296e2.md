@@ -1,15 +1,15 @@
 ---
-id: "01a1e972-96e2-749a-a7e3-93903179bbf7"
+x-okfw-id: "01a1e972-96e2-749a-a7e3-93903179bbf7"
 title: "ISSUE-003: Phase 3: Composable CUE ruleset engine"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-3"
   - "ruleset"
   - "closed"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:32:41-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:32:41-06:00"
 description: "Add the CUE ruleset schema, the loader with overlays and overrides, and the nasa-p10 ruleset."
 ---
 

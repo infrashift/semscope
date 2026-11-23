@@ -1,13 +1,13 @@
 ---
-id: "01a1f526-3500-7b17-af40-7dd82ce851da"
+x-okfw-id: "01a1f526-3500-7b17-af40-7dd82ce851da"
 title: "ADR-0015: lexis checks the documentation with a repository vocabulary"
 type: "ADR"
 tags:
   - "adr"
   - "docs"
   - "gates"
-created: "2026-11-19T12:51:24-06:00"
-timestamp: "2026-11-19T12:51:24-06:00"
+x-okfw-created: "2026-11-19T12:51:24-06:00"
+x-okfw-timestamp: "2026-11-19T12:51:24-06:00"
 description: "The docs-lexis gate scans the Markdown documentation with lexis and vocabulary.cue, fails on each finding and runs only when lexis is on the PATH."
 ---
 

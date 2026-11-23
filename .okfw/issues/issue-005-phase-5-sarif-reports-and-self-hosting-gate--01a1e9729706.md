@@ -1,15 +1,15 @@
 ---
-id: "01a1e972-9706-7158-a6fa-fe4ee1bdbe8f"
+x-okfw-id: "01a1e972-9706-7158-a6fa-fe4ee1bdbe8f"
 title: "ISSUE-005: Phase 5: SARIF reports and self-hosting gate"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-5"
   - "report"
   - "closed"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T07:07:37-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T07:07:37-06:00"
 description: "Add the SARIF 2.1.0 and 2.2 writers and run the final self-hosting gate."
 ---
 

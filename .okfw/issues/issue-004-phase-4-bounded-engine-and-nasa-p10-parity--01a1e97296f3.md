@@ -1,15 +1,15 @@
 ---
-id: "01a1e972-96f3-7e23-b94a-ba41c455c04d"
+x-okfw-id: "01a1e972-96f3-7e23-b94a-ba41c455c04d"
 title: "ISSUE-004: Phase 4: Bounded engine and nasa-p10 parity"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-4"
   - "engine"
   - "closed"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T07:01:10-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T07:01:10-06:00"
 description: "Add the Tree-sitter parsers, the bounded engine and the parity tests against both oracles."
 ---
 

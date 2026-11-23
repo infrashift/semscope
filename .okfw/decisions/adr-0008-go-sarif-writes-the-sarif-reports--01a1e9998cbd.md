@@ -1,5 +1,5 @@
 ---
-id: "01a1e999-8cbd-7baf-9ea8-33bd9a65e301"
+x-okfw-id: "01a1e999-8cbd-7baf-9ea8-33bd9a65e301"
 title: "ADR-0008: go-sarif writes the SARIF reports"
 type: "ADR"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "report"
   - "sarif"
   - "dependency"
-created: "2026-11-17T07:01:56-06:00"
-timestamp: "2026-11-17T07:01:56-06:00"
+x-okfw-created: "2026-11-17T07:01:56-06:00"
+x-okfw-timestamp: "2026-11-17T07:01:56-06:00"
 description: "semscope writes SARIF 2.1.0 and SARIF 2.2 through github.com/owenrumney/go-sarif/v3 and validates each report against the schema before it writes it."
 ---
 

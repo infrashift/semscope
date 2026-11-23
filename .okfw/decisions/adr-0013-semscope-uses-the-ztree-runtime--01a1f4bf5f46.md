@@ -1,5 +1,5 @@
 ---
-id: "01a1f4bf-5f46-7bf7-ad49-0ad7692cdef3"
+x-okfw-id: "01a1f4bf-5f46-7bf7-ad49-0ad7692cdef3"
 title: "ADR-0013: semscope uses the ztree runtime"
 type: "ADR"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "parser"
   - "ztree"
   - "dependency"
-created: "2026-11-19T10:59:04-06:00"
-timestamp: "2026-11-19T10:59:04-06:00"
+x-okfw-created: "2026-11-19T10:59:04-06:00"
+x-okfw-timestamp: "2026-11-19T10:59:04-06:00"
 description: "internal/parser and internal/engine use the ztree Go binding in place of go-tree-sitter, and the gates build libztree.a first."
 ---
 

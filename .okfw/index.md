@@ -1,5 +1,7 @@
 ---
-okf_version: "0.2"
+okf_version: "0.3"
+description: "Design record for semscope, the CUE-ruleset code scanner with the nasa-p10 baseline: ADRs on tree-sitter/ztree parsing, parity oracles and SARIF, plus specs and phase issues."
+title: "semscope"
 ---
 
 # /

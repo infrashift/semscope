@@ -1,5 +1,5 @@
 ---
-id: "01a1ebe0-5590-74a1-a6dc-5918c6528c12"
+x-okfw-id: "01a1ebe0-5590-74a1-a6dc-5918c6528c12"
 title: "ADR-0010: A patched Zig grammar for Zig 0.17"
 type: "ADR"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "parser"
   - "zig"
   - "dependency"
-created: "2026-11-17T17:38:30-06:00"
-timestamp: "2026-11-17T17:38:30-06:00"
+x-okfw-created: "2026-11-17T17:38:30-06:00"
+x-okfw-timestamp: "2026-11-17T17:38:30-06:00"
 description: "semscope keeps a patched copy of tree-sitter-zig v1.1.2 without the keywords async, await and usingnamespace, because no release reads Zig 0.17."
 status: "deprecated"
 ---

@@ -1,12 +1,12 @@
 ---
-id: "01a1e972-95ff-7186-893d-12deaeef1747"
+x-okfw-id: "01a1e972-95ff-7186-893d-12deaeef1747"
 title: "semscope architecture overview"
 type: "Architecture"
 tags:
   - "architecture"
   - "overview"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T07:07:37-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T07:07:37-06:00"
 description: "The packages of semscope and the data flow from the command line to a SARIF report."
 status: "stable"
 ---

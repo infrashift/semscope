@@ -1,13 +1,13 @@
 ---
-id: "01a1e972-969b-7d42-af22-04302b03a42b"
+x-okfw-id: "01a1e972-969b-7d42-af22-04302b03a42b"
 title: "ADR-0005: Two oracles define nasa-p10 parity"
 type: "ADR"
 tags:
   - "adr"
   - "parity"
   - "testing"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 description: "nasa-lint.py (Zig) and nasa-lint-go.py (Go) are the parity oracles; fixtures match exactly and corpus divergences need a recorded reason."
 ---
 

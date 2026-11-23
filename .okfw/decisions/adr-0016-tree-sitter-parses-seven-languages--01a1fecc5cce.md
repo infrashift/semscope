@@ -1,13 +1,13 @@
 ---
-id: "01a1fecc-5cce-79e5-8ee3-c5d5fa771324"
+x-okfw-id: "01a1fecc-5cce-79e5-8ee3-c5d5fa771324"
 title: "ADR-0016: Tree-sitter parses seven languages"
 type: "ADR"
 tags:
   - "adr"
   - "parser"
   - "tree-sitter"
-created: "2026-11-21T09:49:28-06:00"
-timestamp: "2026-11-21T09:49:28-06:00"
+x-okfw-created: "2026-11-21T09:49:28-06:00"
+x-okfw-timestamp: "2026-11-21T09:49:28-06:00"
 description: "internal/parser reads Go, C, C++, Zig, Python, Rust and C# through the ztree runtime, with one adapter for each language; nasa-p10 applies to C# except NASA-P10-03."
 ---
 

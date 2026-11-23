@@ -1,16 +1,16 @@
 ---
-id: "01a1f526-5a5d-7d3e-a4c0-705941f412d4"
+x-okfw-id: "01a1f526-5a5d-7d3e-a4c0-705941f412d4"
 title: "ISSUE-015: Phase 13: lexis checks the documentation"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "docs"
   - "gates"
   - "phase-13"
   - "closed"
-created: "2026-11-19T12:51:33-06:00"
-timestamp: "2026-11-19T12:52:32-06:00"
+x-okfw-created: "2026-11-19T12:51:33-06:00"
+x-okfw-timestamp: "2026-11-19T12:52:32-06:00"
 description: "A repository vocabulary and new text bring the lexis findings of the documentation to 0, and the docs-lexis gate keeps them at 0."
 ---
 

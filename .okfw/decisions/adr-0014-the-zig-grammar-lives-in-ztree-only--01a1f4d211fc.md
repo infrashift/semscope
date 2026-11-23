@@ -1,5 +1,5 @@
 ---
-id: "01a1f4d2-11fc-735b-9136-8d066b7f9c4d"
+x-okfw-id: "01a1f4d2-11fc-735b-9136-8d066b7f9c4d"
 title: "ADR-0014: The Zig grammar lives in ztree only"
 type: "ADR"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "parser"
   - "zig"
   - "dependency"
-created: "2026-11-19T11:19:30-06:00"
-timestamp: "2026-11-19T11:19:30-06:00"
+x-okfw-created: "2026-11-19T11:19:30-06:00"
+x-okfw-timestamp: "2026-11-19T11:19:30-06:00"
 description: "semscope removes its copy of the patched Zig grammar, because the parser takes all grammars from ztree since ADR-0013."
 ---
 

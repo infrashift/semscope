@@ -1,13 +1,13 @@
 ---
-id: "01a1e972-9645-7396-bccb-45faa9d82beb"
+x-okfw-id: "01a1e972-9645-7396-bccb-45faa9d82beb"
 title: "CUE ruleset schema"
 type: "Spec"
 tags:
   - "spec"
   - "ruleset"
   - "cue"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:29:28-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:29:28-06:00"
 description: "The CUE schema of a semscope ruleset and the steps that compose a base ruleset, overlays and overrides."
 status: "stable"
 ---

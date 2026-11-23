@@ -1,13 +1,13 @@
 ---
-id: "01a1e972-9667-7a01-8e28-5a934c609607"
+x-okfw-id: "01a1e972-9667-7a01-8e28-5a934c609607"
 title: "ADR-0002: Composable CUE rulesets with a nasa-p10 baseline"
 type: "ADR"
 tags:
   - "adr"
   - "ruleset"
   - "cue"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 description: "Rulesets are CUE values that users extend with overlays, omissions and parameter overrides; nasa-p10 is the first built-in ruleset."
 ---
 

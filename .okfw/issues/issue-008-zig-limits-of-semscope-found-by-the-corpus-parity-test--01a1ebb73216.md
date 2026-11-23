@@ -1,8 +1,8 @@
 ---
-id: "01a1ebb7-3216-795d-a02a-e7293e52af32"
+x-okfw-id: "01a1ebb7-3216-795d-a02a-e7293e52af32"
 title: "ISSUE-008: Zig limits of semscope found by the corpus parity test"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "parser"
@@ -10,8 +10,8 @@ tags:
   - "parity"
   - "phase-6"
   - "closed"
-created: "2026-11-17T16:53:34-06:00"
-timestamp: "2026-11-17T16:53:34-06:00"
+x-okfw-created: "2026-11-17T16:53:34-06:00"
+x-okfw-timestamp: "2026-11-17T16:53:34-06:00"
 description: "The Zig grammar v1.1.2 lags Zig 0.17, and the Zig call graph gives same-name functions of one file one node."
 ---
 

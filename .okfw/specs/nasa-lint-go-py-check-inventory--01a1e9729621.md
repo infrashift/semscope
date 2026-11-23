@@ -1,5 +1,5 @@
 ---
-id: "01a1e972-9621-7880-958b-ec616f766d55"
+x-okfw-id: "01a1e972-9621-7880-958b-ec616f766d55"
 title: "nasa-lint-go.py check inventory"
 type: "Spec"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "nasa-p10"
   - "oracle"
   - "go"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 description: "Every check, threshold, pattern and exemption of scripts/nasa-lint-go.py, the Go oracle and Go gate for the nasa-p10 ruleset."
 ---
 
