@@ -1,12 +1,12 @@
 ---
-id: "01a1e972-9633-7718-8eae-df9a2cd538ba"
+x-okfw-id: "01a1e972-9633-7718-8eae-df9a2cd538ba"
 title: "CLI contract"
 type: "Spec"
 tags:
   - "spec"
   - "cli"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T07:07:37-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T07:07:37-06:00"
 description: "The commands, flags, outputs and exit codes of the semscope command line."
 status: "stable"
 ---

@@ -1,16 +1,16 @@
 ---
-id: "01a1f4bf-5f39-739c-be17-aeae56288355"
+x-okfw-id: "01a1f4bf-5f39-739c-be17-aeae56288355"
 title: "ISSUE-012: Phase 10: the ztree runtime"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "parser"
   - "ztree"
   - "phase-10"
   - "closed"
-created: "2026-11-19T10:59:04-06:00"
-timestamp: "2026-11-19T10:59:04-06:00"
+x-okfw-created: "2026-11-19T10:59:04-06:00"
+x-okfw-timestamp: "2026-11-19T10:59:04-06:00"
 description: "semscope parses with the ztree Go binding in place of go-tree-sitter, and the gates build libztree.a first."
 ---
 

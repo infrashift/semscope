@@ -1,15 +1,15 @@
 ---
-id: "01a1e972-96d0-776e-af09-67e792f2839a"
+x-okfw-id: "01a1e972-96d0-776e-af09-67e792f2839a"
 title: "ISSUE-002: Phase 2: Version package and Cobra CLI"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-2"
   - "cli"
   - "closed"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:35:40-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:35:40-06:00"
 description: "Add internal/version and the cobra commands version, scan and rules with every ruleset flag."
 ---
 

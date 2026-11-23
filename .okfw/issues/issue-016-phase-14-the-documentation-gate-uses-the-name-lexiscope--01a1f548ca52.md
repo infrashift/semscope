@@ -1,16 +1,16 @@
 ---
-id: "01a1f548-ca52-7082-b13d-815e00b1d9b4"
+x-okfw-id: "01a1f548-ca52-7082-b13d-815e00b1d9b4"
 title: "ISSUE-016: Phase 14: the documentation gate uses the name lexiscope"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-14"
   - "docs"
   - "gates"
   - "closed"
-created: "2026-11-19T13:29:10-06:00"
-timestamp: "2026-11-19T13:29:45-06:00"
+x-okfw-created: "2026-11-19T13:29:10-06:00"
+x-okfw-timestamp: "2026-11-19T13:29:45-06:00"
 description: "The docs-lexis gate becomes docs-lexiscope, because the documentation linter lexis now has the official name lexiscope."
 ---
 

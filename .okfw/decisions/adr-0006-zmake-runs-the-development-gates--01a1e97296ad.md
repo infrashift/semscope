@@ -1,13 +1,13 @@
 ---
-id: "01a1e972-96ad-74b9-987e-04553c6aec1c"
+x-okfw-id: "01a1e972-96ad-74b9-987e-04553c6aec1c"
 title: "ADR-0006: zmake runs the development gates"
 type: "ADR"
 tags:
   - "adr"
   - "build"
   - "zmake"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 description: "A ZMakefile and a Makefile hold the same gate tasks; zmake runs both before each task commit."
 ---
 

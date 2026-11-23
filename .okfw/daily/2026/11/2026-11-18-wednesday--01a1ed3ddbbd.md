@@ -1,12 +1,12 @@
 ---
-id: "01a1ed3d-dbbd-7bfb-8d74-febc70f3c1e9"
+x-okfw-id: "01a1ed3d-dbbd-7bfb-8d74-febc70f3c1e9"
 title: "2026-11-18 Wednesday"
 type: "daily-note"
-kind: "daily-note"
+x-okfw-kind: "daily-note"
 tags:
   - "daily"
-created: "2026-11-18T00:00:16-06:00"
-timestamp: "2026-11-18T00:00:16-06:00"
+x-okfw-created: "2026-11-18T00:00:16-06:00"
+x-okfw-timestamp: "2026-11-18T00:00:16-06:00"
 ---
 
 # 2026-11-18 Wednesday

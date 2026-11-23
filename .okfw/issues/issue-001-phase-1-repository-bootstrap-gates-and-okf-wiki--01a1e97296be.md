@@ -1,15 +1,15 @@
 ---
-id: "01a1e972-96be-77de-bcb0-886662cd4f77"
+x-okfw-id: "01a1e972-96be-77de-bcb0-886662cd4f77"
 title: "ISSUE-001: Phase 1: Repository bootstrap, gates and OKF wiki"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-1"
   - "bootstrap"
   - "closed"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:21:28-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:21:28-06:00"
 description: "Bootstrap git, the zmake gates, the Go module, the oracle scripts, the STE gate and the wiki."
 ---
 

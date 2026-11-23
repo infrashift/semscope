@@ -1,13 +1,13 @@
 ---
-id: "01a1e972-9678-7816-8b9f-b715aa629b9a"
+x-okfw-id: "01a1e972-9678-7816-8b9f-b715aa629b9a"
 title: "ADR-0003: Adapt the NASA Power of 10 rules to Go"
 type: "ADR"
 tags:
   - "adr"
   - "safety"
   - "lint"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 description: "semscope follows the Power of 10 rules where Go allows; nasa-lint-go.py, golangci-lint and the self-scan check them, with a recorded R3 deviation."
 ---
 

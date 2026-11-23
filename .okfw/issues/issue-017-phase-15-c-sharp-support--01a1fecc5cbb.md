@@ -1,16 +1,16 @@
 ---
-id: "01a1fecc-5cbb-761b-8884-6c09466f405b"
+x-okfw-id: "01a1fecc-5cbb-761b-8884-6c09466f405b"
 title: "ISSUE-017: Phase 15: C# support"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-15"
   - "parser"
   - "rules"
   - "closed"
-created: "2026-11-21T09:49:28-06:00"
-timestamp: "2026-11-21T09:49:53-06:00"
+x-okfw-created: "2026-11-21T09:49:28-06:00"
+x-okfw-timestamp: "2026-11-21T09:49:53-06:00"
 description: "semscope reads C# files and checks the nasa-p10 rules in them, except NASA-P10-03."
 ---
 

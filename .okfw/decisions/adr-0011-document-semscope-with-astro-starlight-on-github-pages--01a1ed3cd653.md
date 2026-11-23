@@ -1,12 +1,12 @@
 ---
-id: "01a1ed3c-d653-7875-a819-fa41b951c621"
+x-okfw-id: "01a1ed3c-d653-7875-a819-fa41b951c621"
 title: "ADR-0011: Document semscope with Astro Starlight on GitHub Pages"
 type: "ADR"
 tags:
   - "adr"
   - "docs"
-created: "2026-11-17T23:59:09-06:00"
-timestamp: "2026-11-17T23:59:09-06:00"
+x-okfw-created: "2026-11-17T23:59:09-06:00"
+x-okfw-timestamp: "2026-11-17T23:59:09-06:00"
 description: "An Astro Starlight site in docs/, built with bun and deployed to GitHub Pages by GitHub Actions; the docs toolchain stays outside the Go build and the check gate."
 ---
 

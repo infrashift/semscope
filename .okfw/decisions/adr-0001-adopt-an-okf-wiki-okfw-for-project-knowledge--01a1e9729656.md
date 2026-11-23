@@ -1,12 +1,12 @@
 ---
-id: "01a1e972-9656-7537-bfdd-2fa979738ef3"
+x-okfw-id: "01a1e972-9656-7537-bfdd-2fa979738ef3"
 title: "ADR-0001: Adopt an OKF wiki (okfw) for project knowledge"
 type: "ADR"
 tags:
   - "adr"
   - "wiki"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 description: "semscope records decisions, specs and open work in a local-first OKF wiki in .okfw/."
 ---
 

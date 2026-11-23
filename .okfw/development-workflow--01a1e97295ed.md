@@ -1,13 +1,13 @@
 ---
-id: "01a1e972-95ed-7298-847a-65bed36c7f51"
+x-okfw-id: "01a1e972-95ed-7298-847a-65bed36c7f51"
 title: "Development workflow"
 type: "Guide"
 tags:
   - "conventions"
   - "workflow"
   - "meta"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 description: "The loop for each semscope task: implement, run the zmake gates until green, update the wiki, then commit."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1eba8-6090-7d14-ba66-605bf411eb91"
+x-okfw-id: "01a1eba8-6090-7d14-ba66-605bf411eb91"
 title: "ADR-0009: Type information for the Go check of NASA-P10-07"
 type: "ADR"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "go"
   - "nasa-p10"
   - "dependency"
-created: "2026-11-17T16:37:22-06:00"
-timestamp: "2026-11-17T16:37:22-06:00"
+x-okfw-created: "2026-11-17T16:37:22-06:00"
+x-okfw-timestamp: "2026-11-17T16:37:22-06:00"
 description: "When go_types is true, semscope loads the Go packages with golang.org/x/tools/go/packages and reports each call, defer and go statement that drops an error result."
 ---
 

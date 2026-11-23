@@ -1,15 +1,15 @@
 ---
-id: "01a1ed3c-f4ce-7b3a-85a8-4527064501bd"
+x-okfw-id: "01a1ed3c-f4ce-7b3a-85a8-4527064501bd"
 title: "ISSUE-010: Phase 8: Documentation site on GitHub Pages"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-8"
   - "docs"
   - "closed"
-created: "2026-11-17T23:59:17-06:00"
-timestamp: "2026-11-18T00:00:07-06:00"
+x-okfw-created: "2026-11-17T23:59:17-06:00"
+x-okfw-timestamp: "2026-11-18T00:00:07-06:00"
 description: "Add an Astro Starlight documentation site in docs/, docs-dev and docs-build tasks, and a GitHub Actions workflow that deploys the site to GitHub Pages."
 ---
 

@@ -1,16 +1,16 @@
 ---
-id: "01a1ebb7-320f-7162-b57e-fadbae48ed50"
+x-okfw-id: "01a1ebb7-320f-7162-b57e-fadbae48ed50"
 title: "ISSUE-007: Oracle defects found by the corpus parity test"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "parity"
   - "oracle"
   - "phase-6"
   - "closed"
-created: "2026-11-17T16:53:34-06:00"
-timestamp: "2026-11-17T16:53:34-06:00"
+x-okfw-created: "2026-11-17T16:53:34-06:00"
+x-okfw-timestamp: "2026-11-17T16:53:34-06:00"
 description: "The corpus parity test of Task 6.3 found defects in nasa-lint.py and nasa-lint-go.py; this issue lists each class and its state."
 ---
 

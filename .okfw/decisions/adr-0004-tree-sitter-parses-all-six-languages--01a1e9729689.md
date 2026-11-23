@@ -1,13 +1,13 @@
 ---
-id: "01a1e972-9689-7c77-9a6f-e7179bfdb535"
+x-okfw-id: "01a1e972-9689-7c77-9a6f-e7179bfdb535"
 title: "ADR-0004: Tree-sitter parses all six languages"
 type: "ADR"
 tags:
   - "adr"
   - "parser"
   - "tree-sitter"
-created: "2026-11-17T06:19:23-06:00"
-timestamp: "2026-11-17T06:19:23-06:00"
+x-okfw-created: "2026-11-17T06:19:23-06:00"
+x-okfw-timestamp: "2026-11-17T06:19:23-06:00"
 status: "deprecated"
 description: "internal/parser uses the cgo Tree-sitter bindings for Go, C, C++, Zig, Python and Rust, with one adapter for each language."
 ---

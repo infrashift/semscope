@@ -1,16 +1,16 @@
 ---
-id: "01a1f510-2109-72f1-9ff7-63701f14d04e"
+x-okfw-id: "01a1f510-2109-72f1-9ff7-63701f14d04e"
 title: "ISSUE-014: The Go parity corpus lost five modules"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "parity"
   - "scripts"
   - "phase-12"
   - "closed"
-created: "2026-11-19T12:27:17-06:00"
-timestamp: "2026-11-19T12:27:17-06:00"
+x-okfw-created: "2026-11-19T12:27:17-06:00"
+x-okfw-timestamp: "2026-11-19T12:27:17-06:00"
 description: "scripts/parity_corpora.py listed go-tree-sitter after semscope removed it, so go list failed and the Go parity corpus held the fixture only."
 ---
 

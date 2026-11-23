@@ -1,16 +1,16 @@
 ---
-id: "01a1f3fd-c1c1-7edd-9080-ce128e270612"
+x-okfw-id: "01a1f3fd-c1c1-7edd-9080-ce128e270612"
 title: "ISSUE-011: Phase 9: the Zig grammar of ztree"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "parser"
   - "zig"
   - "phase-9"
   - "closed"
-created: "2026-11-19T07:27:36-06:00"
-timestamp: "2026-11-19T07:27:36-06:00"
+x-okfw-created: "2026-11-19T07:27:36-06:00"
+x-okfw-timestamp: "2026-11-19T07:27:36-06:00"
 description: "semscope takes the Zig grammar of ztree, so that both give the same trees for empty containers and three rare Zig forms."
 ---
 

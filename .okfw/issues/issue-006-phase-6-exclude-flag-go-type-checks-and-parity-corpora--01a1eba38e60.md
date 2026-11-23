@@ -1,8 +1,8 @@
 ---
-id: "01a1eba3-8e60-745e-ac59-77059f1accd0"
+x-okfw-id: "01a1eba3-8e60-745e-ac59-77059f1accd0"
 title: "ISSUE-006: Phase 6: Exclude flag, Go type checks and parity corpora"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "phase-6"
@@ -10,8 +10,8 @@ tags:
   - "engine"
   - "parity"
   - "closed"
-created: "2026-11-17T16:32:07-06:00"
-timestamp: "2026-11-17T16:32:07-06:00"
+x-okfw-created: "2026-11-17T16:32:07-06:00"
+x-okfw-timestamp: "2026-11-17T16:32:07-06:00"
 description: "Add the --exclude flag, a type-aware Go check for NASA-P10-07 and more corpora for the parity test."
 ---
 

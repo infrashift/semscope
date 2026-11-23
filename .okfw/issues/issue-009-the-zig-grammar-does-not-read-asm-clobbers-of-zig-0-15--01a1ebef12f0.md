@@ -1,8 +1,8 @@
 ---
-id: "01a1ebef-12f0-7f1a-82e7-c58605dc59c7"
+x-okfw-id: "01a1ebef-12f0-7f1a-82e7-c58605dc59c7"
 title: "ISSUE-009: The Zig grammar does not read asm clobbers of Zig 0.15"
 type: "Issue"
-kind: "issue"
+x-okfw-kind: "issue"
 tags:
   - "issue"
   - "parser"
@@ -10,8 +10,8 @@ tags:
   - "parity"
   - "phase-7"
   - "closed"
-created: "2026-11-17T17:54:36-06:00"
-timestamp: "2026-11-17T17:54:36-06:00"
+x-okfw-created: "2026-11-17T17:54:36-06:00"
+x-okfw-timestamp: "2026-11-17T17:54:36-06:00"
 description: "Zig 0.15 writes asm clobbers as a struct literal; tree-sitter-zig reads strings only, so 26 syscall functions of the Zig standard library are lost."
 ---
 
